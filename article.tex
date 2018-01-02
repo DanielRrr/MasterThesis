@@ -1,0 +1,1234 @@
+\documentclass[a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{bussproofs}
+\usepackage{mathtools}
+\usepackage{verbatim}
+\usepackage{dsfont}
+\usepackage[all, 2cell]{xy}
+\usepackage[all]{xy}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{defin}{Definition}
+\newtheorem{ex}{Example}
+\newtheorem{col}{Corollary}
+\newtheorem{con}{Convention}
+\usepackage{listings} 		% for source code
+\date{}
+\title{Modal type theory based on the intuitionistic epistemic logic}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Modal intuitionistic epistemic logic IEL$^{-}$ was proposed by S.Artemov and T. Protopopescu as the formal
+foundation for the intuitionistic theory of knowledge. We construct a modal simply typed lambda-calculus
+which is Curry-Howard isomorphic to IEL$^{-}$ as formal theory of calculations with applicative functors in
+functional programming languages like Haskell or Idris. We prove that this typed lambda-calculus has the
+strong normalization and Church-Rosser properties.
+\end{abstract}
+
+
+  % This is a comment, not shown in final output.
+  % The following shows typesetting  power of LaTeX:
+
+  \section{Introduction}
+
+  Modal intutionistic epistemic logic IEL was proposed by S. Artemov and T. Proropopescu \cite{Artemov}. IEL
+  provides the epistimology and the theory of knowledge as based on BHK-semantics of intuitionistic logic.
+  $IEL^{-}$  is a variant of IEL, that corresponds to intuitionistic belief.
+  Informally, $\textbf{K}A$ denotes that $A$ is verified intuitionistically.
+
+  Intuitionistic epistemic logic IEL$^{-}$ is defined with by following axioms and derivation rules:
+
+  \begin{defin} Intuitionistic epistemic logic IEL:
+
+    1) IPC axioms;
+
+    2) $\textbf{K}(A \to B) \to (\textbf{K}A \to \textbf{K}B)$ (normality);
+
+    3) $A \to \textbf{K}A$ (co-reflection);
+
+    Rule: MP.
+
+  \end{defin}
+
+  We have the deduction theorem and necessitation rule which is derivable.
+
+  V. Krupski and  A. Yatmanov provided the sequential calculus for IEL and proved that this calculus is
+  PSPACE-complete \cite{Krupski}.
+
+  It's not difficult to see that modal axioms in $IEL^{-}$ and types of the methods of Applicative class in
+  Haskell-like languages (which is described below) are syntactically similar and we are going to show that
+  this coincidence has a
+  non-trivial computational meaning.
+
+  Functional programming languages such as Haskell \cite{Haskell}, Idris \cite{Idris}, Purescript \cite{Purs}
+  or Elm \cite{Elm} have special type classes\footnote{Type class in Haskell is a general interface for
+  special group of datatypes.} for calculations with container types like \verb"Functor" and
+  \verb"Applicative" \footnote{Reader may read more about container types in the Haskell standard library documentation\cite{Base} or in the next one textbook
+  \cite{Miran}}:
+
+  \begin{lstlisting}[language=Haskell]
+    class Functor f where
+      fmap :: (a -> b) -> f a -> f b
+
+    class Functor f => Applicative f where
+      pure :: a -> f a
+      (<*>) :: f (a -> b) -> f a -> f b
+  \end{lstlisting}
+
+  By \emph{container} (or \emph{computational context}) type we mean some type-operator $f$, where $f$ is a
+  ``function'' from $*$ to $*$: type operator takes a simple type (which has kind $*$) and returns another
+  simple type type with kind \verb"*". For more detailed description of the type system with kinds used in
+  Haskell see \cite{Morten}.
+
+
+  The main goal of our research is a relationship between intuitionistic epistemic logic $IEL^{-}$ and
+  functional programming with effects. We show that relationship by building the type system (which is called $\lambda_{\textbf{K}}$) which is Curry-Howard isomorphic to $IEL^{-}$. So we will consider $\textbf{K}$-modality as an arbitrary applicative functor.
+
+  $\lambda K$ consists of the rules for simply typed lambda-calculus and special typing rules for
+  lifting types into the applicative functor $\textbf{K}$. We assume that our type system will
+  axiomatize the simplest case of computation with effects with one container. We provide proof-theoretical
+  view on
+  this kind of computations in functional programming and prove strong normalization and confluence.
+
+  \section{Typed lambda-calculus based on IEL$^{-}$}
+
+  At first we define the natural deduction for IEL$^{-}$ with $\textbf{K}$-modality and binary connectives
+  $\to$ and $\land$ (we call that calculus NIEL$^{-}_{\land, \to}$):
+
+  \begin{defin} Natural deduction NIEL$^{-}_{\land, \to}$ for IEL$^{-}$ with $\to$ and $\wedge$:
+
+  \begin{center}
+  \begin{prooftree}
+  \AxiomC{}
+  \RightLabel{\scriptsize{ax}}
+  \UnaryInfC{$\Gamma , \alpha \vdash \alpha$}
+  \end{prooftree}
+  \end{center}
+
+  \begin{minipage}{0.5\textwidth}
+    \begin{flushleft}
+  	\begin{prooftree}
+  	\AxiomC{$\Gamma, \alpha \vdash \beta$}
+  	\RightLabel{$\rightarrow_i$}
+  	\UnaryInfC{$\Gamma \vdash \alpha \to \beta$}
+    	\end{prooftree}
+
+  	\begin{prooftree}
+  	\AxiomC{ $\Gamma \vdash \alpha$ }
+  	\AxiomC{ $\Gamma \vdash \beta$ }
+  	\RightLabel{$\land_i$}
+  	\BinaryInfC{$\Gamma \vdash \alpha \land \beta$}
+  	\end{prooftree}
+
+  	\begin{prooftree}
+    	\AxiomC{$\Gamma \vdash \alpha$}
+    	\RightLabel{$\textbf{K}_I$}
+    	\UnaryInfC{$\Gamma \vdash \textbf{K}\alpha$}
+  \end{prooftree}
+    \end{flushleft}
+  \end{minipage}
+  \begin{minipage}{0.5\textwidth}
+    \begin{flushright}
+    	\begin{prooftree}
+  	\AxiomC{$\Gamma \vdash \alpha \to \beta$}
+  	\AxiomC{$\Gamma \vdash \alpha$}
+  	\RightLabel{$\rightarrow_i$}
+  	\BinaryInfC{$\Gamma \vdash \beta$}
+    	\end{prooftree}
+
+  	\begin{prooftree}
+  	\AxiomC{ $\Gamma \vdash \alpha_1 \land \alpha_2$ }
+  	\RightLabel{$\land_e, i \in \{ 1, 2 \}$}
+  	\UnaryInfC{$\Gamma \vdash \alpha_i$}
+  	\end{prooftree}
+
+  	\begin{prooftree}
+    	\AxiomC{$\Gamma \vdash \textbf{K}(\alpha \to \beta)$}
+    	\AxiomC{$\Gamma \vdash \textbf{K}\alpha$}
+    	\RightLabel{$\textbf{K}_{MP}$}
+          \BinaryInfC{$\Gamma \vdash \textbf{K}\beta$}
+  	\end{prooftree}
+    \end{flushright}
+  \end{minipage}
+  \end{defin}
+
+  \vspace{\baselineskip}
+
+  \begin{lemma}
+    NIEL$^{-}_{\land, \to} \vdash \alpha \Rightarrow$ IEL$^{-}$ $\vdash \alpha$.
+  \end{lemma}
+
+  \begin{proof}
+Induction on the derivation.
+
+  \vspace{\baselineskip}
+
+Let us consider cases with modality.
+
+\vspace{\baselineskip}
+
+1) If $\Gamma \vdash_{NIEL^{-}_{\land, \to}} \alpha$, then $IEL^{-} \vdash \wedge \Gamma \rightarrow \textbf{K}\alpha$.
+
+$\begin{array}{lll}
+(1)& \wedge \Gamma \rightarrow \alpha & \text{assumption}\\
+(2)& \alpha \rightarrow \textbf{K}\alpha &\text{co-reflection.}\\
+(3)& (\wedge \Gamma \rightarrow \alpha) \rightarrow ((\alpha \rightarrow \textbf{K}\alpha) \rightarrow (\wedge \Gamma \rightarrow \textbf{K}\alpha))&\text{IPC theorem}\\
+(4) &(\alpha \rightarrow \textbf{K}\alpha) \rightarrow (\wedge \Gamma \rightarrow \textbf{K}\alpha) &\text{1, 3, MP}\\
+(5) &\wedge \Gamma \rightarrow \textbf{K}\alpha &\text{2,4, MP}\\
+\end{array}$
+
+\vspace{\baselineskip}
+
+2) If $\Gamma \vdash_{NIEL^{-}_{\land, \to}} \textbf{K}(\alpha \to \beta)$ and $\Gamma \vdash_{NIEL^{-}_{\land, \to}} \textbf{K}\alpha$, then $IEL^{-} \vdash \wedge \Gamma \rightarrow \textbf{K}\beta$.
+
+$\begin{array}{lll}
+(1)& \Gamma \vdash_{NIEL^{-}_{\land, \to}} \textbf{K}(\alpha \to \beta) & \text{condition}\\
+(2)& \Gamma \vdash_{NIEL^{-}_{\land, \to}} \textbf{K}\alpha & \text{condition}\\
+(3)& \Gamma \vdash_{NIEL^{-}_{\land, \to}} \textbf{K}(\alpha \to \beta) \land \textbf{K}\alpha & \land_i \\
+(4)& \wedge \Gamma \rightarrow \textbf{K}(\alpha \to \beta) \land \textbf{K}\alpha & \text{induction
+hypothesis} \\
+(5)& (\textbf{K}(\alpha \rightarrow \beta) \rightarrow (\textbf{K}\alpha \to \textbf{K}\beta)) \rightarrow
+((\textbf{K}(\alpha \rightarrow \beta) \land \textbf{K}\alpha) \rightarrow \textbf{K}\beta)& \text{IPC
+theorem} \\
+(6)&\textbf{K}(\alpha \rightarrow \beta) \rightarrow (\textbf{K}\alpha \to \textbf{K}\beta)&
+\text{normality}\\
+(7)&(\textbf{K}(\alpha \rightarrow \beta) \land \textbf{K}\alpha) \rightarrow \textbf{K}\beta)& \text{5,6,
+MP}\\
+(8)&(\wedge \Gamma \rightarrow \textbf{K}(\alpha \to \beta) \land \textbf{K}\alpha) \rightarrow & \\
+&\quad\rightarrow ((\textbf{K}(\alpha \rightarrow \beta) \land \textbf{K}\alpha) \rightarrow
+\textbf{K}\beta) \rightarrow
+(\wedge \Gamma \rightarrow \textbf{K}\beta))& \text{IPC theorem} \\
+(9) &(\textbf{K}(\alpha \rightarrow \beta) \land \textbf{K}\alpha) \rightarrow \textbf{K}\beta) \rightarrow
+(\wedge \Gamma \rightarrow \textbf{K}\beta)& \text{4, 8, MP} \\
+(10) &\wedge \Gamma \rightarrow \textbf{K}\beta& \text{7, 9, MP}
+\end{array}$
+
+  \end{proof}
+
+  \vspace{\baselineskip}
+
+  At the next step we build the typed lambda-calculus based on NIEL$^{-}_{\land, \to}$ by proof-assingment in
+  rules.
+
+  At first, we define lambda-terms and types for this lambda-calculus.
+
+  \vspace{\baselineskip}
+
+  \begin{defin} The set of terms:
+
+  Let $\mathbb{V}$ be the set of variables. The set $\Lambda_{\textbf{K}}$ of terms is defined by the grammar:
+  \begin{equation}
+    \Lambda_{\textbf{K}} ::= \mathbb{V} \: | \:  (\lambda \Lambda.\Lambda_{\textbf{K}}) \: | \:
+    (\Lambda_{\textbf{K}}\Lambda_{\textbf{K}}) \: | \: (\Lambda_{\textbf{K}} , \Lambda_{\textbf{K}}) \: | \:
+    (\pi_i \Lambda_{\textbf{K}}) \:
+    | \: ({\bf pure \: } \: \Lambda_{\textbf{K}}) \: | \: (\Lambda_{\textbf{K}} \star
+    \Lambda_{\textbf{K}})
+  \end{equation}
+  where $i \in \{ 1, 2 \}$.
+  \end{defin}
+
+  \begin{defin} The set of types:
+
+  Let $\mathbb{T}$ be the set of atomic types. The set $\mathbb{T}_{\textbf{K}}$ of types with applicative
+  functor
+  $\textbf{K}$ is generated by the grammar:
+  \begin{equation}
+    \mathbb{T}_{\textbf{K}} ::= \mathbb{T} \: | \: (\mathbb{T}_{\textbf{K}} \to \mathbb{T}_{\textbf{K}}) \: |
+    \:
+    (\mathbb{T}_{\textbf{K}} \times \mathbb{T}_{\textbf{K}}) \: | \: (\textbf{K}\mathbb{T}_{\textbf{K}})
+  \end{equation}
+  \end{defin}
+
+  Context, domain of context and range of context are defined standardly \cite{Neder}\cite{Morten}.
+
+  Our type system is based on the Curry-style typing rules:
+
+  \begin{defin} Modal typed lambda calculus $\lambda \textbf{K}$ based on NIEL$^{-}_{\land, \to}$:
+
+  \begin{center}
+  \begin{prooftree}
+  \AxiomC{$ $}
+  \RightLabel{\scriptsize{ax}}
+  \UnaryInfC{$\Gamma , x : \alpha \vdash x : \alpha$}
+  \end{prooftree}
+  \end{center}
+
+  \begin{minipage}{0.5\textwidth}
+    \begin{flushleft}
+  \begin{prooftree}
+  \AxiomC{$\Gamma, x : \alpha \vdash M : \beta$}
+  \RightLabel{$\rightarrow_i$}
+  \UnaryInfC{$\Gamma \vdash \lambda x. M : \alpha \to \beta$}
+  \end{prooftree}
+
+  \begin{prooftree}
+  \AxiomC{ $\Gamma \vdash x : \alpha$ }
+  \AxiomC{ $\Gamma \vdash y : \beta$ }
+  \RightLabel{$\times_i$}
+  \BinaryInfC{$\Gamma \vdash (x, y) : \alpha \times \beta$}
+  \end{prooftree}
+
+  \begin{prooftree}
+    \AxiomC{$\Gamma \vdash x : \alpha$}
+    \RightLabel{$\textbf{K}_I$}
+    \UnaryInfC{$\Gamma \vdash {\bf pure \: } \: x : \textbf{K}\alpha $}
+  \end{prooftree}
+    \end{flushleft}
+  \end{minipage}
+
+  \begin{minipage}{0.5\textwidth}
+    \begin{flushright}
+  \begin{prooftree}
+  \AxiomC{$\Gamma \vdash f : \alpha \to \beta$}
+  \AxiomC{$\Gamma \vdash x : \alpha$}
+  \RightLabel{$\rightarrow_e$}
+  \BinaryInfC{$\Gamma \vdash fx : \beta$}
+  \end{prooftree}
+
+  \begin{prooftree}
+  \AxiomC{ $\Gamma \vdash p : \alpha_1 \times \alpha_2$ }
+  \RightLabel{$\times_e$, $i \in \{ 1, 2 \}$}
+  \UnaryInfC{$\Gamma \vdash \pi_i p : \alpha_i$}
+  \end{prooftree}
+
+  \begin{prooftree}
+    \AxiomC{$\Gamma \vdash f : \textbf{K}(\alpha \to \beta)$}
+    \AxiomC{$\Gamma \vdash x : \textbf{K}\alpha$}
+    \RightLabel{$\textbf{K}_{app}$}
+    \BinaryInfC{$\Gamma \vdash f \star x : \textbf{K}\beta$}
+  \end{prooftree}
+    \end{flushright}
+  \end{minipage}
+  \end{defin}
+
+  $\textbf{K}_I$-typing rule is the same as $\bigcirc$-introduction in lax logic (also known as monadic
+  metalanguage \cite{Lax}) and in typed lambda-calculus which is derived by proof-assignment for lax-logic
+  proofs.
+  $\textbf{K}_I$ allows to inject an object of type $\alpha$ into the functor. $\textbf{K}_I$  reflects the
+  Haskell method {\bf pure} for Applicative class. It plays the same role as the {\bf return} method in Monad class.
+
+  $\textbf{K}_{app}$ is a typing rule for lifted application. This rule is similar to
+  $\rightarrow_e$-rule, therefore we introduce the infix operator $\star$ for lifted application.
+
+  \begin{con}
+
+  \emph{$\star$ is a left-associative, so $M \star N \star P = (M \star N) \star P$,  unless otherwise specified.}
+
+  \end{con}
+
+  \vspace{\baselineskip}
+
+Here are some examples of derivation trees.
+
+  \begin{prooftree}
+  \AxiomC{$x : \alpha \vdash x : \alpha$}
+  \RightLabel{$\textbf{K}_I$}
+  \UnaryInfC{$x : \alpha \vdash {\bf pure \: } x : \textbf{K} \alpha$}
+  \RightLabel{$\rightarrow_i$}
+  \UnaryInfC{$\vdash (\lambda x. {\bf pure \: } x) : \alpha \to \textbf{K}\alpha$}
+  \end{prooftree}
+
+
+  \begin{prooftree}
+    \AxiomC{$f : \textbf{K}(\alpha \to \beta) \vdash f : \textbf{K}(\alpha \to \beta)$}
+    \AxiomC{$x : \textbf{K}\alpha \vdash x : \textbf{K}\alpha$}
+    \RightLabel{$\textbf{K}_{app}$}
+    \BinaryInfC{$f : \textbf{K}(\alpha \to \beta), x : \textbf{K}\alpha \vdash f \star x :
+    \textbf{K}\beta$}
+    \RightLabel{$\rightarrow_i$}
+    \UnaryInfC{$f : \textbf{K}(\alpha \to \beta) \vdash \lambda x. f \star x : \textbf{K}\alpha \to \textbf{K}\beta$}
+    \RightLabel{$\rightarrow_i$}
+    \UnaryInfC{$\vdash \lambda f. \lambda x. f \star x: \textbf{K}(\alpha \to \beta) \to
+    \textbf{K}\alpha \to \textbf{K}\beta$}
+  \end{prooftree}
+
+
+
+
+  \vspace{\baselineskip}
+
+  Now we define free variables and substitutions. $\beta$-reduction, multi-step $\beta$-reduction and $\beta$-equality are defined standardly:
+
+  \begin{defin} Set $FV(M)$ of free variables for arbitrary term $M$:
+
+  1) $FV(x) = \{ x \}$;
+
+  2) $FV(\lambda x. M) = FV(M) \setminus \{ x\}$;
+
+  3) $FV(M N) = FV(M) \cup FV(N);$
+
+  4) $FV((M,N)) = FV(M) \cup FV(N)$;
+
+  5) $FV(\pi_i p) \subseteq FV(p)$, $i \in \{ 1, 2\}$;
+
+  6) $FV(\text{pure } M) = FV(M)$;
+
+  7) $FV(M \star N) = FV(M) \cup FV(N)$.
+  \end{defin}
+
+  \begin{defin} Substitution:
+
+  1) $x [x := N] = N$, $x [y := N] = x$;
+
+  2) $(M N) [x := N] = M[x := N] N [x := N]$;
+
+  3) $(\lambda x. M) [x := N] = \lambda x. M [x := N]$;
+
+  4) $(M, N)[x := P] = (M[x := P], N [x := P])$;
+
+  5) $(\pi_i M) [x := P] = \pi_i (M[x := P])$, $i \in \{ 1, 2\}$;
+
+  6) $({\bf pure \: } M) [x := P] = {\bf pure \: } (M [x := P])$;
+
+  7) $(M \star N) [x := P] = (M [x := P]) \star (N [x := P])$.
+  \end{defin}
+
+  In $\lambda \textbf{K}$ we have the following computational rules. We will define them for terms with
+  ${\bf pure \: }$ or $\star$. Reduction rules for $(,)$ and $\pi_i$ are described, for example, in
+  \cite{Pierce}.
+
+  \begin{defin} $\beta$-reduction rules for \emph{$\lambda \textbf{K}$}.
+
+  1) ${\bf pure \: } (\lambda x. x) \star M \rightarrow_{\beta} M$;
+
+  2) ${\bf pure \: } (\lambda f g x. f (g x)) \star M \star N \star P \rightarrow_{\beta} M \star (N \star
+  P)$;
+
+  3) $({\bf pure \: } M) \star (\text{pure } N) \rightarrow_{\beta} \text{pure } (M N)$;
+
+  4) $M \star {\bf pure \: } N \rightarrow_{\beta} (\lambda f. f N) \star M$;
+
+  5) $M_1 \rightarrow_{\beta} M_2 \Leftrightarrow {\bf pure \: } \: M_1 \rightarrow_{\beta} {\bf pure \: } \: M_2$;
+
+  6) $M_1 \rightarrow_{\beta} M_2 \Rightarrow M_1 \star N \rightarrow_{\beta} M_2 \star N$;
+
+  7) $N_1 \rightarrow_{\beta} N_2 \Rightarrow M \star N_1 \rightarrow_{\beta} M \star N_2$;
+  \end{defin}
+
+  In Haskell any implementation of the Applicative instance should preserve the laws proposed by McBride and
+  Paterson \cite{McP}. We preserve these laws by the introduction of corresponding reduction rules (rules
+  (1)-(4)). These rules will be called respectively identity rule, composition rule, homomorphism rule and
+  interchange rule.
+
+  Rules (5)-(7) are would be useful for strong normalization proof.
+
+
+
+  \section{Basic lemmas}
+
+  Now we will prove standard lemmas for contexts in type systems\footnote{We will not prove cases with
+  $\to$-constructor, they are proved standardly in the same lemmas for simply typed lambda calculus, for
+  example see \cite{Neder}\cite{Morten}\cite{Girard}. We will consider only modal cases}:
+
+  \begin{defin} The domain of a context $\Gamma$:
+
+  Let $\Gamma = \{ x_1 : \alpha_1, ..., x_n : \alpha_n \}$. Then the domain of $\Gamma$, or $dom(\Gamma)$, is a set $\{  x_1, ..., x_n\}$.
+
+  \end{defin}
+
+  \begin{lemma}
+
+  If $\Gamma \vdash M : \alpha$, then $FV(M) \subseteq dom(\Gamma)$
+
+  \end{lemma}
+
+  \begin{proof}
+
+  Induction on the derivation of $\Gamma \vdash M : \alpha$.
+
+  \end{proof}
+
+  \vspace{\baselineskip}
+
+  \begin{lemma} Generation for $\lambda \textbf{K}$.
+
+  1) $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alpha$ implies that $\Gamma \vdash M : \alpha$;
+
+  2) $\Gamma \vdash M \star N : \textbf{K}\beta$ implies that $\Gamma \vdash M : \textbf{K}(\alpha \to \beta)$ and
+  $\Gamma \vdash N : \textbf{K}\alpha$.
+  \end{lemma}
+
+  \begin{proof}
+
+  $ $
+
+  Simple induction on the derivation of $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alpha$ and $\Gamma \vdash M \star N : \textbf{K}(\alpha \to \beta)$ respectively.
+  \end{proof}
+
+  \vspace{\baselineskip}
+
+  The next one lemma allows that weakening structural rule is admissable.
+
+  \begin{lemma} Weakening for $\lambda \textbf{K}$.
+
+  Let $\Gamma \vdash M : \alpha$ and $\Gamma \subseteq \Delta$, then $\Delta \vdash M : \alpha$.
+
+  \end{lemma}
+
+  \begin{proof}
+
+  $ $
+
+  Induction on derivation of $\Gamma \vdash M : \alpha$. Let us assume $\Gamma \subseteq \Delta$.
+
+  1) Let $\Gamma \vdash x : \alpha$, such that $\Gamma = \Delta, x : \alpha$ and $\Theta \subseteq \Gamma$.
+  Let $\Sigma = \Theta \setminus \Gamma$, or, which is the same, $\Sigma = \Theta \setminus \Delta, x :
+  \alpha$, then $\Sigma,
+  \Delta, x : \alpha \vdash x : \alpha$, or, $\Theta \vdash x : \alpha$.
+
+  2) Let $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alpha$ and $\Gamma \subseteq \Theta$.
+
+  If $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alpha$, then $\Gamma \vdash M : \alpha$ by generation and, by
+  hypothesis, $\Theta \vdash M : \alpha$, so $\Theta \vdash {\bf pure \: } M : \textbf{K}\alpha$ by applying
+  $\textbf{K}_I$-rule.
+
+  3) Let $\Gamma \vdash M \star N : \textbf{K}\beta$. So $\Gamma \vdash M : \textbf{K}(\alpha \to \beta)$ and $\Gamma
+  \vdash N : \textbf{K}\alpha$. By hypothesis $\Delta \vdash M : \textbf{K}(\alpha \to \beta)$ and $\Delta \vdash N :
+  \textbf{K}\alpha$. Then $\Delta \vdash M \star N : \textbf{K}\beta$.
+
+  \end{proof}
+
+  \begin{lemma} Considering for $\lambda \textbf{K}$.
+
+  If $\Gamma \vdash M : \alpha$, then $\Gamma \uparrow FV(M) \vdash M : \alpha$, where $\Gamma \uparrow
+  FV(M)$ is a subcontext of $\Gamma$, such that $dom(\Gamma \uparrow FV(M)) = dom(\Gamma) \cap FV(M)$.
+
+  \end{lemma}
+
+  \begin{proof}
+
+  Induction by derivation. We consider the base of induction and the case with $\textbf{K}_{app}$. The rest
+  cases are
+  proven by the same way.
+
+  $ $
+
+  1) Let $\Gamma \vdash x : \alpha$, where $\Gamma = \Delta, x : \alpha$, $x \in \mathbb{V}$.
+
+  $FV(x) = \{ x\}$, then $dom(\Gamma) \cap \{ x\} = \{ x\}. $ So $(\Delta, x : \alpha) \uparrow FV(x) = \{ x
+  : \alpha\}$, then $x : \alpha \vdash x : \alpha$ by axiom.
+
+  2) Let $\Gamma \vdash M \star N : \textbf{K}\beta$.
+
+  By generation $\Gamma \vdash M : \textbf{K}(\alpha \to \beta)$ and $\Gamma \vdash N : \textbf{K}\alpha$.
+
+  By induction hypothesis $\Gamma \uparrow FV(M) \vdash M : \textbf{K}(\alpha \to \beta)$ and $\Gamma
+  \uparrow FV(N) \vdash N : \textbf{K}\beta$.
+
+  But $\Gamma \uparrow FV(M) \subseteq \Gamma \uparrow FV(M \star N)$ and $\Gamma
+  \uparrow FV(N) \subseteq \Gamma \uparrow FV(M \star N)$, so $\Gamma \uparrow FV(M \star N) \vdash M :
+  \textbf{K}(\alpha \to \beta)$ and $\Gamma \uparrow FV(M \star N) \vdash N : \textbf{K}\alpha$ by weakening.
+
+  Then $\Gamma \uparrow FV(M \star N) \vdash M \star N : \textbf{K}\beta$ by $\textbf{K}_{app}$.
+
+  \end{proof}
+
+  \vspace{\baselineskip}
+
+  \begin{lemma}
+
+  If $\Gamma, x : \alpha \vdash M : \beta$  and $\Gamma \vdash N : \alpha$, then $\Gamma \vdash (M [x := N]) :
+  \beta $
+
+  \end{lemma}
+
+  \begin{proof}
+
+  $ $
+
+  1) Let $\Gamma, x : \alpha \vdash {\bf pure \: } M : \textbf{K}\beta$ and $\Gamma \vdash N : \alpha$.
+
+  If $\Gamma, x : \alpha \vdash {\bf pure \: } M : \textbf{K}\beta$, then, by generation, $\Gamma, x : A \vdash
+  M : \beta$. So, by induction hypothesis, $\Gamma \vdash (M [x := N]) : \beta $, then $\Gamma \vdash
+  {\bf pure \: } (M [x := N]) : \textbf{K}\beta$ by $\textbf{K}_I$, but ${\bf pure \: } (M [x := N]) =
+  ({\bf pure \: } M) (M [x := N])$
+  by substitution definition, so $\Gamma \vdash ({\bf pure \: } M) (M [x := N]) : \textbf{K}\beta$
+
+  2) Let $\Gamma, x : \gamma \vdash M \star N : \textbf{K}\beta$, and $\Gamma \vdash y : \gamma$.
+
+  So, by generation, $\Gamma, x : \gamma \vdash M : \textbf{K}(\alpha \to \beta)$ and $\Gamma, x : \gamma
+  \vdash N : \textbf{K}\alpha$.
+
+  Hence $\Gamma, x : \gamma \vdash (M [x := y]) : \textbf{K}(\alpha \to \beta)$ and
+  $\Gamma \vdash (N [x := y]): \textbf{K}\alpha$ by hypothesis.
+
+  So $\Gamma \vdash (M [x := y]) \star (N [x := y]) : \textbf{K}\beta$, or, $\Gamma \vdash (M \star N) ([x
+  := y]) : \textbf{K}\beta$.
+
+  \end{proof}
+
+  \vspace{\baselineskip}
+
+  \begin{theorem} Subject reduction
+
+  $ $
+
+  Let $\Gamma \vdash M : \alpha$ and $M \twoheadrightarrow_{\beta} N$, then $\Gamma \vdash N : \alpha$
+
+  \end{theorem}
+
+  We consider cases with reduction rules which are applicative laws. The general statement for $\twoheadrightarrow_{\beta}$ follows from transitivity of multi-step $\beta$-reduction.
+
+  \begin{proof}
+
+  $ $
+
+\vspace{\baselineskip}
+
+  1) Let $\Gamma \vdash {\bf pure \: } (\lambda x. x) \star M : \textbf{K}\alpha$. Then $\Gamma \vdash
+  {\bf pure \: } (\lambda x.x) : \textbf{K}(\alpha \to \alpha)$ and $\Gamma \vdash M : \textbf{K}\alpha$ by
+  generation. Then $\Gamma \vdash M : \textbf{K}\alpha$ trivially.
+
+\vspace{\baselineskip}
+
+  2) Let $\Gamma \vdash {\bf pure \: }(\lambda f g x. f (g x)) \star M \star N \star P : \textbf{K}\gamma$.
+
+  Then $\Gamma \vdash {\bf pure \: } (\lambda f g x. f (g x)) : \textbf{K}((\beta \to \gamma) \to (\alpha \to \beta)
+  \to \alpha \to \gamma)$, $\Gamma \vdash M : \textbf{K}(\beta \to \gamma)$, $\Gamma \vdash N :
+  \textbf{K}(\alpha \to \beta)$ and $\Gamma \vdash P : \textbf{K}\alpha$ by generation.
+
+  If $\Gamma \vdash N : \textbf{K}(\alpha \to \beta)$ and $\Gamma \vdash P : \textbf{K}\alpha$, then $\Gamma
+  \vdash N \star P : \textbf{K}\beta$ by $\textbf{K}_{app}$.
+
+  Hence, if $\Gamma \vdash M : \textbf{K}(\beta \to \gamma)$, then $\Gamma \vdash M \star (N \star P) :
+  \textbf{K}\gamma$ by $\textbf{K}_{app}$.
+
+\vspace{\baselineskip}
+
+  3) Let $\Gamma \vdash ({\bf pure \: } M) \star ({\bf pure \: } N) : \textbf{K}\beta$. Then $\Gamma \vdash
+  {\bf pure \: } M : \textbf{K}(\alpha \to \beta)$ and $\Gamma \vdash {\bf pure \: } N : \textbf{K}\alpha$ by
+  generation. Moreover, $\Gamma \vdash M : \alpha \to \beta$ and $\Gamma \vdash N : \alpha$.
+
+  Then $\Gamma \vdash M N : \beta$ by application.
+
+  Hence, $\Gamma \vdash {\bf pure \: } (M N) : \textbf{K}\beta$ by $K_I$.
+
+\vspace{\baselineskip}
+
+  4) Let $\Gamma \vdash M \star ({\bf pure \: } N) : \textbf{K}\beta$.
+
+  Then $\Gamma \vdash M : \textbf{K}(\alpha \to \beta)$ and $\Gamma \vdash {\bf pure \: } N : \textbf{K}\alpha$.
+
+  Moreover, $\Gamma \vdash N : \alpha$ by generation.
+
+  Let $\Gamma, f : \alpha \to \beta \vdash f : \alpha \to \beta$ and $\Gamma, f : \alpha \to \beta \vdash N :
+  \alpha$ by weakening.
+
+  So $\Gamma, f : \alpha \to \beta \vdash f N : \beta$ by application, so $\Gamma \vdash \lambda f. f N :
+  (\alpha \to \beta) \to \beta$ by abstraction.
+
+  Then $\Gamma \vdash {\bf pure \: } (\lambda f. f N) : \textbf{K}((\alpha \to \beta) \to \beta)$ by $\textbf{K}_I$.
+
+  Hence, $\Gamma \vdash {\bf pure \: } (\lambda f. f N) \star M : \textbf{K}\beta$.
+
+  \end{proof}
+
+
+  \vspace{\baselineskip}
+
+
+\section{Strong normalization}
+
+  We modify and apply Tait's technique of logical relation for modalities. Strong normalization proof with Tait's method for simply typed lambda calculus is described here \cite{Pierce}.
+
+
+  \begin{theorem}
+
+    Let $M \in \Lambda_{\textbf{K}}$, then any sequence of reduction $M \rightarrow_{\beta} M_1 \dots$ terminates.
+
+  \end{theorem}
+
+  \begin{proof}
+
+  We build the smallest of subset of strongly normalazing terms of modal types and show that an arbitrary
+  term belongs to this subset.
+
+  \begin{defin} The set of strongly computable terms of type $\phi \in \mathbb{T}_{\textbf{K}}$, $SC_{\phi}$:
+
+  \begin{itemize}
+  \item Let $\phi = \textbf{K}\alpha$ and $\alpha \in \mathbb{T}$ , then:
+  \begin{equation}
+  SC_{\textbf{K}\alpha} = \{ M : \textbf{K}\alpha \: | \: \text{$M$ is strongly normalizing} \}
+  \end{equation}
+
+  \item Let $\phi = \textbf{K}(\tau \to \psi)$ and $\tau, \psi \in \mathbb{T}_{\textbf{K}}$, then:
+  \begin{equation}
+  SC_{\textbf{K}(\tau \to \psi)} = \{ M : \textbf{K}(\tau \to \psi) \: | \: \forall N \in SC_{\textbf{K}\tau}, M \star N \in SC_{\textbf{K}\psi}\}
+  \end{equation}
+
+  \item Let $\phi = \textbf{K}(\tau_1 \times \tau_2)$ and $\tau_1, \tau_2 \in \mathbb{T}_{\textbf{K}}$, then:
+  \begin{equation}
+  SC_{\textbf{K}(\tau_1 \times \tau_2)} = \{ P : \textbf{K}(\tau_1 \times \tau_2) \: |
+  \: {\bf pure \:} (\lambda x. \pi_i x) \star P \in SC_{\textbf{K}\tau_i}, i \in \{1,2\} \}
+  \end{equation}
+  \end{itemize}
+  \end{defin}
+
+  \begin{lemma}
+
+  $ $
+
+  If $M \in SC_{\alpha}$, then $M$ is strongly normalizing.
+
+  \end{lemma}
+
+  \begin{proof}
+
+$ $
+
+  1) If $M \in SC_{{\bf K} \alpha}$ and $\alpha \in \mathbb{T}$, then $M$ is strongly normalizing by the
+  definition of $SC_{{\bf K} \alpha}$.
+
+  2) Let $M \in SC_{\textbf{K}(\tau \to \psi)}$, so by every $N \in SC_{\textbf{K}\tau}$,
+  $M \star N \in SC_{\textbf{K}\psi}$, which is strongly normalizing by hypothesis. So $M$ is
+  strongly normalizing.
+
+  3) Let $M \in SC_{\textbf{K}(\tau_1 \times \tau_2)}$, so ${\bf pure \:} (\lambda x. \pi_i x) \star M \in
+  SC_{\textbf{K}\tau_i}$, $i \in \{ 1,2 \}$, which are strongly normalizing. So $M$ is
+  strongly normalizing.
+
+  \end{proof}
+
+
+  \begin{lemma}
+
+  $ $
+
+  Let $M \rightarrow_{\beta} M'$ and $M \in SC_{\alpha}$, then $M' \in SC_{\alpha}$.
+
+  \end{lemma}
+
+
+  \begin{proof}
+
+$ $
+
+  1) Let $M \rightarrow_{\beta} M'$ and $M \in SC_{\textbf{K}\alpha}$, where $\alpha \in \mathbb{T}$.
+
+  $M$ has the longest reduction path (which we denote as $p(M)$). So $p(M') < p(M)$, then $M' \in SC_{\textbf{K}\alpha}$.
+
+  2) Let $M \in SC_{\textbf{K}(\alpha \to \beta)}$ and $M \rightarrow_{\beta} M'$. Let $N \in
+  SC_{\textbf{K}\alpha}$. So $M \star N \in SC_{\textbf{K}\beta}$.
+
+  If $M \rightarrow_{\beta} M'$, then $M \star N \rightarrow_{\beta} M' \star N$ by reduction
+  rule, so $M' \star N \in SC_{\textbf{K}\beta}$ and $M' \in SC_{\textbf{K}(\alpha \to \beta)}$ by
+  hypothesis.
+
+  3) Let $M \in SC_{\textbf{K}(\tau_1 \times \tau_2)}$ and $M \rightarrow_{\beta} M'$.
+
+  So ${\bf pure \: } (\lambda x. \pi_i x) \star M \rightarrow_{\beta} {\bf pure \: } (\lambda x. \pi_i x)
+  \star M'$, $i \in \{ 1, 2 \}$ by reduction rule. So ${\bf pure \: } (\lambda x. \pi_i x) \star M' \in
+  SC_{\textbf{K} \tau_i }$ and $M' \in SC_{\textbf{K}(\tau_1 \times \tau_2)}$.
+
+  \end{proof}
+
+  \begin{defin} Neutral term:
+
+  We define a term $M$ to be neutral if it has of the next forms:
+
+  1) $M = x$, where $x \in \mathbb{V}$;
+
+  2) $M = (P Q)$;
+
+  3) $M = \pi_i M$, $i \in \{ 1,2 \}$;
+
+  4) $M = P \star Q$;
+
+  5) If $M$ is a neutral, then ${\bf pure \: } M$ is a neutral.
+
+  \end{defin}
+
+  \begin{lemma}
+
+  Let $M \rightarrow_{\beta} M'$ and $M' \in SC_{\alpha}$ for every one-step reduction. So if $M'$ is a
+  neutral, then $M \in SC_{\alpha}$.
+
+  \end{lemma}
+
+  \begin{proof}
+
+  $ $
+
+  Simple induction on the structure of $M'$.
+
+  \end{proof}
+
+  \begin{lemma}
+
+  $ $
+
+  Let $x_1 : \phi_1, \dots, x_n : \phi_n \vdash M : \phi$ and for all $i \in \{ 1, \dots, n\}$, $N_i
+  \in SC_{\phi_i}$, then $(M [x_1 := N_1, \dots, x_n := N_n]) \in SC_{\phi}$.
+
+  \end{lemma}
+
+  \begin{proof}
+
+$ $
+
+  1) If $\phi$ is an atomic and $M$ is a variable, then this condition holds straightforwardly.
+
+  2) Let $\Gamma = \{ x_1 : \phi_1, \dots, x_n : \phi_n \}$, $\Gamma \vdash {\bf pure \: } M :
+  \textbf{K}\alpha$ and for all $i \in \{1, \dots, n\}, N_i \in SC_{\phi_i}$.
+
+  Then by $\Gamma \vdash M : \alpha$ by generation
+  and $(M [x_1 := N_1, \dots, x_n := N_n]) \in SC_{\alpha}$ by induction hypothesis.
+
+  Hence, $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alpha$ and $({\bf pure \: } M ([x_1 := N_1, \dots, x_n := N_n])) \in SC_{\textbf{K}\alpha}$ by definition of $SC_{\textbf{K}\alpha}$.
+
+  3) Let $\Gamma = \{ x_1 : \phi_1, \dots, x_n : \phi_n \}$, $\Gamma : \phi_n \vdash M \star P : \textbf{K}\beta$ and forall $i \in \{ 1, \dots, n\}, N_i \in SC_{\phi_i}$.
+
+  Then $\Gamma \vdash M : \textbf{K}(\alpha \to \beta)$, $\Gamma \vdash P : \textbf{K}\alpha$ by generation.
+
+  But by induction hypothesis $M [x_1 := N_1, \dots, x_n := N_n] \in SC_{\textbf{K}(\alpha \to
+  \beta)}$ and $P [x_1 := N_1, \dots, x_n := N_n] \in SC_{\textbf{K}\alpha}$.
+
+  Then, by definition of $SC_{\textbf{K}\beta}$, $((M [x_1 := N_1, \dots, x_n := N_n]) \star (P [x_1 := N_1, \dots, x_n := N_n])) \in SC_{\textbf{K}\beta}$, i.e. $(M \star N ([x_1 := N_1, \dots, x_n := N_n])) \in
+  SC_{\textbf{K}\beta}$.
+  \end{proof}
+
+  \begin{col}
+
+  $ $
+
+  If $\vdash M : \alpha$, then $M$ is strongly normalizing.
+
+  \end{col}
+
+  \begin{proof}
+
+  $M \in SC_{\alpha}$ by Lemma 10, so $M$ is strongly normalizing.
+
+  \end{proof}
+
+
+  \end{proof}
+
+\section{Confluence}
+
+In the confluence proof (below) we treat the cases with ${\bf pure}$ and $\star$ similar to \cite{Baren} \cite{Baren2}.
+
+\begin{defin} Alphabet for the labelled terms:
+
+variables: $x, y, z, x_1, y_1, z_1, ...$;
+
+lambdas: $\lambda, \lambda_0, \lambda_1, \lambda_2, ...$;
+
+constructors for an applicative functor: ${\bf pure \: }, \star$;
+
+parentheses (,).
+
+\end{defin}
+
+\begin{defin} The set of labelled terms $\Lambda^{'}_{\textbf{K}}$ inductively defined as a set of words on the alphabet
+described above:
+
+1) $x \in \Lambda^{'}$;
+
+2) If $M \in \Lambda^{'}_{\textbf{K}}$, then $(\lambda x. M) \in \Lambda^{'}_{\textbf{K}}$;
+
+3) If $M, N \in \Lambda^{'}_{\textbf{K}}$, then $(MN) \in \Lambda^{'}_{\textbf{K}}$;
+
+4) If $M \in \Lambda^{'}_{\textbf{K}}$, then ${\bf pure \: } M \in \Lambda^{'}_{\textbf{K}}$;
+
+5) If $M, N \in \Lambda^{'}_{\textbf{K}}$, then $M \star N \in \Lambda^{'}_{\textbf{K}}$;
+
+6) If $M, N \in \Lambda^{'}_{\textbf{K}}$, then for all $i \in \mathbb{N}$, $((\lambda_i x. M) N) \in
+\Lambda^{'}_{\textbf{K}}$.
+
+\end{defin}
+
+\begin{defin} Erasing map
+
+Erasing map is a map $|.| : \Lambda^{'}_{\textbf{K}} \to \Lambda_{\textbf{K}}$, such that:
+
+1) $|x| = x$;
+
+2) $|(\lambda x. M)| = \lambda x. |M|$;
+
+3) $|(M N)| = |M| |N|$;
+
+4) $|({\bf pure \: } M)| = {\bf pure \: } |M|$;
+
+5) $|M \star N| = |M| \star |N|$;
+
+6) $|((\lambda_i x. M) N)| = (\lambda x. |M|) |N|$
+
+\end{defin}
+
+\begin{ex}
+
+$ $
+
+$|{\bf pure \: } ((\lambda_i x. M) N) \star P| = {\bf pure \: } (\lambda x. |M|) |N|) \star |P|$
+
+\end{ex}
+
+\begin{defin} Substitution for $\Lambda^{'}_{\textbf{K}}$:
+
+1) $x [x := N] = N$, $x [y := N] = x$;
+
+2) $(M N) [x := N] = M[x := N] N [x := N]$;
+
+3) $(\lambda x. M) [x := N] = \lambda x. M [x := N]$;
+
+4) $({\bf pure \: } M) [x := P] = {\bf pure \: } \: (M [x := P])$;
+
+5) $(M \star N) [x := P] = (M [x := P]) \star (N [x := P])$;
+
+6) $(\lambda_i x. M) N [y := P] = (\lambda_i x. M [y := P]) (N [y := P])$.
+
+\end{defin}
+
+\begin{defin} One-step reduction $\rightarrow_{\beta^{'}}$ for $\Lambda^{'}_{\textbf{K}}$:
+
+1) $(\lambda x. M) N \rightarrow_{\beta^{'}} M [x := N]$;
+
+2) ${\bf pure \: } (\lambda x. x) \star M \rightarrow_{\beta^{'}} M$;
+
+3) ${\bf pure \: } (\lambda f g x. f (g x)) \star M \star N \star P \rightarrow_{\beta^{'}} M \star (N \star
+P)$;
+
+4) $({\bf pure \: } M) \star ({\bf pure \: } N) \rightarrow_{\beta^{'}} {\bf pure \: } (M N)$;
+
+5) $M \star ({\bf pure \: } N) \rightarrow_{\beta^{'}} {\bf pure \: } (\lambda f. f N) \star M$;
+
+6) $(\lambda_i x. M) N \rightarrow_{\beta^{'}} M [x := N]$.
+
+
+Multi-step reduction $\twoheadrightarrow_{\beta^{'}}$ is a reflexive-transitive closure of
+$\rightarrow_{\beta^{'}}$.
+
+\end{defin}
+
+\begin{defin} Let us define a map $\phi : \Lambda^{'}_{\textbf{K}} \to \Lambda_{\textbf{K}}$ inductively as
+follows:
+
+1) $\phi(x) = x$;
+
+2) $\phi(M N) = \phi(M)\phi(N)$;
+
+3) $\phi(\lambda x. M) = \lambda x. \phi(M)$;
+
+4) $\phi({\bf pure \: } M) = {\bf pure \: } (\phi(M))$;
+
+5) $\phi(M \star N) = \phi(M) \star \phi(N)$;
+
+6) $\phi((\lambda_i x. M) N) = \phi(M) [x := \phi(N)]$.
+
+\end{defin}
+
+\begin{ex}
+
+$ $
+
+$\phi({\bf pure \: } ((\lambda_i x. M) N) \star P) = {\bf pure \: } (\phi(M) [x := \phi(N)]) \star \phi(P)$
+
+\end{ex}
+
+\begin{lemma}
+
+$ $
+
+1) Let $M, N \in \Lambda^{'}_{\textbf{K}}$ and $|M| \twoheadrightarrow_{\beta} |N|$, then $M \twoheadrightarrow_{\beta^{'}} N$.
+
+2) Let $M, N \in \Lambda^{'}_{\textbf{K}}$ and $M \twoheadrightarrow_{\beta^{'}} N$, then $|M| \twoheadrightarrow_{\beta} |N|$.
+
+\end{lemma}
+
+\begin{proof}
+
+$ $
+
+Induction on the generation of $\twoheadrightarrow_{\beta}$ ($\twoheadrightarrow_{\beta^{'}}$).
+
+1) Let us consider homomorphism rule. The rest applicative reduction rules are considered similary.
+
+Let $({\bf pure \: } M') \star ({\bf pure \: } N'), {\bf pure \: } (M' N') \in \Lambda^{'}_{\textbf{K}}$.
+
+So $|({\bf pure \: } M') \star ({\bf pure \: } N')| = ({\bf pure \: } |M'|) \star ({\bf pure \: } |N'|)$ and
+$|{\bf pure \: } (M' N')| = {\bf pure \: } (|M'| |N'|)$.
+
+By reduction rule, $({\bf pure \: } |M'|) \star ({\bf pure \: } |N'|) \rightarrow_{\beta} {\bf pure \: }
+(|M'||N'|)$.
+
+But $({\bf pure \: } M') \star ({\bf pure \: } N') \rightarrow_{\beta^{'}} {\bf pure \: } (M' N')$ by
+reduction rule for $\rightarrow_{\beta^{'}}$.
+
+  \vspace{\baselineskip}
+
+2) Let us consider interchange rule.
+
+Let $M \star ({\bf pure \: } N), {\bf pure \: } (\lambda f. f N) \star M \in \Lambda^{'}_{\textbf{K}}$ and
+$M \star ({\bf pure \: } N) \rightarrow_{\beta^{'}} {\bf pure \: } (\lambda f. f N) \star M$.
+
+But $|M \star ({\bf pure \: } N)| = |M| \star ({\bf pure \: } |N|)$ and $|{\bf pure \: } (\lambda f. f N)
+\star M| = {\bf pure \: } (\lambda f. f |N|) \star |M|$.
+
+So $|M| \star ({\bf pure \: } |N|) \rightarrow_{\beta} {\bf pure \: } (\lambda f. f |N|) \star |M|$ by
+$\beta$-reduction rule.
+
+\vspace{\baselineskip}
+
+It is easy to see, that the statement for $\twoheadrightarrow_{\beta^{'}}$ and $\twoheadrightarrow_{\beta}$
+immedeatly follows from transitivity of multi-step rediction for labelled terms and for usual terms
+respectively.
+
+\end{proof}
+
+\begin{lemma}
+
+$ $
+
+$\phi(M [x := N]) = \phi(M) [x := \phi(N)]$.
+
+\end{lemma}
+
+\begin{proof} Induction on $M$.
+
+1) Let $M = x$. Then $\phi(x [x := N]) = \phi(N)$.
+
+On the other hand, $\phi(x) [x := \phi(N)] = x [x := \phi(N)] = \phi(N)$.
+
+So $\phi(x [x := N]) = \phi(x) [x := \phi(N)]$.
+
+  \vspace{\baselineskip}
+
+2) Let $M = y$ and $y \neq x$. Then $\phi(y [x := N]) = \phi(y) = y$.
+
+But $\phi(y) [x := \phi(N)] = y [x := \phi(N)] = y$.
+
+Therefore $\phi(y [x := N]) = \phi(y) [x := \phi(N)]$.
+
+  \vspace{\baselineskip}
+
+3) Let $M = {\bf pure \: } M'$. Then $\phi({\bf pure \: } M' [x := N]) = {\bf pure \: } \phi(M' [x := N])$.
+
+By hypothesis, ${\bf pure \: } (\phi(M' [x := N])) = {\bf pure \: } (\phi(M') [x := \phi(N)])$, which is
+$({\bf pure \: } \phi(M')) [x := \phi(N)]$ by substitution definition.
+
+\vspace{\baselineskip}
+
+4) Let $M = M' \star N'$. So $\phi((M' \star N') [x := N])) = \phi(M' [x := N] \star N' [x := N])$.
+
+By definition of $\phi$,
+
+\quad $\phi(M' [x := N] \star N' [x := N]) = \phi(M' [x := N]) \star \phi(N' [x := N])$.
+
+But by induction hypothesis,
+
+\quad $\phi(M' [x := N]) = \phi(M') [x := \phi(N)]$ and
+
+\quad $\phi(N' [x := N]) = \phi(N') [x := \phi(N)]$.
+
+Hence,
+
+\quad $\phi(M' [x := N]) \star \phi(N' [x := N]) = \phi(M') [x := \phi(N)] \star \phi(N') [x := \phi(N)]$.
+
+So,
+
+\quad $\phi(M') [x := \phi(N)] \star \phi(N')[x := \phi(N)] = (\phi(M') \star \phi(N')) [x := \phi(N)]$.
+
+And by definition of $\phi$, $(\phi(M') \star \phi(N')) [x := \phi(N)] = \phi(M' \star N') [x := \phi(N)]$.
+
+\end{proof}
+
+\begin{lemma}
+
+$ $
+
+  Let $M, N \in \Lambda^{'}_{\textbf{K}}$ and $M \twoheadrightarrow_{\beta^{'}} N$, then $\phi(M)
+  \twoheadrightarrow_{\beta} \phi(N)$.
+
+\end{lemma}
+
+\begin{proof}
+
+$ $
+
+1) Let ${\bf pure \: } (\lambda x. x) \star M, M \in \Lambda^{'}_{\textbf{K}}$ and ${\bf pure \: } (\lambda
+x. x) \star M \rightarrow_{\beta^{'}} M$.
+
+But $\phi ({\bf pure \: } (\lambda x. x) \star M) = {\bf pure \: } (\lambda x. x) \star \phi(M)$.\
+
+So ${\bf pure \: } (\lambda x. x) \star \phi(M) \rightarrow_{\beta} \phi(M)$ by $\beta$-reduction rule.
+
+\vspace{\baselineskip}
+
+2) Let ${\bf pure \: } (\lambda f g x. f (g x)) \star M \star N \star P, M \star (N \star P) \in
+\Lambda^{'}_{\textbf{K}}$ and ${\bf pure \: } (\lambda f g x. f (g x)) \star M \star N \star P
+\rightarrow_{\beta^{'}} M \star (N \star P)$.
+
+By the definition of $\phi$:
+
+$\phi({\bf pure \: } (\lambda f g x. f (g x)) \star M \star N \star P) = {\bf pure \: } (\lambda f g x. f (g
+x)) \star \phi(M) \star \phi(N) \star \phi(P)$;
+
+$M \star (N \star P) = \phi(M) \star (\phi(N) \star \phi(P))$.
+
+Hence, ${\bf pure \: } (\lambda f g x. f (g x))
+\star \phi(M) \star \phi(N) \star \phi(P) \rightarrow_{\beta} \phi(M) \star (\phi(N) \star \phi(P))$ by
+$\beta$-reduction rule.
+
+\vspace{\baselineskip}
+
+3) Let $({\bf pure \: } M) \star ({\bf pure \: } N), {\bf pure \: } (M N) \in \Lambda^{'}_{\textbf{K}}$ and
+$({\bf pure \: } M) \star ({\bf pure \: } N) \rightarrow_{\beta} {\bf pure \: } (M N)$.
+
+By the definition of $\phi$:
+
+$\phi(({\bf pure \: } M) \star ({\bf pure \: } N)) = ({\bf pure \: } \phi(M)) \star ({\bf pure \: }
+\phi(N))$;
+
+$\phi({\bf pure \: } (M N)) = {\bf pure \: } (\phi(M) \phi(N))$.
+
+So, by reduction rule, $({\bf pure \: } \phi(M)) \star ({\bf pure \: } \phi(N)) \rightarrow_{\beta} {\bf
+pure \: } (\phi(M) \phi(N))$.
+
+\vspace{\baselineskip}
+
+4) Let $M \star ({\bf pure \: }), {\bf pure \: } (\lambda f. f N) \star M$ and $M \star ({\bf pure \: } N)
+\rightarrow_{\beta^{'}} (\lambda f. f N) \star M$.
+
+$\phi(M \star ({\bf pure \: } N)) = \phi(M) \star ({\bf pure \: } \phi(N))$
+
+$\phi((\lambda f. f N) \star M) = (\lambda f. f \phi(N)) \star \phi(M)$.
+
+So, $\phi(M) \star ({\bf pure \: } \phi(N)) \rightarrow_{\beta} {\bf pure \: } (\lambda f. f \phi(N)) \star
+\phi(M)$.
+\end{proof}
+
+\begin{lemma}
+
+$ $
+
+Let $M \in \Lambda^{'}_{\textbf{K}}$. Then $|M| \twoheadrightarrow_{\beta} \phi(M)$.
+
+\end{lemma}
+
+\begin{proof}
+
+Induction on the structure of $M$.
+
+\end{proof}
+
+\begin{lemma} Strip lemma.
+
+$ $
+
+If $M \rightarrow_{\beta} N$ and $M \twoheadrightarrow_{\beta} P$. Then there exists some term $Q$, such that
+$N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
+
+\end{lemma}
+
+\begin{proof}
+
+  Proof is similar to \cite{Baren} \cite{Baren2}. We build the following diagram
+
+\vspace{\baselineskip}
+
+\xymatrix{
+&&& M \ar[dd]_{\beta} \ar@{->>}[rrr] &&& P \ar@{-->>}[dd]^{\beta} \\
+&&&& N' \ar[ul]^{|.|} \ar[dl]_{\phi} \ar@{-->>}[rrr]^{\beta^{'}} &&& P' \ar[ul]^{|.|} \ar[dl]_{\phi} \\
+&&& N \ar@{-->>}[rrr]_{\beta} &&& Q
+}
+
+\end{proof}
+
+which is commutes by lemmas 11 -- 14.
+
+\begin{theorem} Confluence.
+
+$ $
+
+If $M \twoheadrightarrow_{\beta} N$ and $M \twoheadrightarrow_{\beta} P$. Then there exists some term $Q$,
+such that $N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
+
+\end{theorem}
+
+\begin{proof}
+
+$ $
+
+  By unfolding $M \twoheadrightarrow_{\beta} N$ as the sequence of one-step reductions $M \rightarrow_{\beta}
+  M_1 \rightarrow_{\beta} ... \rightarrow_{\beta} M_n \rightarrow_{\beta} N$ and applying strip lemma on every step.
+
+\end{proof}
+
+  \section{Acknowledgement.}
+
+  Author would like to thank his supervisior
+  V.L.Vasukov, V.N. Krupski for general idea and wise
+  advice, V. de Paiva, V.I. Shalack, A.V. Rodin and M.
+  Taldykin for discussing, critics and consulting.
+
+  \addcontentsline{toc}{section}{References}
+
+  %далее сам список используевой литературы
+  \begin{thebibliography}{}
+
+  \bibitem{Artemov} Artemov S. and Protopopescu T., \/ ``Intuitionistic Epistemic Logic'', \textit{The
+  Review of Symbolic Logic}, 2016, vol. 9, no 2. pp. 266-298.\parskip=1mm
+
+  \bibitem{Krupski} Krupski V. N. and Yatmanov A., \/ ``Sequent Calculus for Intuitionistic Epistemic Logic
+  IEL'', \textit{Logical Foundations of Computer Science: International Symposium, LFCS 2016, Deerfield
+  Beach, FL, USA, January 4-7, 2016. Proceedings}, 2016, pp. 187-201.\parskip=1mm
+
+  \bibitem{Haskell} Haskell Language. // URL: https://www.haskell.org. (Date: 1.08.2017) \parskip=1mm
+
+  \bibitem{Idris} Idris. A Language with Dependent Types.// URL:https://www.idris-lang.org. (Date:
+  1.08.2017) \parskip=1mm
+
+  \bibitem{Purs} Purescript. A strongly-typed functional programming language that compiles to JavaScript.
+  URL: http://www.purescript.org. (Date: 1.08.2017) \parskip=1mm
+
+  \bibitem{Elm} Elm. A delightful language for reliable webapps. // URL: http://elm-lang.org. (Date:
+  1.08.2017) \parskip=1mm
+
+  \bibitem{Base} Hackage, \/ ``The base package'' // URL: https://hackage.haskell.org/package/base-4.10.0.0
+  (Date: 1.08.2017) \parskip=1mm
+
+  \bibitem{Miran} Lipovaca M, \/ ``Learn you a Haskell for Great Good!''. //URL:
+  http://learnyouahaskell.com/chapters (Date: 1.08.2017) \parskip=1mm
+
+  \bibitem{McP} McBride C. and Paterson R., ``Applicative programming with effects", \textit{Journal of
+  Functional Programming}, 2008, vol. 18, no 01. pp 1-13. \parskip=1mm
+
+  \bibitem{McP2} McBride C. and Paterson R, ``Functional Pearl. Idioms: applicative programming with
+  effects'', \textit{Journal of Functional Programming}, 2005. vol. 18, no 01. pp 1-20. \parskip=1mm
+
+  \bibitem{Neder} R. Nederpelt and H. Geuvers, ``Type Theory and Formal Proof: An Introduction''.
+  \textit{Cambridge University Press}, New York, NY, USA, 2014. pp. 436. \parskip=1mm
+
+  \bibitem{Morten} Sorensen M. H. and Urzyczyn P, ``Lectures on the Curry-Howard isomorphism'',
+  \textit{Studies in Logic and the Foundations of Mathematics}, vol. 149, \textit{Elsevier Science}, 1998.
+  pp 261. \parskip=1mm
+
+  \bibitem{Pierce} Pierce B. C., ``Types and Programming Languages''. \textit{Cambridge, Mass: The MIT
+  Press}, 2002. pp. 605. \parskip=1mm
+
+  \bibitem{Girard} Girard J.-Y., Taylor P. and  Lafont Y, ``Proofs and Types'', \textit{Cambridge University
+  Press}, New York, NY, USA, 1989. pp. 175. \parskip=1mm
+
+  \bibitem{Baren} Barendregt. H. P., ``Lambda calculi with types" // Abramsky S., Gabbay Dov M., and S. E.
+  Maibaum, ``Handbook of logic in computer science (vol. 2), Osborne Handbooks Of Logic In Computer
+  Science'', Vol. 2. \textit{Oxford University Press, Inc.}, New York, NY, USA, 1993. pp 117-309.
+  \parskip=1mm
+
+  \bibitem{Hindley} Hindley J. Roger, ``Basic Simple Type Theory''. \textit{Cambridge University Press}, New
+  York, NY, USA, 1997. pp. 185. \parskip=1mm
+
+  \bibitem{Lax} Pfenning F. and Davies R., ``A judgmental reconstruction of modal logic'',
+  \textit{Mathematical Structures in Computer Science}, vol. 11, no 4, 2001, pp. 511-540. \parskip=1mm
+
+  \bibitem{Baren2} H.P. Barendregt. The Lambda Calculus --- Its Syntax and Semantics. Studies in Logic and
+  the Foundations of Mathematics, vol. 103. Amsterdam: North-Holland, 1985.
+  \end{thebibliography}
+
+
+\end{document}
