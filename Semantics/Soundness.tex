@@ -564,19 +564,84 @@ p_{[\![B]\!]^{[\![A]\!]} \times [\![A]\!]} \circ f \times g& \\
 
 \newpage
 
-4) $[\![M \star \text{pure } N]\!] = [\![\text{pure } (\lambda f. f N) \star M]\!]$
+4) $\begin{array}{lll}
+&[\![N : A, M : \textbf{K}(A \to B) \vdash M \star \text{pure } N : \textbf{K}B]\!] =&\\
+&[\![N : A, M : \textbf{K}(A \to B) \vdash \text{pure } (\lambda f. f N) \star M : \textbf{K}B]\!]&
+\end{array}$
+
+\vspace{\baselineskip}
+
+It is easy to see that the following diagram commutes:
 
 \vspace{\baselineskip}
 
 \xymatrix{
-\mathcal{K}(B^{(B^A)}) \times \mathcal{K}(B^A)\ar[rr]^{\cong} && \mathcal{K}(B^{(B^A)} \times B^A) \ar[rr]^{\mathcal{K}(\epsilon)}&& \mathcal{K}B \\
+\mathcal{K}([\![B]\!]^{([\![B]\!]^{[\![A]\!]})}) \times \mathcal{K}([\![B]\!]^{[\![A]\!]})\ar[r]^{\cong} &
+\mathcal{K}([\![B]\!]^{([\![B]\!]^{[\![A]\!]})} \times [\![B]\!]^{[\![A]\!]})
+\ar[r]^{\quad \mathcal{K}(\epsilon)}& \mathcal{K}[\![B]\!] \\
 \\
-\mathcal{K}A \times \mathcal{K}(B^A) \ar[rr]^{\cong} \ar[uu]^{\mathcal{K}(\Lambda(\langle \pi_2, \pi_1
-\rangle \circ \epsilon)) \times id_{\mathcal{K}B^A}} && \mathcal{K}(A \times B^A)
-\ar[rr]^{\mathcal{K}(\langle \pi_2, \pi_1 \rangle)} \ar[uu]^{\mathcal{K}(\Lambda(\langle \pi_2, \pi_1 \rangle \circ \epsilon) \times id_{B^A})} && \mathcal{K}(B^A \times A) \ar[uu]_{\mathcal{K}(\epsilon)}\\
+\mathcal{K}[\![A]\!] \times \mathcal{K}([\![B]\!]^{[\![A]\!]}) \ar[r]^{\cong}
+\ar[uu]^{\mathcal{K}(\Lambda(\epsilon \circ
+\langle \pi_2, \pi_1 \rangle)) \times id_{\mathcal{K}[\![B]\!]^{[\![A]\!]}}} & \mathcal{K}([\![A]\!] \times
+[\![B]\!]^{[\![A]\!]})
+\ar[r]^{\mathcal{K}(\langle \pi_2, \pi_1 \rangle)} \ar[uu]^{\mathcal{K}(\Lambda(\epsilon \circ \langle
+\pi_2, \pi_1 \rangle) \times id_{[\![B]\!]^{[\![A]\!]}})} & \mathcal{K}([\![B]\!]^{[\![A]\!]} \times
+[\![A]\!]) \ar[uu]_{\mathcal{K}(\epsilon)}\\
 \\
-A \times \mathcal{K}(B^A) \ar[rr]_{p_A \times id_{\mathcal{K}(B^A)}} \ar[uu]^{p_A \times id_{\mathcal{K}(B^A)}} && \mathcal{K}A \times \mathcal{K}(B^A) \ar[rr]_{\langle \pi_2, \pi_1 \rangle} \ar[uu]_{\cong} && \mathcal{K}(B^A) \times \mathcal{K}A \ar[uu]_{\cong}
+[\![A]\!] \times \mathcal{K}([\![B]\!]^{[\![A]\!]}) \ar[r]_{p_{[\![A]\!]} \times
+id_{\mathcal{K}([\![B]\!]^{[\![A]\!]})}} \ar[uu]^{p_{[\![A]\!]} \times id_{\mathcal{K}([\![B]\!]^{[\![A]\!]})}} & \mathcal{K}[\![A]\!] \times
+\mathcal{K}([\![B]\!]^{[\![A]\!]}) \ar[r]_{\langle \pi_2, \pi_1 \rangle} \ar[uu]_{\cong} & \mathcal{K}([\![B]\!]^{[\![A]\!]}) \times \mathcal{K}[\![A]\!]
+\ar[uu]_{\cong}
 }
+
+\vspace{\baselineskip}
+
+$\begin{array}{lll}
+&[\![N : A, M : \textbf{K}(A \to B) \vdash \text{pure } (\lambda f. f N) \star M : \textbf{K}B]\!] =&\\
+&\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad \text{by unfolding}&\\
+&\mathcal{K}(\epsilon) \circ (\cong) \circ ((p_{[\![B]\!]^{([\![B]\!]^{[\![A]\!]})}} \circ \Lambda(\epsilon
+\circ \langle \pi_2, \pi_1 \rangle)) \times id_{\mathcal{K}([\![B]\!]^{[\![A]\!]})}) =&\\
+&\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad \text{by the definition of $p$}&\\
+&\mathcal{K}(\epsilon) \circ (\cong) \circ
+(\mathcal{K}(\Lambda(\epsilon \circ \langle \pi_2, \pi_1 \rangle)) \circ p_{[\![A]\!]}) \times
+id_{\mathcal{K}([\![B]\!]^{[\![A]\!]})} =&\\
+&\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad
+\text{by the definition of identity function }& \\
+&\mathcal{K}(\epsilon) \circ (\cong) \circ
+(\mathcal{K}(\Lambda(\epsilon \circ \langle \pi_2, \pi_1 \rangle)) \circ p_{[\![A]\!]}) \times
+(id_{\mathcal{K}([\![B]\!]^{[\![A]\!]})} \circ id_{\mathcal{K}([\![B]\!]^{[\![A]\!]})}) =&\\
+&\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad \text{the property of composition of product morphisms}&\\
+&\mathcal{K}(\epsilon) \circ (\cong) \circ
+(\mathcal{K}(\Lambda(\epsilon \circ \langle \pi_2, \pi_1 \rangle)) \times
+id_{\mathcal{K}([\![B]\!]^{[\![A]\!]})}) \circ
+(p_{[\![A]\!]} \times id_{\mathcal{K}([\![B]\!]^{[\![A]\!]})}))= &\\
+&\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad \text{diagram above}&\\
+&\mathcal{K}(\epsilon) \circ (\cong) \circ \langle \pi_2, \pi_1 \rangle \circ (p_{[\![A]\!]} \times
+id_{\mathcal{K}([\![B]\!]^{[\![A]\!]})}))= &\\
+&\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad \text{the property of product morphisms}&\\
+&\mathcal{K}(\epsilon) \circ (\cong) \circ \langle \pi_2 \circ (p_{[\![A]\!]} \times
+id_{\mathcal{K}([\![B]\!]^{[\![A]\!]})}, \pi_1 \circ (p_{[\![A]\!]} \times
+id_{\mathcal{K}([\![B]\!]^{[\![A]\!]})} \rangle =& \\
+&\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad \text{by unfolding the morphism product}&\\
+&\mathcal{K}(\epsilon) \circ (\cong) \circ
+\langle
+\pi_2 \circ \langle p_{[\![A]\!]} \circ \pi_1, id_{\mathcal{K}([\![B]\!]^{[\![A]\!]})} \circ \pi_2 \rangle,
+\pi_1 \circ \langle p_{[\![A]\!]} \circ \pi_1, id_{\mathcal{K}([\![B]\!]^{[\![A]\!]})} \circ \pi_2 \rangle
+\rangle =&\\
+&\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad \text{by the definition of pair morphism}&\\
+&\mathcal{K}(\epsilon) \circ (\cong) \circ
+\langle
+id_{\mathcal{K}([\![B]\!]^{[\![A]\!]})} \circ \pi_2,
+p_{[\![A]\!]} \circ \pi_1
+\rangle =&\\
+&\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad \text{the property of product morphisms}&\\
+&\mathcal{K}(\epsilon) \circ (\cong) \circ (id_{\mathcal{K}([\![B]\!]^{[\![A]\!]})} \times p_{[\![A]\!]})
+\circ \langle \pi_2, \pi_1 \rangle =&\\
+&\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad \text{by interpretation}&\\
+&[\![N : A, M : \textbf{K}(A \to B) \vdash M \star \text{pure } N : \textbf{K}B]\!]&
+\end{array}$
+
+\vspace{\baselineskip}
 
 \begin{lemma}
 
