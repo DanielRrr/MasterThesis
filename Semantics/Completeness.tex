@@ -1,0 +1,89 @@
+\documentclass[a4paper]{article}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{bussproofs}
+\usepackage{mathtools}
+\usepackage{verbatim}
+\usepackage{dsfont}
+\usepackage[all, 2cell]{xy}
+\usepackage[all]{xy}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{defin}{Definition}
+\newtheorem{ex}{Example}
+\newtheorem{col}{Corollary}
+\usepackage{listings} 		% for source code
+\date{}
+\title{Completeness for modal type theory based on the intuitionistic epistemic logic}
+
+\begin{document}
+\maketitle
+
+\begin{defin} Family of relations $\sim_{\alpha, \beta} \subseteq \Lambda_{\textbf{K}} \times \Lambda_{\textbf{K}}$, $\alpha, \beta \in \mathbb{T}_{\textbf{K}}$ is defined by:
+\begin{equation}
+(x_1, y_1) \sim_{\alpha, \beta} (x_2, y_2) \Leftrightarrow x_i : \alpha \vdash y_i : \beta, i \in \{ 1,2 \} \: \& \: y_2 =_{\beta\eta} y_1 [x_1 := x_2]
+\end{equation}
+\end{defin}
+
+It is clearly that forall $\alpha, \beta \in \mathbb{T}_{\textbf{K}}$ is an equivalence relation.
+
+Equivalence class for some $\phi, \psi \in \in \mathbb{T}_{\textbf{K}}$ and for some $(M, N)$ such that $M :
+\phi \vdash N : \psi$ is defined as:
+\begin{equation}
+[(M,N)]_{\phi, \psi} = \{ (K, L) | (K, L) \sim_{\phi, \psi} (M, N)\}
+\end{equation}
+
+\vspace{\baselineskip}
+
+Let us consider the category $\mathcal{C}_{\lambda}$:
+\begin{defin}
+
+$ $
+
+\begin{itemize}
+\item $Ob_{\mathcal{C}_{\lambda}} = \{ \mathds{1}\} \cup \{ \hat{\phi} \: | \: \phi \in
+\mathbb{T}_{\textbf{K}} \}$
+\item $Hom_{\mathcal{C}_{\lambda}}(\hat{\phi},\hat{\psi}) = \{ [(x_1, y_1)]_{\phi, \psi} \: | \: x_1 : \phi
+\vdash y_1 : \psi \}$.
+\item $[(x_2, y_2)]_{\psi, \tau} \circ [(x_1, y_1)]_{\phi, \psi} = [(x_1, y_2[y_1 := x_2])]_{\phi, \tau}$;
+\item $id_{\hat{\phi}} = [(x,x)]_{\phi, \phi}$;
+\item $\widehat{\phi \times \psi} = \hat{\phi} \times \hat{\psi}$;
+\item $\pi_i = [(x, \pi_i x)]_{\phi_1 \times \phi_2, \phi_i}, i \in \{ 1, 2\}$;
+\item $\epsilon = [(x, (\pi_1 x)(\pi_2 x))]_{\phi \rightarrow \psi \times \phi, \psi}$;
+\item $\Lambda([(x, M)]_{\phi \times \psi, \tau}) = [(x_1, \lambda x_2. M [x := \langle x_1, x_2
+\rangle])]_{\phi, \psi \rightarrow \tau}$.
+\end{itemize}
+\end{defin}
+
+\begin{defin} Let us functor map $\textbf{K} : \mathcal{C}_{\lambda} \to \mathcal{C}_{\lambda}$, such that:
+\begin{itemize}
+\item $\textbf{K} : \hat{\phi} \mapsto \hat{\textbf{K}\phi}$;
+\item $\textbf{K}(\mathds{1}) = \mathds{1}$
+\item $\textbf{K} : [(x_2, y_2)]_{\psi, \tau} \mapsto \textbf{K}([(x_2, y_2)]_{\psi, \tau}) = {K}([(x_2,
+y_2)])_{\textbf{K}\psi, \textbf{K}\tau}$;
+\item $\textbf{K}([(x_2, y_2)]_{\psi, \tau} \circ [(x_1, y_1)]_{\phi, \psi}) = \textbf{K}([(x_1, y_2[y_1 :=
+x_2])])_{\textbf{K}\phi, \textbf{K}\tau}$
+\item $\textbf{K} : \hat{\phi} \times \hat{\psi} \mapsto \hat{\textbf{K}\phi} \times \hat{\textbf{K}\psi}$;
+\item $\textbf{K} : \hat{\phi} \rightarrow \hat{\psi} \mapsto \hat{\textbf{K}\phi} \rightarrow
+\hat{\textbf{K}\psi}$.
+\end{itemize}
+\end{defin}
+
+\begin{lemma}
+
+$\textbf{K}(\hat{\phi} \times \hat{\psi}) \cong \textbf{K}(\hat{\phi}) \times \textbf{K}(\hat{\psi})$.
+
+\end{lemma}
+
+\begin{proof}
+
+$ $
+
+$\langle \textbf{K}(\pi_1), \textbf{K}(\pi_2) \rangle = \langle \textbf{K}([(x, \pi_1 x)])_{\textbf{K}(\phi \times \psi), \textbf{K}\phi}, \textbf{K}(
+[(x, \pi_2 x)])_{\textbf{K}(\phi \times \psi), \textbf{K}\psi} \rangle : \textbf{K}(\hat{\phi} \times
+\hat{\psi}) \rightarrow \textbf{K}(\hat{\phi}) \times \textbf{K}(\hat{\psi})$.
+\end{proof}
+
+\end{document}

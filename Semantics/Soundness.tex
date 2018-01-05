@@ -496,8 +496,6 @@ The first part of equality:
 
 \vspace{\baselineskip}
 
-
-
 \newpage
 
 3) $[\![(\text{pure } M) \star (\text{pure } N)]\!] = [\![\text{pure } (M N)]\!]$;
@@ -598,7 +596,7 @@ id_{\mathcal{K}([\![B]\!]^{[\![A]\!]})}} \ar[uu]^{p_{[\![A]\!]} \times id_{\math
 
 $\begin{array}{lll}
 &[\![N : A, M : \textbf{K}(A \to B) \vdash \text{pure } (\lambda f. f N) \star M : \textbf{K}B]\!] =&\\
-&\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad \text{by unfolding}&\\
+&\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad \text{by interpretation}&\\
 &\mathcal{K}(\epsilon) \circ (\cong) \circ ((p_{[\![B]\!]^{([\![B]\!]^{[\![A]\!]})}} \circ \Lambda(\epsilon
 \circ \langle \pi_2, \pi_1 \rangle)) \times id_{\mathcal{K}([\![B]\!]^{[\![A]\!]})}) =&\\
 &\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad \text{by the definition of $p$}&\\
@@ -677,22 +675,72 @@ $\begin{array}{lll}
 \end{array}$
 \vspace{\baselineskip}
 
-3) $[\![\text{pure } (\lambda x. \lambda y. \langle x, y \rangle) \star (\text{pure } (\lambda x. \pi_1) \star M) \star (\text{pure } (\lambda x. \pi_2) \star M)]\!] = [\![M]\!]$
+3)
+
+$\begin{array}{lll}
+&[\![M : \textbf{K}(A \times B) \vdash \text{pure } (\lambda x. \lambda y. \langle x, y \rangle) \star
+(\text{pure } (\lambda x. \pi_1) \star M) \star (\text{pure } (\lambda x. \pi_2) \star M : \textbf{K}(A
+\times B)]\!]=&\\
+&[\![M : \textbf{K}(A \times B) \vdash M : \textbf{K}(A \times B)]\!]&
+\end{array}$
+
+\vspace{\baselineskip}
+
+i) The first step
+
+Let us consider interpetation for $\vdash \text{pure } (\lambda x. \lambda y. \langle x, y \rangle) :
+\textbf{K}(A \to B \to A \times B)$:
+\begin{prooftree}
+\AxiomC{$\pi_2 : \mathds{1} \times ([\![A]\!] \times [\![B]\!]) \rightarrow [\![A]\!] \times [\![B]\!]$}
+\UnaryInfC{$\pi_2 \circ \alpha : (\mathds{1} \times [\![A]\!]) \times [\![B]\!] \rightarrow [\![A]\!] \times [\![B]\!]$}
+\UnaryInfC{$\Lambda(\pi_2 \circ \alpha) : \mathds{1} \times [\![A]\!] \rightarrow [\![A]\!] \times [\![B]\!]^{[\![B]\!]}$}
+\UnaryInfC{$\Lambda(\Lambda(\pi_2 \circ \alpha)): \mathds{1} \rightarrow [\![A]\!] \times
+[\![B]\!]^{[\![B]\!]^{[\![A]\!]}}$}
+\UnaryInfC{$p_{[\![A]\!] \times [\![B]\!]^{[\![B]\!]^{[\![A]\!]}}} \circ \Lambda(\Lambda(\pi_2 \circ
+\alpha)) : \mathds{1} \rightarrow \mathcal{K}([\![A]\!] \times [\![B]\!]^{[\![B]\!]^{[\![A]\!]}})$ }
+\end{prooftree}
+
+By naturality, $p_{[\![A]\!] \times [\![B]\!]^{[\![B]\!]^{[\![A]\!]}}} \circ \Lambda(\Lambda(\pi_2 \circ
+\alpha)) = \mathcal{K}(\Lambda(\Lambda(\pi_2 \circ \alpha))$.
+
+At first let us show that the following diagram commutes in any CCC:
 
 \vspace{\baselineskip}
 
 \xymatrix{
-\mathcal{K}({((A \times B)^B)}^A) \times (\mathcal{K}(A^{A \times B}) \times \mathcal{K}(A \times B)) \times
-(\mathcal{K}(B^{A \times B}) \times \mathcal{K}(A \times B)) \\
-\\
-\mathcal{K}({((A \times B)^B)}^A) \times \mathcal{K}A \times \mathcal{K}B \\
-\\
-\mathcal{K}((A \times B)^B) \times \mathcal{K}B\\
-\\
-\mathcal{K}(A \times B)
+([\![A \times B]\!]^{[\![B]\!]^{[\![A]\!]}} \times [\![A]\!]) \times [\![B]\!] \ar[rr]^{\quad\quad\quad\quad
+\epsilon \circ (\epsilon \times id_{[\![B]\!]})} && [\![A]\!] \times [\![B]\!] \\
+(\mathds[1] \times [\![A]\!]) \times [\![B]\!] \ar[u]^{(\Lambda(\Lambda(\pi_2 \circ
+\alpha)) \times id_{[\![A]\!]}) \times id_{[\![B]\!]}} \ar[urr]_{\pi_2 \circ \alpha}
 }
 
+\vspace{\baselineskip}
 
+$\begin{array}{lll}
+&\epsilon \circ (\epsilon \times id_{[\![B]\!]}) \circ (\Lambda(\Lambda(\pi_2 \circ
+\alpha)) \times id_{[\![A]\!]}) \times id_{[\![B]\!]} =&\\
+&\text{by the definition of morphism product}&\\
+&\epsilon \circ (\epsilon \times id_{[\![B]\!]}) \circ \langle \Lambda(\Lambda(\pi_2 \circ
+\alpha)) \circ \pi_1, id_{[\![A]\!]} \circ \pi_2 \rangle \times id_{[\![B]\!]} = & \\
+&\text{by the definition of morphism product}& \\
+&\epsilon \circ (\epsilon \times id_{[\![B]\!]}) \circ \langle \langle \Lambda(\Lambda(\pi_2 \circ
+\alpha)) \circ \pi_1, id_{[\![A]\!]} \circ \pi_2 \rangle \circ \pi_1, id_{[\![B]\!]} \circ \pi_2 \rangle & \\
+&\text{by the property of morphism product}& \\
+&\epsilon \circ \langle \epsilon \circ \langle \Lambda(\Lambda(\pi_2 \circ
+\alpha)) \circ \pi_1, id_{[\![A]\!]} \circ \pi_2 \rangle \circ \pi_1, id_{[\![B]\!]} \circ id_{[\![B]\!]} \circ \pi_2 \rangle = &\\
+&\text{by the definition of morphism product and by identity}& \\
+&\epsilon \circ \langle \epsilon \circ (\Lambda(\Lambda(\pi_2 \circ \alpha)) \times id_{[\![A]\!]}) \circ \pi_1, id_{[\![B]\!]} \circ \pi_2 \rangle = & \\
+&\text{by exponentiation and currying property}& \\
+&\epsilon \circ \langle \Lambda(\pi_2 \circ \alpha) \circ \pi_1, id_{[\![B]\!]} \circ \pi_2 \rangle = & \\
+&\text{by the definition of morphism product}&\\
+&\epsilon \circ \Lambda(\pi_2 \circ \alpha) \times id_{[\![B]\!]} & \\
+&\text{by exponentiation and currying property}& \\
+&\pi_2 \circ \alpha&
+\end{array}$
+
+\vspace{\baselineskip}
+
+2) 
 
 \end{proof}
 
