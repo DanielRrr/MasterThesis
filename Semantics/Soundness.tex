@@ -134,141 +134,6 @@ Our type system is based on the Curry-style typing rules:
 
 
 \section{Categorical model.}
-Let us define monoidal categories and strong lax monoidal functors.
-
-\begin{defin} Monoidal category.
-
-A monoidal category $\mathcal{C}$ is a category with:
-
-1) A bifunctor $\otimes : \mathcal{C} \times \mathcal{C} \to \mathcal{C}$ called the tensor product;
-
-2) An object $\mathds{1} \in Ob(\mathcal{C})$ called the unit;
-
-3) A natural isomorphism such that for all $A, B, C \in Ob(\mathcal{C})$:
-
-\xymatrix{
-  &&&& \alpha_{A, B, C} :  (A \otimes B)  \otimes C \ar[rr]^{\cong}  &&A \otimes (B \otimes C)}
-
-where $\alpha$ is called associator.
-
-4) A natural isomorphism (left unitor) for all $A \in Ob(\mathcal{C})$:
-
-\xymatrix{
- &&&& L_A : (\mathds{1} \otimes A) \ar[rr]^{\cong} && A
-}
-
-5) A natural isomorphism (right unitor) for all $A \in Ob(\mathcal{C})$:
-
-\xymatrix{
- &&&& R_A : (A \otimes \mathds{1}) \ar[rr]^{\cong} && A}
-
-\vspace{\baselineskip}
-
-6) The next one diagram commutes (the triangle identity):
-
-\vspace{\baselineskip}
-
-\xymatrix{
-&&&& A \otimes B &&&&\\
-&&&(A \otimes \mathds{1}) \otimes B \ar[rr]_{\alpha_{A, \mathds{1}, B}} \ar[ur]^{R_{A} \otimes id_{B}} && A \otimes (\mathds{1} \otimes B \ar[ul]_{id_{A} \otimes L_{B}})
-}
-
-\vspace{\baselineskip}
-
-7) The next one diagram commutes too (the pentagon identity):
-
-\vspace{\baselineskip}
-
-\xymatrix{
-&& (A \otimes B) \otimes (C \otimes D) \ar[dr]^{\alpha_{A, B, C \otimes D}}&& \\
-&((A \otimes B) \otimes C) \otimes D \ar[ur]^{\alpha_{A \otimes B, C, D}}  \ar[dd]_{\alpha_{A,B,C}  \otimes
-id_{D}}&& A \otimes (B \otimes (C \otimes D)) \\
-\\
-& (A \otimes (B \otimes C)) \otimes D \ar[rr]_{\alpha_{A, B \otimes C, D}} && A \otimes ((B \otimes C)
-\otimes D) \ar[uu]_{id_{A} \otimes \alpha_{B, C, D}}
-}
-
-\vspace{\baselineskip}
-
-A monoidal category is symmetrical iff $\forall A, B \in Ob(\mathcal{C}), A \otimes B \cong B \otimes
-A$.
-\end{defin}
-
-\vspace{\baselineskip}
-
-\begin{defin}
-A lax monoidal functor between monoinal categories $\langle \mathcal{C}, \otimes, \mathds{1} \rangle$
-and $\langle \mathcal{D}, \otimes', \mathds{1} \rangle$ is a functor $F : \langle \mathcal{C}, \otimes,
-\mathds{1} \rangle \to \langle \mathcal{D}, \otimes', \mathds{1} \rangle$ with the next natural
-transformations:
-
-1) $u : \mathds{1} \to F \mathds{1}$ (unit property);
-
-2) $\ast : F A \otimes' F B \to F (A \otimes B)$ (application property);
-
-and with the next commuting diagrams:
-
-\vspace{\baselineskip}
-
-\xymatrix{
-&&&& \mathds{1} \otimes' F A \ar[rr]_{L_{F A}} \ar[d]_{u \otimes id_{F A}} && F A \\
-&&&& F \mathds{1} \otimes' F A \ar[rr]_{\ast} && F (\mathds{1} \otimes A) \ar[u]_{F L}
-}
-
-\xymatrix{
-&&&& F A \otimes' \mathds{1}\ar[rr]_{R_{F A}} \ar[d]_{id_{F A} \otimes u} && F A \\
-&&&& F A \otimes' F \mathds{1} \ar[rr]_{\ast} && F (A \otimes \mathds{1}) \ar[u]_{F R}
-}
-
-\xymatrix{
-&& F A \otimes' F (B \otimes C) \ar[dr]^{\ast} &&\\
-& F A \otimes' (F B \otimes' F C) \ar[dd]_{\alpha_{F A, F B, F C}} \ar[ur]^{id_{F A} \otimes \ast }&& F (A
-\otimes (B \otimes C)) \ar[dd]^{F \alpha_{A, B, C} }\\
-\\
-& (F A \otimes' F B) \otimes' F C \ar[dr]_{\ast \otimes id_{F C}} && F ((A \otimes B) \otimes C)\\
-&& F (A \otimes B) \otimes' F C \ar[ur]_{\ast}&&
-}
-\end{defin}
-
-\begin{defin} Applicative functor.
-
-Let $\langle \mathcal{C}, \otimes, \mathds{1} \rangle$ is a symmetrcial monoidal category. Applicative
-functor is an endofunctor $F : \langle \mathcal{C}, \otimes, \mathds{1}\rangle \to \langle \mathcal{C},
-\otimes, \mathds{1}\rangle$ with a natural transformation $p: Id_{\mathcal{C}} \Rightarrow F$ with the next
-properties:
-
-1) A natural transformation $p$ is defined as follows for all $A \in Ob(\mathcal{C})$ the following
-diagram commutes:
-
-\xymatrix{
-&&&&& A \ar[dd]_{p_A}\ar[rr]^{f}&& B \ar[dd]^{p_B}\\
-\\
-&&&&& F A \ar[rr]_{F f} && F B
-}
-
-2) $p_{\mathds{1}} = u$:
-
-\xymatrix{
-&&&&& \mathds{1} \ar[dd]_{p_{\mathds{1}}}\ar[rr]^{id_{\mathds{1}}}&& \mathds{1} \ar[dd]^{u}\\
-\\
-&&&&& F \mathds{1} \ar[rr]_{id_{F \mathds{1}}} && F \mathds{1}
-}
-
-3) $p \circ \ast = \ast \circ (p \otimes p)$;
-
-4) The following diagram commutes (weak commutativity condition):
-\vspace{\baselineskip}
-\begin{center}
-\xymatrix{
-&&&& F A \otimes F B \ar[dr]^{\ast} &&&&\\
-&&& A \otimes F B \ar[dd]_{swap_{A, F B}} \ar[ur]^{p_A \otimes id_{F B}}&& F (A \otimes B) \ar[dd]^{F
-(swap_{A, B})}\\
-\\
-&&& F B \otimes A \ar[dr]_{id_{F B} \otimes p_A} && F (B \otimes A)\\
-&&&& F B \otimes F A \ar[ur]_{\ast}&&&
-}
-\end{center}
-\end{defin}
 
 \section{Soundness}
 
@@ -492,9 +357,39 @@ id_{\mathcal{K}A}) & \\
 
 2) $[\![(\text{pure } \lambda f g x. f (g x)) \star M \star N \star P]\!] = [\![M \star (N \star P)]\!]$
 
-The first part of equality:
+\vspace{\baselineskip}
+
+i) The first step.
+
+Let us consider interpretation for $\vdash \text{pure } \lambda f g x. f(g x) : \textbf{K}((B \to C) \to (A
+\to B) \to A \to C)$:
+\begin{prooftree}
+\AxiomC{$\pi_2 : \mathds{1} \times [\![B]\!] \Rightarrow [\![C]\!] \rightarrow [\![B]\!] \Rightarrow
+[\![C]\!]$}
+\AxiomC{$\epsilon : [\![A]\!] \Rightarrow [\![B]\!] \times [\![A]\!] \rightarrow [\![B]\!]$}
+\BinaryInfC{$\pi_2 \times \epsilon : (\mathds{1} \times [\![B]\!] \Rightarrow
+[\![C]\!]) \times ([\![A]\!] \Rightarrow [\![B]\!] \times [\![A]\!]) \rightarrow [\![B]\!] \Rightarrow
+[\![C]\!] \times [\![B]\!]$}
+\UnaryInfC{$\epsilon \circ (\pi_2 \times \epsilon) : (\mathds{1} \times [\![B]\!] \Rightarrow
+[\![C]\!]) \times ([\![A]\!] \Rightarrow [\![B]\!] \times [\![A]\!]) \rightarrow [\![C]\!]$}
+\UnaryInfC{$\epsilon \circ (\pi_2 \times \epsilon) \circ \alpha : (((\mathds{1} \times [\![B]\!] \Rightarrow
+[\![C]\!]) \times [\![A]\!] \Rightarrow [\![B]\!]) \times [\![A]\!] \rightarrow [\![C]\!]$}
+\UnaryInfC{$\Lambda(\epsilon \circ (\pi_2 \times \epsilon) \circ \alpha) : (\mathds{1} \times [\![B]\!]
+\Rightarrow [\![C]\!]) \times [\![A]\!] \Rightarrow [\![B]\!] \rightarrow [\![A]\!] \Rightarrow [\![C]\!]$}
+\UnaryInfC{$\Lambda(\Lambda(\epsilon \circ (\pi_2 \times \epsilon) \circ \alpha)) : \mathds{1} \times
+[\![B]\!] \Rightarrow [\![C]\!] \rightarrow ([\![A]\!] \Rightarrow [\![B]\!]) \Rightarrow
+[\![A]\!] \Rightarrow [\![C]\!]$}
+\UnaryInfC{$\Lambda(\Lambda(\Lambda(\epsilon \circ (\pi_2 \times \epsilon) \circ \alpha))) : \mathds{1}
+\rightarrow ([\![B]\!] \Rightarrow [\![C]\!]) \Rightarrow ([\![A]\!] \Rightarrow [\![B]\!]) \Rightarrow
+[\![A]\!] \Rightarrow [\![C]\!]$}
+\UnaryInfC{$\mathcal{K}(\Lambda(\Lambda(\Lambda(\epsilon \circ (\pi_2 \times \epsilon) \circ \alpha)))) :
+\mathds{1} \rightarrow \mathcal{K}(([\![B]\!] \Rightarrow [\![C]\!]) \Rightarrow ([\![A]\!] \Rightarrow
+[\![B]\!]) \Rightarrow [\![A]\!] \Rightarrow [\![C]\!])$}
+\end{prooftree}
 
 \vspace{\baselineskip}
+
+2) The second step:
 
 \newpage
 
@@ -691,17 +586,17 @@ i) The first step
 Let us consider interpetation for $\vdash \text{pure } (\lambda x. \lambda y. \langle x, y \rangle) :
 \textbf{K}(A \to B \to A \times B)$:
 \begin{prooftree}
-\AxiomC{$\pi_2 : \mathds{1} \times ([\![A]\!] \times [\![B]\!]) \rightarrow [\![A]\!] \times [\![B]\!]$}
-\UnaryInfC{$\pi_2 \circ \alpha : (\mathds{1} \times [\![A]\!]) \times [\![B]\!] \rightarrow [\![A]\!] \times [\![B]\!]$}
-\UnaryInfC{$\Lambda(\pi_2 \circ \alpha) : \mathds{1} \times [\![A]\!] \rightarrow [\![A]\!] \times [\![B]\!]^{[\![B]\!]}$}
-\UnaryInfC{$\Lambda(\Lambda(\pi_2 \circ \alpha)): \mathds{1} \rightarrow [\![A]\!] \times
+\AxiomC{$\pi_2 : \mathds{1} \times [\![A]\!] \rightarrow [\![A]\!]$}
+\AxiomC{$id_{[\![B]\!]} : [\![B]\!] \rightarrow [\![B]\!]$}
+\BinaryInfC{$\pi_2 \times id_{[\![B]\!]} : (\mathds{1} \times [\![A]\!]) \times [\![B]\!] \rightarrow [\![A]\!] \times [\![B]\!]$}
+\UnaryInfC{$\Lambda(\pi_2 \times id_{[\![B]\!]}) : \mathds{1} \times [\![A]\!] \rightarrow [\![A]\!] \times [\![B]\!]^{[\![B]\!]}$}
+\UnaryInfC{$\Lambda(\Lambda(\pi_2 \times id_{[\![B]\!]})): \mathds{1} \rightarrow [\![A]\!] \times
 [\![B]\!]^{[\![B]\!]^{[\![A]\!]}}$}
-\UnaryInfC{$p_{[\![A]\!] \times [\![B]\!]^{[\![B]\!]^{[\![A]\!]}}} \circ \Lambda(\Lambda(\pi_2 \circ
-\alpha)) : \mathds{1} \rightarrow \mathcal{K}([\![A]\!] \times [\![B]\!]^{[\![B]\!]^{[\![A]\!]}})$ }
+\UnaryInfC{$p_{[\![A]\!] \times [\![B]\!]^{[\![B]\!]^{[\![A]\!]}}} \circ \Lambda(\Lambda(\pi_2 \times id_{[\![B]\!]})) : \mathds{1} \rightarrow \mathcal{K}([\![A]\!] \times [\![B]\!]^{[\![B]\!]^{[\![A]\!]}})$ }
 \end{prooftree}
 
 By naturality, $p_{[\![A]\!] \times [\![B]\!]^{[\![B]\!]^{[\![A]\!]}}} \circ \Lambda(\Lambda(\pi_2 \circ
-\alpha)) = \mathcal{K}(\Lambda(\Lambda(\pi_2 \circ \alpha))$.
+\alpha)) = \mathcal{K}(\Lambda(\Lambda(\pi_2 \times id_{[\![B]\!]}))$.
 
 At first let us show that the following diagram commutes in any CCC:
 
@@ -710,37 +605,38 @@ At first let us show that the following diagram commutes in any CCC:
 \xymatrix{
 ([\![A \times B]\!]^{[\![B]\!]^{[\![A]\!]}} \times [\![A]\!]) \times [\![B]\!] \ar[rr]^{\quad\quad\quad\quad
 \epsilon \circ (\epsilon \times id_{[\![B]\!]})} && [\![A]\!] \times [\![B]\!] \\
-(\mathds[1] \times [\![A]\!]) \times [\![B]\!] \ar[u]^{(\Lambda(\Lambda(\pi_2 \circ
-\alpha)) \times id_{[\![A]\!]}) \times id_{[\![B]\!]}} \ar[urr]_{\pi_2 \circ \alpha}
+(\mathds[1] \times [\![A]\!]) \times [\![B]\!] \ar[u]^{(\Lambda(\Lambda(\pi_2 \times id_{[\![B]\!]}) \times
+id_{[\![A]\!]}) \times id_{[\![B]\!]}} \ar[urr]_{\pi_2 \times id_{[\![B]\!]}}
 }
 
 \vspace{\baselineskip}
 
 $\begin{array}{lll}
-&\epsilon \circ (\epsilon \times id_{[\![B]\!]}) \circ (\Lambda(\Lambda(\pi_2 \circ
-\alpha)) \times id_{[\![A]\!]}) \times id_{[\![B]\!]} =&\\
+&\epsilon \circ (\epsilon \times id_{[\![B]\!]}) \circ (\Lambda(\Lambda(\pi_2 \times id_{[\![B]\!]})) \times id_{[\![A]\!]}) \times id_{[\![B]\!]} =&\\
 &\text{by the definition of morphism product}&\\
-&\epsilon \circ (\epsilon \times id_{[\![B]\!]}) \circ \langle \Lambda(\Lambda(\pi_2 \circ
-\alpha)) \circ \pi_1, id_{[\![A]\!]} \circ \pi_2 \rangle \times id_{[\![B]\!]} = & \\
+&\epsilon \circ (\epsilon \times id_{[\![B]\!]}) \circ \langle \Lambda(\Lambda(\pi_2 \times id_{[\![B]\!]})) \circ \pi_1, id_{[\![A]\!]} \circ \pi_2 \rangle \times id_{[\![B]\!]} = & \\
 &\text{by the definition of morphism product}& \\
-&\epsilon \circ (\epsilon \times id_{[\![B]\!]}) \circ \langle \langle \Lambda(\Lambda(\pi_2 \circ
-\alpha)) \circ \pi_1, id_{[\![A]\!]} \circ \pi_2 \rangle \circ \pi_1, id_{[\![B]\!]} \circ \pi_2 \rangle & \\
+&\epsilon \circ (\epsilon \times id_{[\![B]\!]}) \circ \langle \langle \Lambda(\Lambda(\pi_2 \times
+id_{[\![B]\!]})) \circ \pi_1, id_{[\![A]\!]} \circ \pi_2 \rangle \circ \pi_1, id_{[\![B]\!]} \circ \pi_2
+\rangle & \\
 &\text{by the property of morphism product}& \\
-&\epsilon \circ \langle \epsilon \circ \langle \Lambda(\Lambda(\pi_2 \circ
-\alpha)) \circ \pi_1, id_{[\![A]\!]} \circ \pi_2 \rangle \circ \pi_1, id_{[\![B]\!]} \circ id_{[\![B]\!]} \circ \pi_2 \rangle = &\\
+&\epsilon \circ \langle \epsilon \circ \langle \Lambda(\Lambda(\pi_2 \times id_{[\![B]\!]})) \circ \pi_1,
+id_{[\![A]\!]} \circ \pi_2 \rangle \circ \pi_1, id_{[\![B]\!]} \circ id_{[\![B]\!]} \circ \pi_2 \rangle = &\\
 &\text{by the definition of morphism product and by identity}& \\
-&\epsilon \circ \langle \epsilon \circ (\Lambda(\Lambda(\pi_2 \circ \alpha)) \times id_{[\![A]\!]}) \circ \pi_1, id_{[\![B]\!]} \circ \pi_2 \rangle = & \\
+&\epsilon \circ \langle \epsilon \circ (\Lambda(\Lambda(\pi_2 \times id_{[\![B]\!]})) \times id_{[\![A]\!]})
+\circ \pi_1, id_{[\![B]\!]} \circ \pi_2 \rangle = & \\
 &\text{by exponentiation and currying property}& \\
-&\epsilon \circ \langle \Lambda(\pi_2 \circ \alpha) \circ \pi_1, id_{[\![B]\!]} \circ \pi_2 \rangle = & \\
+&\epsilon \circ \langle \Lambda(\pi_2 \times id_{[\![B]\!]}) \circ \pi_1, id_{[\![B]\!]} \circ \pi_2 \rangle
+= & \\
 &\text{by the definition of morphism product}&\\
-&\epsilon \circ \Lambda(\pi_2 \circ \alpha) \times id_{[\![B]\!]} & \\
+&\epsilon \circ \Lambda(\pi_2 \times id_{[\![B]\!]}) \times id_{[\![B]\!]} & \\
 &\text{by exponentiation and currying property}& \\
-&\pi_2 \circ \alpha&
+&\pi_2 \times id_{[\![B]\!]}&
 \end{array}$
 
 \vspace{\baselineskip}
 
-2) 
+2)
 
 \end{proof}
 
