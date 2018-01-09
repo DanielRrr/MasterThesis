@@ -135,6 +135,26 @@ Our type system is based on the Curry-style typing rules:
 
 \section{Categorical model.}
 
+\section{Definitions}
+
+Let $\langle \mathcal{C}, \oplus_1, \mathds{1} \rangle$ and $\langle \mathcal{D}, \oplus_2, \mathds{1}' \rangle$ are monoidal categories.
+
+A lax monoidal functor $\mathcal{F} : \langle \mathcal{C}, \oplus_1, \mathds{1} \rangle \to \langle \mathcal{D}, \oplus_2, \mathds{1}' \rangle$ is a functor
+$\mathcal{F} : \mathcal{C} \to \mathcal{D}$ with additional natural transformations:
+
+1) $u : \mathds{1}' \to \mathcal{F}\mathds{1}$;
+
+2) $\mathcal{F}A \otimes_2 \mathcal{F}B \to \mathcal{F}(A \otimes_1 B)$,
+
+such that the following diagrams commute:
+
+\xymatrix{
+\mathds{1}' \otimes_2 \mathcal{F}A & \mathcal{F}A &&& \\
+\mathcal{F}\mathds{1} \otimes_2 \mathcal{F}A & \mathcal{F}(\mathds{1} \otimes_1 A) &&&
+}
+
+
+
 \section{Soundness}
 
 \begin{defin} Semantical translation from $\lambda_{\textbf{K}}$ to CCC with applicative functor:
@@ -296,56 +316,29 @@ If $M \rightarrow_{\beta} N$, then $[\![M]\!] = [\![N]\!]$.
 \begin{prooftree}
 \AxiomC{$[\![x : A \vdash x : A]\!] = \pi_2 : \mathds{1} \times [\![A]\!] \to [\![A]\!]$}
 \UnaryInfC{$[\![\vdash \lambda x. x : A \to A]\!] = \Lambda(\pi_2) : \mathds{1} \to [\![A]\!]^{[\![A]\!]}$}
-\UnaryInfC{$[\![\vdash \text{pure } (\lambda x. x) : \textbf{K}(A \to A)]\!] = p_{[\![A]\!]^{[\![A]\!]}} \circ \Lambda(\pi_2) : \mathds{1} \to \mathcal{K}([\![A]\!]^{[\![A]\!]})$}
+\UnaryInfC{$[\![\vdash \text{pure } (\lambda x. x) : \textbf{K}(A \to A)]\!] = p_{[\![A]\!]^{[\![A]\!]}} \circ \Lambda(\pi_2) = \mathcal{K}(\Lambda(\pi_2)): \mathds{1} \to \mathcal{K}([\![A]\!]^{[\![A]\!]})$}
 \end{prooftree}
 
-But by the following diagram:
-
-\xymatrix{
-&&&&& [\![A]\!]^{[\![A]\!]} \ar[r]^{p_{[\![A]\!]^{[\![A]\!]}}} & \mathcal{K}([\![A]\!]^{[\![A]\!]}) \\
-&&&&& \mathds{1} \ar[u]^{\Lambda{\pi_2}} \ar[r]_{p_{\mathds{1} = id_{\mathds{1}}}} & \mathds{1} \ar[u]_{\mathcal{K}(\Lambda(\pi_2))}
-}
-
 $\begin{array}{lll}
-&p_{[\![A]\!]^{[\![A]\!]}} \circ \Lambda(\pi_2) = id_{\mathds{1}} \circ \mathcal{K}(\Lambda(\pi_2)) & \\
-&\quad\quad\quad\quad\quad\quad\quad= \mathcal{K}(\Lambda(\pi_2))&
+&\mathcal{K}(\epsilon) \circ \ast \circ \mathcal{K}(\Lambda(\pi_2)) \times f = & \\
+&\text{identity}& \\
+&\mathcal{K}(\epsilon) \circ \ast \circ (\mathcal{K}(\Lambda(\pi_2)) \circ id_{\mathds{1}}) \times (id_{\mathcal{K}A} \circ f)  = & \\
+&\text{by the property of morphism product and composition}& \\
+&\mathcal{K}(\epsilon) \circ \ast \circ (\mathcal{K}(\Lambda(\pi_2)) \times id_{\mathcal{K}A}) \circ (id_{\mathds{1}} \times f) = & \\
+&\text{naturality for $\ast$}& \\
+&\mathcal{K}(\epsilon) \circ \mathcal{K}(\Lambda(\pi_2) \times id_A) \circ \ast \circ (id_{\mathds{1}} \times f) = & \\
+&\text{functoriality}& \\
+&\mathcal{K}(\epsilon \circ (\Lambda(\pi_2) \times id_A)) \circ \ast \circ (id_{\mathds{1}} \times f) =& \\
+&\text{exponentiation property}& \\
+&\mathcal{K}(\pi_2) \circ \ast \circ (id_{\mathds{1}} \times f) = & \\
+&\text{property of canonical projection and functor}& \\
+&\pi_2 \circ id_{\mathds{1}} \times f = & \\
+&\text{property of pair morphism}& \\
+&f&
 \end{array}$
-
-So:
-
-$[\![\vdash \text{pure } (\lambda x. x) : \textbf{K}(A \to A)]\!] = \mathcal{K}(\Lambda(\pi_2)) :
-\mathds{1} \to \mathcal{K}([\![A]\!]^{[\![A]\!]})$
-
-$[\![M : \textbf{K}A \vdash M : \textbf{K}A]\!] = id_{\mathcal{K}A} : \mathcal{K}([\![A]\!]) \to
-\mathcal{K}([\![A]\!])$, or
-
-$[\![M : \textbf{K}A \vdash M : \textbf{K}A]\!] = \pi_2 : \mathds{1} \times \mathcal{K}([\![A]\!]) \to \mathcal{K}([\![A]\!])$.
 
 \vspace{\baselineskip}
 
-Let us consider the next commutative diagram:
-
-\xymatrix{
-\mathcal{K}(A^A) \times \mathcal{K}A \ar[r]^{\cong} & \mathcal{K}(A^A \times A)
-\ar[r]^{\mathcal{K(\epsilon)}} & \mathcal{K}A && \mathds{1} \times \mathcal{K}A \ar[dd]_{\pi_2}
-\ar[r]^{\cong} & \mathcal{K}(A^A \times A) \ar[dd]^{\mathcal{K}(\pi_2)} \\
-\\
-\mathds{1} \times \mathcal{K}A \ar[uu]^{\mathcal{K}(\Lambda(\pi_2)) \times id_{\mathcal{K}A}} \ar[r]_{\cong}
-& \mathcal{K}(\mathds{1} \times A) \ar[uu]^{\mathcal{K}(\Lambda(\pi_2) \times id_A)}
-\ar[uur]_{\mathcal{K}(\pi_2)} &&& \mathcal{K}A \ar[r]_{id_{\mathcal{K}A}} & \mathcal{K}A
-}
-
-\vspace{\baselineskip}
-
-Hence:\\
-$\begin{array}{lll}
-&[\![M : \textbf{K}A \vdash \text{pure } (\lambda x. x) \star M]\!] = (\mathcal{K}(\epsilon) \circ (\cong))
-\circ (\mathcal{K}(\Lambda(\pi_2)) \times
-id_{\mathcal{K}A}) & \\
-&\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad = \mathcal{K}(\epsilon) \circ \mathcal{K}(\Lambda(\pi_2) \times id_A) \: \circ \: (\cong) & \\
-&\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad = \mathcal{K}(\epsilon) \circ \: (\cong)& \\
-&\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad = \pi_2 = [\![M : \textbf{K}A \vdash M : \textbf{K}A]\!]&
-\end{array}$
 
 \vspace{\baselineskip}
 
