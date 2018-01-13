@@ -97,37 +97,6 @@ strong normalization and Church-Rosser properties.
 
   \section{Typed lambda-calculus based on IEL$^{-}$}
 
-  \begin{defin} Intuitionistic normal modal logic {\bf IK}
-
-    1) IPC axioms;
-
-    2) $\Box (A \to B) \to (\Box A \to \Box B)$;
-
-    3) Rules: MP and necessiation.
-
-  \end{defin}
-
-  \begin{defin} Translation from {\bf IK} into {\bf IEL}$^{-}$
-
-    1) $\bot^{\circ} = \bot$;
-
-    2) $p^{\circ} = p$;
-
-    3) $(A \alpha B)^{\circ} = A^{\circ} \alpha B^{\circ}$, $\alpha \in \{ \to, \wedge, \vee \}$.
-
-    4) $(\Box A)^{\circ} = {\bf K} A^{\circ}$
-  \end{defin}
-
-  \begin{lemma}
-    $ $
-    ${\bf IK} \vdash A \Rightarrow {\bf IEL}^{-} \vdash A^{\circ}$
-  \end{lemma}
-
-  \begin{proof}
-    Straightforward induction on the structure of $M$.
-  \end{proof}
-
-  It is clearly that we may prove similar fact for ${\bf IEL}$ by the same way.
 
   At first we define the natural deduction for IEL$^{-}$ with $\textbf{K}$-modality and binary connectives
   $\to$ and $\land$ (we call that calculus NIEL$^{-}_{\land, \to}$):
@@ -395,7 +364,7 @@ Here are some examples of derivation trees.
 
   1) $x [x := N] = N$, $x [y := N] = x$;
 
-  2) $(M N) [x := N] = M[x := N] N [x := N]$;
+  2) $(M N) [x := P] = M[x := P] N [x := P]$;
 
   3) $(\lambda x. M) [x := N] = \lambda x. M [x := N]$;
 
@@ -525,7 +494,7 @@ Induction on the derivation of $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alph
 
   By hypothesis $\Gamma \uparrow FV(\vec{M}) \vdash \vec{M} : \textbf{K}\vec{A}$.
 
-  So $\Gamma \uparrow FV(\vec{M}) \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\bf \: in \:} N : \textbf{K}B$.
+  So $\Gamma \uparrow FV(\vec{M}) \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\bf \: in \:} N : \textbf{K}B$ by ${\bf let}_{\textbf{K}}$.
 
   \end{proof}
 
@@ -554,11 +523,63 @@ Induction on the derivation of $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alph
 
   So $\Gamma \vdash ({\bf pure \: } M [x := N]) : \textbf{K}B$
 
-  2) .
+  2) Let $\Gamma, y : C \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\bf \: in \:} N : \textbf{K}B$ and $\Gamma \vdash P : C$.
+
+  By generation $\Gamma, y : C \vdash \vec{M} : \textbf{K}\vec{A}$ and $\vec{x} : \vec{A} \vdash N : \textbf{K}B$.
+
+  By assumption $\Gamma \vdash \overrightarrow{M [y := P]} : \textbf{K}A$.
+
+  So $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \overrightarrow{M [y := P]} {\bf \: in \:} N : \textbf{K}B$ by ${\bf let}_{\textbf{K}}$.
 
   \end{proof}
 
   \vspace{\baselineskip}
+
+  \begin{defin} Type substitution
+
+    The substitution of type $C$ for type variable $B$ in some type $A$ is defined by:
+
+    1) $A [ A := B ] = B$;
+
+    2) $A^{'} [A := C] = A^{'}$;
+
+    3) $(A_1 \alpha A_2) [B := C] = A_1 [B := C] \alpha A_2 [A := B]$, where $\alpha \{ \times, \to \}$;
+
+    4) $(\textbf{K}A) [B := C] = \textbf{K}(A [B := C])$.
+
+  \end{defin}
+
+    \vspace{\baselineskip}
+
+  \begin{lemma} Substitution for types.
+
+    Let $\Gamma \vdash M : A$, then $\Gamma [B := C] \vdash M : A [B := C]$, where $\Gamma [B := C]$ denotes $\{ x_1 : A_1 [B := C],\dots, x_n : A_n [B := C] \}$.
+
+  \end{lemma}
+
+  1) Let $\Gamma, x : A \vdash x : A$, so $\Gamma [B := C], x : A [B := C] \vdash x : A [B := C]$.
+
+  \vspace{\baselineskip}
+
+  2) Let $\Gamma \vdash {\bf pure \: } M : \textbf{K}A$. By generation $\Gamma \vdash M : A$.
+
+  By assumption $\Gamma [B := C] \vdash M : A [B := C]$.
+
+  By $\textbf{K}_I$, $\Gamma [B := C] \vdash {\bf pure \:} M : \textbf{K} (A [B := C])$.
+
+  But, by substitution definition, $\textbf{K} (A [B := C]) = (\textbf{K}A) [B := C]$.
+
+  Then $\Gamma [B := C] \vdash {\bf pure \:} M : (\textbf{K}A) [B := C]$.
+
+  3) $\Gamma \vdash {\bf let \: pure} \: \vec{x} = \vec{M} \: {\bf in} \: M : {\bf K} B$.
+
+  By generation $\Gamma \vdash \vec{M} : \textbf{K}\vec{A}$ and $\vec{x} : \vec{A} \vdash N : \textbf{K}B$.
+
+  $\Gamma [D := C] \vdash \vec{M} : \textbf{K}\overrightarrow{A [D := C]}$ and $\vec{x} : \overrightarrow{A [D := C]} \vdash M : B [D := C]$ by assumption.
+
+  Then $\Gamma [D := C] \vdash {\bf let \: pure } \: \vec{x} = \vec{M} \: {\bf in} \: M : {\bf } (B [D := C])$.
+
+
 
   \begin{theorem} Subject reduction
 
@@ -568,59 +589,7 @@ Induction on the derivation of $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alph
 
   \end{theorem}
 
-  We consider cases with reduction rules which are applicative laws. The general statement for $\twoheadrightarrow_{\beta}$ follows from transitivity of multi-step $\beta$-reduction.
-
   \begin{proof}
-
-  $ $
-
-\vspace{\baselineskip}
-
-  1) Let $\Gamma \vdash {\bf pure \: } (\lambda x. x) \star M : \textbf{K}\alpha$. Then $\Gamma \vdash
-  {\bf pure \: } (\lambda x.x) : \textbf{K}(\alpha \to \alpha)$ and $\Gamma \vdash M : \textbf{K}\alpha$ by
-  generation. Then $\Gamma \vdash M : \textbf{K}\alpha$ trivially.
-
-\vspace{\baselineskip}
-
-  2) Let $\Gamma \vdash {\bf pure \: }(\lambda f g x. f (g x)) \star M \star N \star P : \textbf{K}\gamma$.
-
-  Then $\Gamma \vdash {\bf pure \: } (\lambda f g x. f (g x)) : \textbf{K}((\beta \to \gamma) \to (\alpha \to \beta)
-  \to \alpha \to \gamma)$, $\Gamma \vdash M : \textbf{K}(\beta \to \gamma)$, $\Gamma \vdash N :
-  \textbf{K}(\alpha \to \beta)$ and $\Gamma \vdash P : \textbf{K}\alpha$ by generation.
-
-  If $\Gamma \vdash N : \textbf{K}(\alpha \to \beta)$ and $\Gamma \vdash P : \textbf{K}\alpha$, then $\Gamma
-  \vdash N \star P : \textbf{K}\beta$ by $\textbf{K}_{app}$.
-
-  Hence, if $\Gamma \vdash M : \textbf{K}(\beta \to \gamma)$, then $\Gamma \vdash M \star (N \star P) :
-  \textbf{K}\gamma$ by $\textbf{K}_{app}$.
-
-\vspace{\baselineskip}
-
-  3) Let $\Gamma \vdash ({\bf pure \: } M) \star ({\bf pure \: } N) : \textbf{K}\beta$. Then $\Gamma \vdash
-  {\bf pure \: } M : \textbf{K}(\alpha \to \beta)$ and $\Gamma \vdash {\bf pure \: } N : \textbf{K}\alpha$ by
-  generation. Moreover, $\Gamma \vdash M : \alpha \to \beta$ and $\Gamma \vdash N : \alpha$.
-
-  Then $\Gamma \vdash M N : \beta$ by application.
-
-  Hence, $\Gamma \vdash {\bf pure \: } (M N) : \textbf{K}\beta$ by $K_I$.
-
-\vspace{\baselineskip}
-
-  4) Let $\Gamma \vdash M \star ({\bf pure \: } N) : \textbf{K}\beta$.
-
-  Then $\Gamma \vdash M : \textbf{K}(\alpha \to \beta)$ and $\Gamma \vdash {\bf pure \: } N : \textbf{K}\alpha$.
-
-  Moreover, $\Gamma \vdash N : \alpha$ by generation.
-
-  Let $\Gamma, f : \alpha \to \beta \vdash f : \alpha \to \beta$ and $\Gamma, f : \alpha \to \beta \vdash N :
-  \alpha$ by weakening.
-
-  So $\Gamma, f : \alpha \to \beta \vdash f N : \beta$ by application, so $\Gamma \vdash \lambda f. f N :
-  (\alpha \to \beta) \to \beta$ by abstraction.
-
-  Then $\Gamma \vdash {\bf pure \: } (\lambda f. f N) : \textbf{K}((\alpha \to \beta) \to \beta)$ by $\textbf{K}_I$.
-
-  Hence, $\Gamma \vdash {\bf pure \: } (\lambda f. f N) \star M : \textbf{K}\beta$.
 
   \end{proof}
 
