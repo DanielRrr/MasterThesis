@@ -285,9 +285,9 @@ $\begin{array}{lll}
   \end{prooftree}
 
   \begin{prooftree}
-    \AxiomC{$\Gamma \vdash \vec{x} : {\bf K} \vec{A}$}
-    \AxiomC{$\vec{y} : \vec{A} \vdash M : B$}
-    \BinaryInfC{$\Gamma \vdash {\bf let \:\: pure} \:\: \vec{y} = \vec{x} \:\: {\bf in} \:\: M : {\bf K} B$}
+    \AxiomC{$\Gamma \vdash \vec{M} : {\bf K} \vec{A}$}
+    \AxiomC{$\vec{N} : \vec{A} \vdash M : B$}
+    \BinaryInfC{$\Gamma \vdash {\bf let \:\: pure} \:\: \vec{N} = \vec{M} \:\: {\bf in} \:\: M : {\bf K} B$}
   \end{prooftree}
     \end{flushright}
   \end{minipage}
@@ -355,7 +355,7 @@ Here are some examples of derivation trees.
 
   6) $FV(\text{pure } M) = FV(M)$;
 
-  7) $FV(M \star N) = FV(M) \cup FV(N)$.
+  7) $FV({\bf let \:\: pure} \:\: \vec{N} = \vec{M} \:\: {\bf in} \:\: M) = \bigcup \limits_{i = 1}^n FV(M), \text{where $n = |\vec{M}|$}$.
   \end{defin}
 
   \begin{defin} Substitution:
@@ -372,7 +372,7 @@ Here are some examples of derivation trees.
 
   6) $({\bf pure \: } M) [x := P] = {\bf pure \: } (M [x := P])$;
 
-  7) $(M \star N) [x := P] = (M [x := P]) \star (N [x := P])$.
+  7) $({\bf let \:\: pure} \:\: \vec{N} = \vec{M} \:\: {\bf in} \:\: M) [x := P] = {\bf let \:\: pure} \:\: \vec{N} = (\vec{M} [x := P]) \:\: {\bf in} \:\: M$.
   \end{defin}
 
   In $\lambda \textbf{K}$ we have the following computational rules. We will define them for terms with
@@ -381,28 +381,8 @@ Here are some examples of derivation trees.
 
   \begin{defin} $\beta$-reduction rules for \emph{$\lambda \textbf{K}$}.
 
-  1) ${\bf pure \: } (\lambda x. x) \star M \rightarrow_{\beta} M$;
 
-  2) ${\bf pure \: } (\lambda f g x. f (g x)) \star M \star N \star P \rightarrow_{\beta} M \star (N \star
-  P)$;
-
-  3) $({\bf pure \: } M) \star (\text{pure } N) \rightarrow_{\beta} \text{pure } (M N)$;
-
-  4) $M \star {\bf pure \: } N \rightarrow_{\beta} (\lambda f. f N) \star M$;
-
-  5) $M_1 \rightarrow_{\beta} M_2 \Leftrightarrow {\bf pure \: } \: M_1 \rightarrow_{\beta} {\bf pure \: } \: M_2$;
-
-  6) $M_1 \rightarrow_{\beta} M_2 \Rightarrow M_1 \star N \rightarrow_{\beta} M_2 \star N$;
-
-  7) $N_1 \rightarrow_{\beta} N_2 \Rightarrow M \star N_1 \rightarrow_{\beta} M \star N_2$;
   \end{defin}
-
-  In Haskell any implementation of the Applicative instance should preserve the laws proposed by McBride and
-  Paterson \cite{McP}. We preserve these laws by the introduction of corresponding reduction rules (rules
-  (1)-(4)). These rules will be called respectively identity rule, composition rule, homomorphism rule and
-  interchange rule.
-
-  Rules (5)-(7) are would be useful for strong normalization proof.
 
 
 
@@ -436,15 +416,15 @@ Here are some examples of derivation trees.
 
   1) $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alpha$ implies that $\Gamma \vdash M : \alpha$;
 
-  2) $\Gamma \vdash M \star N : \textbf{K}\beta$ implies that $\Gamma \vdash M : \textbf{K}(\alpha \to \beta)$ and
-  $\Gamma \vdash N : \textbf{K}\alpha$.
+  2) $\Gamma \vdash {\bf let \: pure} \: \vec{N} = \vec{M} \: {\bf in} \: M : {\bf K} B$ implies that $\Gamma \vdash \vec{M} : {\bf K} \vec{A}$ and
+$\vec{N} : \vec{A} \vdash M : B$.
   \end{lemma}
 
   \begin{proof}
 
   $ $
 
-  Simple induction on the derivation of $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alpha$ and $\Gamma \vdash M \star N : \textbf{K}(\alpha \to \beta)$ respectively.
+Induction on the derivation of $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alpha$ and $\Gamma \vdash {\bf let \: pure} \: \vec{N} = \vec{M} \: {\bf in} \: M : {\bf K} B$ respectively.
   \end{proof}
 
   \vspace{\baselineskip}
