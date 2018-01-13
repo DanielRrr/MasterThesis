@@ -381,6 +381,13 @@ Here are some examples of derivation trees.
 
   \begin{defin} $\beta$-reduction rules for \emph{$\lambda \textbf{K}$}.
 
+  1) $(\lambda x. M) N \rightarrow_{\beta} M [x := N]$;
+
+  2) $\pi_1 \langle M, N \rangle \rightarrow_{\beta} M$;
+
+  3) $\pi_2 \langle M, N \rangle \rightarrow_{\beta} N$;
+
+  4) ${\bf let \: pure \: } \vec{N_1} = \vec{M_1} \: {\bf in} \: {\bf let \: pure \:} \vec{N_2} = \vec{M_2} \: {\bf in} \: M \rightarrow_{\beta} $
 
   \end{defin}
 
