@@ -106,61 +106,62 @@ strong normalization and Church-Rosser properties.
   \begin{prooftree}
   \AxiomC{}
   \RightLabel{\scriptsize{ax}}
-  \UnaryInfC{$\Gamma , \alpha \vdash \alpha$}
+  \UnaryInfC{$\Gamma , \alpha \vdash A$}
   \end{prooftree}
   \end{center}
 
   \begin{minipage}{0.5\textwidth}
     \begin{flushleft}
   	\begin{prooftree}
-  	\AxiomC{$\Gamma, \alpha \vdash \beta$}
+  	\AxiomC{$\Gamma, A \vdash B$}
   	\RightLabel{$\rightarrow_i$}
-  	\UnaryInfC{$\Gamma \vdash \alpha \to \beta$}
+  	\UnaryInfC{$\Gamma \vdash A \to B$}
     	\end{prooftree}
 
   	\begin{prooftree}
-  	\AxiomC{ $\Gamma \vdash \alpha$ }
-  	\AxiomC{ $\Gamma \vdash \beta$ }
+  	\AxiomC{ $\Gamma \vdash A$ }
+  	\AxiomC{ $\Gamma \vdash B$ }
   	\RightLabel{$\land_i$}
-  	\BinaryInfC{$\Gamma \vdash \alpha \land \beta$}
+  	\BinaryInfC{$\Gamma \vdash A \land B$}
   	\end{prooftree}
 
   	\begin{prooftree}
-    	\AxiomC{$\Gamma \vdash \alpha$}
+    	\AxiomC{$\Gamma \vdash A$}
     	\RightLabel{$\textbf{K}_I$}
-    	\UnaryInfC{$\Gamma \vdash \textbf{K}\alpha$}
+    	\UnaryInfC{$\Gamma \vdash \textbf{K}A$}
   \end{prooftree}
     \end{flushleft}
   \end{minipage}
   \begin{minipage}{0.5\textwidth}
     \begin{flushright}
     	\begin{prooftree}
-  	\AxiomC{$\Gamma \vdash \alpha \to \beta$}
-  	\AxiomC{$\Gamma \vdash \alpha$}
+  	\AxiomC{$\Gamma \vdash A \to B$}
+  	\AxiomC{$\Gamma \vdash A$}
   	\RightLabel{$\rightarrow_i$}
-  	\BinaryInfC{$\Gamma \vdash \beta$}
+  	\BinaryInfC{$\Gamma \vdash B$}
     	\end{prooftree}
 
   	\begin{prooftree}
-  	\AxiomC{ $\Gamma \vdash \alpha_1 \land \alpha_2$ }
+  	\AxiomC{ $\Gamma \vdash A_1 \land A_2$ }
   	\RightLabel{$\land_e, i \in \{ 1, 2 \}$}
-  	\UnaryInfC{$\Gamma \vdash \alpha_i$}
+  	\UnaryInfC{$\Gamma \vdash A_i$}
   	\end{prooftree}
 
   	\begin{prooftree}
-    	\AxiomC{$\Gamma \vdash \textbf{K}(\alpha \to \beta)$}
-    	\AxiomC{$\Gamma \vdash \textbf{K}\alpha$}
-    	\RightLabel{$\textbf{K}_{MP}$}
-          \BinaryInfC{$\Gamma \vdash \textbf{K}\beta$}
+    \AxiomC{$\Gamma \vdash {\bf K} \vec{A}$}
+    \AxiomC{$\vec{A} \vdash B$}
+    \BinaryInfC{$\Gamma \vdash {\bf K} B$}
   	\end{prooftree}
     \end{flushright}
   \end{minipage}
   \end{defin}
 
+Where $\Gamma \vdash {\bf K} \vec{A}$ is a syntax sugar for $\Gamma \vdash {\bf K} A_1 ,\dots, \Gamma \vdash {\bf K} A_n$.
+
   \vspace{\baselineskip}
 
   \begin{lemma}
-    NIEL$^{-}_{\land, \to} \vdash \alpha \Rightarrow$ IEL$^{-}$ $\vdash \alpha$.
+    $\Gamma \vdash_{\text{NIEL}^{-}_{\land, \to}} A \Rightarrow$ IEL$^{-} \vdash \bigwedge \Gamma \rightarrow A$.
   \end{lemma}
 
   \begin{proof}
@@ -172,40 +173,29 @@ Let us consider cases with modality.
 
 \vspace{\baselineskip}
 
-1) If $\Gamma \vdash_{NIEL^{-}_{\land, \to}} \alpha$, then $IEL^{-} \vdash \wedge \Gamma \rightarrow \textbf{K}\alpha$.
+1) If $\Gamma \vdash_{NIEL^{-}_{\land, \to}} A$, then $IEL^{-} \vdash \bigwedge \Gamma \rightarrow \textbf{K}A$.
 
 $\begin{array}{lll}
-(1)& \wedge \Gamma \rightarrow \alpha & \text{assumption}\\
-(2)& \alpha \rightarrow \textbf{K}\alpha &\text{co-reflection.}\\
-(3)& (\wedge \Gamma \rightarrow \alpha) \rightarrow ((\alpha \rightarrow \textbf{K}\alpha) \rightarrow (\wedge \Gamma \rightarrow \textbf{K}\alpha))&\text{IPC theorem}\\
-(4) &(\alpha \rightarrow \textbf{K}\alpha) \rightarrow (\wedge \Gamma \rightarrow \textbf{K}\alpha) &\text{1, 3, MP}\\
-(5) &\wedge \Gamma \rightarrow \textbf{K}\alpha &\text{2,4, MP}\\
+(1) & \bigwedge \Gamma \rightarrow A & \text{assumption}\\
+(2) & A \rightarrow \textbf{K}A &\text{co-reflection}\\
+(3) & (\bigwedge \Gamma \rightarrow A) \rightarrow ((A \rightarrow \textbf{K}A) \rightarrow (\bigwedge \Gamma \rightarrow \textbf{K}A))&\text{IPC theorem}\\
+(4) & (A \rightarrow \textbf{K}A) \rightarrow (\bigwedge \Gamma \rightarrow \textbf{K}A) &\text{from (1), (3) and MP}\\
+(5) & \bigwedge \Gamma \rightarrow \textbf{K}A &\text{from (2), (4) and MP}\\
 \end{array}$
 
 \vspace{\baselineskip}
 
-2) If $\Gamma \vdash_{NIEL^{-}_{\land, \to}} \textbf{K}(\alpha \to \beta)$ and $\Gamma \vdash_{NIEL^{-}_{\land, \to}} \textbf{K}\alpha$, then $IEL^{-} \vdash \wedge \Gamma \rightarrow \textbf{K}\beta$.
+2) If $\Gamma \vdash_{NIEL^{-}_{\land, \to}} {\bf K} \vec{A}$ and $\vec{A} \vdash B$, then $IEL^{-} \vdash \bigwedge \Gamma \rightarrow \textbf{K}B$.
 
 $\begin{array}{lll}
-(1)& \Gamma \vdash_{NIEL^{-}_{\land, \to}} \textbf{K}(\alpha \to \beta) & \text{condition}\\
-(2)& \Gamma \vdash_{NIEL^{-}_{\land, \to}} \textbf{K}\alpha & \text{condition}\\
-(3)& \Gamma \vdash_{NIEL^{-}_{\land, \to}} \textbf{K}(\alpha \to \beta) \land \textbf{K}\alpha & \land_i \\
-(4)& \wedge \Gamma \rightarrow \textbf{K}(\alpha \to \beta) \land \textbf{K}\alpha & \text{induction
-hypothesis} \\
-(5)& (\textbf{K}(\alpha \rightarrow \beta) \rightarrow (\textbf{K}\alpha \to \textbf{K}\beta)) \rightarrow
-((\textbf{K}(\alpha \rightarrow \beta) \land \textbf{K}\alpha) \rightarrow \textbf{K}\beta)& \text{IPC
-theorem} \\
-(6)&\textbf{K}(\alpha \rightarrow \beta) \rightarrow (\textbf{K}\alpha \to \textbf{K}\beta)&
-\text{normality}\\
-(7)&(\textbf{K}(\alpha \rightarrow \beta) \land \textbf{K}\alpha) \rightarrow \textbf{K}\beta)& \text{5,6,
-MP}\\
-(8)&(\wedge \Gamma \rightarrow \textbf{K}(\alpha \to \beta) \land \textbf{K}\alpha) \rightarrow & \\
-&\quad\rightarrow ((\textbf{K}(\alpha \rightarrow \beta) \land \textbf{K}\alpha) \rightarrow
-\textbf{K}\beta) \rightarrow
-(\wedge \Gamma \rightarrow \textbf{K}\beta))& \text{IPC theorem} \\
-(9) &(\textbf{K}(\alpha \rightarrow \beta) \land \textbf{K}\alpha) \rightarrow \textbf{K}\beta) \rightarrow
-(\wedge \Gamma \rightarrow \textbf{K}\beta)& \text{4, 8, MP} \\
-(10) &\wedge \Gamma \rightarrow \textbf{K}\beta& \text{7, 9, MP}
+(1) &\bigwedge \Gamma \rightarrow \bigwedge \limits_{i = 1}^{n} {\bf K} A_i & \text{assumption} \\
+(2) &\bigwedge \limits_{i = 1}^{n} {\bf K} A_i \rightarrow {\bf K} \bigwedge \limits_{i = 1}^{n} A_i& \text{IEL theorem} \\
+(3) &\bigwedge \Gamma \rightarrow {\bf K} \bigwedge \limits_{i = 1}^{n} A_i & \text{from (1), (2) and transitivity} \\
+(4) &\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B& \text{assumption} \\
+(5) &(\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B) \rightarrow {\bf K} (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{co-reflection}\\
+(6) &{\bf K} (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{from (2), (3) and MP} \\
+(7) &{\bf K} \bigwedge \limits_{i = 1}^{n} A_i \rightarrow {\bf K} B & \text{from (6) and normality} \\
+(8) &\bigwedge \Gamma \rightarrow {\bf K} B & \text{from (3), (7) and transitivity}
 \end{array}$
 
   \end{proof}
@@ -222,14 +212,12 @@ MP}\\
   \begin{defin} The set of terms:
 
   Let $\mathbb{V}$ be the set of variables. The set $\Lambda_{\textbf{K}}$ of terms is defined by the grammar:
-  \begin{equation}
-    \Lambda_{\textbf{K}} ::= \mathbb{V} \: | \:  (\lambda \Lambda.\Lambda_{\textbf{K}}) \: | \:
-    (\Lambda_{\textbf{K}}\Lambda_{\textbf{K}}) \: | \: (\Lambda_{\textbf{K}} , \Lambda_{\textbf{K}}) \: | \:
-    (\pi_i \Lambda_{\textbf{K}}) \:
-    | \: ({\bf pure \: } \: \Lambda_{\textbf{K}}) \: | \: (\Lambda_{\textbf{K}} \star
-    \Lambda_{\textbf{K}})
-  \end{equation}
-  where $i \in \{ 1, 2 \}$.
+
+$\begin{array}{lll}
+& \Lambda_{\textbf{K}} ::= \mathbb{V} \: | \:  (\lambda \Lambda.\Lambda_{\textbf{K}}) \: | \: (\Lambda_{\textbf{K}}\Lambda_{\textbf{K}}) \: | \: (\Lambda_{\textbf{K}} , \Lambda_{\textbf{K}}) \: | \: (\pi_1 \Lambda_{\textbf{K}}) \: | \: (\pi_2 \Lambda_{\textbf{K}}) \: | & \\
+& \quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad ({\bf pure \: } \: \Lambda_{\textbf{K}}) \: | \: ({\bf let \:\: pure} \:\: \Lambda_{\textbf{K}} = \Lambda_{\textbf{K}} \:\: {\bf in} \:\: \Lambda_{\textbf{K}})
+\end{array}$
+
   \end{defin}
 
   \begin{defin} The set of types:
@@ -297,10 +285,9 @@ MP}\\
   \end{prooftree}
 
   \begin{prooftree}
-    \AxiomC{$\Gamma \vdash f : \textbf{K}(\alpha \to \beta)$}
-    \AxiomC{$\Gamma \vdash x : \textbf{K}\alpha$}
-    \RightLabel{$\textbf{K}_{app}$}
-    \BinaryInfC{$\Gamma \vdash f \star x : \textbf{K}\beta$}
+    \AxiomC{$\Gamma \vdash \vec{x} : {\bf K} \vec{A}$}
+    \AxiomC{$\vec{y} : \vec{A} \vdash M : B$}
+    \BinaryInfC{$\Gamma \vdash {\bf let \:\: pure} \:\: \vec{y} = \vec{x} \:\: {\bf in} \:\: M : {\bf K} B$}
   \end{prooftree}
     \end{flushright}
   \end{minipage}
@@ -312,43 +299,43 @@ MP}\\
   $\textbf{K}_I$ allows to inject an object of type $\alpha$ into the functor. $\textbf{K}_I$  reflects the
   Haskell method {\bf pure} for Applicative class. It plays the same role as the {\bf return} method in Monad class.
 
-  $\textbf{K}_{app}$ is a typing rule for lifted application. This rule is similar to
-  $\rightarrow_e$-rule, therefore we introduce the infix operator $\star$ for lifted application.
 
-  \begin{con}
-
-  \emph{$\star$ is a left-associative, so $M \star N \star P = (M \star N) \star P$,  unless otherwise specified.}
-
-  \end{con}
 
   \vspace{\baselineskip}
 
 Here are some examples of derivation trees.
 
   \begin{prooftree}
-  \AxiomC{$x : \alpha \vdash x : \alpha$}
+  \AxiomC{$x : A \vdash x : A$}
   \RightLabel{$\textbf{K}_I$}
-  \UnaryInfC{$x : \alpha \vdash {\bf pure \: } x : \textbf{K} \alpha$}
+  \UnaryInfC{$x : A \vdash {\bf pure \: } x : \textbf{K} A$}
   \RightLabel{$\rightarrow_i$}
-  \UnaryInfC{$\vdash (\lambda x. {\bf pure \: } x) : \alpha \to \textbf{K}\alpha$}
+  \UnaryInfC{$\vdash (\lambda x. {\bf pure \: } x) : A \to \textbf{K}A$}
   \end{prooftree}
 
 
   \begin{prooftree}
-    \AxiomC{$f : \textbf{K}(\alpha \to \beta) \vdash f : \textbf{K}(\alpha \to \beta)$}
-    \AxiomC{$x : \textbf{K}\alpha \vdash x : \textbf{K}\alpha$}
-    \RightLabel{$\textbf{K}_{app}$}
-    \BinaryInfC{$f : \textbf{K}(\alpha \to \beta), x : \textbf{K}\alpha \vdash f \star x :
-    \textbf{K}\beta$}
-    \RightLabel{$\rightarrow_i$}
-    \UnaryInfC{$f : \textbf{K}(\alpha \to \beta) \vdash \lambda x. f \star x : \textbf{K}\alpha \to \textbf{K}\beta$}
-    \RightLabel{$\rightarrow_i$}
-    \UnaryInfC{$\vdash \lambda f. \lambda x. f \star x: \textbf{K}(\alpha \to \beta) \to
-    \textbf{K}\alpha \to \textbf{K}\beta$}
+    \AxiomC{$f : {\bf K} (A \to B) \vdash f : {\bf K} (A \to B)$}
+    \AxiomC{$x : {\bf K} A \vdash x : {\bf K} A $}
+    \AxiomC{$g : A \to B$}
+    \AxiomC{$y : A$}
+    \BinaryInfC{$g : A \to B, y : A \vdash g y : B$}
+    \TrinaryInfC{$f : {\bf K} (A \to B), x : {\bf K} A \vdash {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle f, x \rangle \:\: {\bf in } \:\: g y : {\bf K} B$}
+    \UnaryInfC{$f : {\bf K} (A \to B) \vdash \lambda x. {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle f, x \rangle \:\: {\bf in } \:\: g y : {\bf K} A \to {\bf K} B$}
+    \UnaryInfC{$\vdash \lambda f. \lambda x. {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle f, x \rangle \:\: {\bf in } \:\: g y : {\bf K}(A \to B) \to {\bf K} A \to {\bf K} B$}
   \end{prooftree}
 
-
-
+\begin{prooftree}
+  \AxiomC{$f : A \to B \vdash f : A \to B$}
+  \UnaryInfC{$f : A \to B \vdash {\bf pure \:\:} f : {\bf K }(A \to B)$}
+  \AxiomC{$x : {\bf K} A \vdash x : {\bf K} A $}
+  \AxiomC{$g : A \to B$}
+  \AxiomC{$y : A$}
+  \BinaryInfC{$g : A \to B, y : A \vdash g y : B$}
+  \TrinaryInfC{$f : A \to B, x : {\bf K} A \vdash {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle {\bf pure \:\:} f, x \rangle \:\: {\bf in } \:\: g y : {\bf K} B$}
+  \UnaryInfC{$f : A \to B \vdash \lambda x. {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle {\bf pure \:\:} f, x \rangle \:\: {\bf in } \:\: g y : {\bf K} A \to {\bf K} B$}
+  \UnaryInfC{$\lambda f. \lambda x. {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle {\bf pure \:\:} f, x \rangle \:\: {\bf in } \:\: g y : (A \to B) \to {\bf K} A \to {\bf K} B$}
+\end{prooftree}
 
   \vspace{\baselineskip}
 
