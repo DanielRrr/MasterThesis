@@ -200,6 +200,15 @@ $\begin{array}{lll}
 
   \end{proof}
 
+\begin{lemma}
+  $ $
+  If $\text{IEL}^{-} \vdash A$, then $\text{NIEL}^{-} \vdash A$.
+\end{lemma}
+
+\begin{proof}
+  Straightforward derivation of modal axioms in $\text{NIEL}^{-}$. We consider this derivation below using terms.
+\end{proof}
+
   \vspace{\baselineskip}
 
   At the next step we build the typed lambda-calculus based on NIEL$^{-}_{\land, \to}$ by proof-assingment in
@@ -286,8 +295,9 @@ $\begin{array}{lll}
 
   \begin{prooftree}
     \AxiomC{$\Gamma \vdash \vec{M} : {\bf K} \vec{A}$}
-    \AxiomC{$\vec{N} : \vec{A} \vdash M : B$}
-    \BinaryInfC{$\Gamma \vdash {\bf let \:\: pure} \:\: \vec{N} = \vec{M} \:\: {\bf in} \:\: M : {\bf K} B$}
+    \AxiomC{$\vec{x} : \vec{A} \vdash M : B$}
+    \RightLabel{$\text{let}_{\bf K}$}
+    \BinaryInfC{$\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } M : {\bf K} B$}
   \end{prooftree}
     \end{flushright}
   \end{minipage}
@@ -299,7 +309,7 @@ $\begin{array}{lll}
   $\textbf{K}_I$ allows to inject an object of type $\alpha$ into the functor. $\textbf{K}_I$  reflects the
   Haskell method {\bf pure} for Applicative class. It plays the same role as the {\bf return} method in Monad class.
 
-
+  $\text{let}_{\bf K}$ is similar to $\Box_I$-rule in typed lambda calculus for intuitionistic normal modal logic {\bf IK}, which is described in \cite{ModalK}.
 
   \vspace{\baselineskip}
 
@@ -336,6 +346,9 @@ Here are some examples of derivation trees.
   \UnaryInfC{$f : A \to B \vdash \lambda x. {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle {\bf pure \:\:} f, x \rangle \:\: {\bf in } \:\: g y : {\bf K} A \to {\bf K} B$}
   \UnaryInfC{$\lambda f. \lambda x. {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle {\bf pure \:\:} f, x \rangle \:\: {\bf in } \:\: g y : (A \to B) \to {\bf K} A \to {\bf K} B$}
 \end{prooftree}
+
+
+
 
   \vspace{\baselineskip}
 
@@ -375,11 +388,7 @@ Here are some examples of derivation trees.
   7) $({\bf let \:\: pure} \:\: \vec{N} = \vec{M} \:\: {\bf in} \:\: M) [x := P] = {\bf let \:\: pure} \:\: \vec{N} = (\vec{M} [x := P]) \:\: {\bf in} \:\: M$.
   \end{defin}
 
-  In $\lambda \textbf{K}$ we have the following computational rules. We will define them for terms with
-  ${\bf pure \: }$ or $\star$. Reduction rules for $(,)$ and $\pi_i$ are described, for example, in
-  \cite{Pierce}.
-
-  \begin{defin} $\beta$-reduction rules for \emph{$\lambda \textbf{K}$}.
+  \begin{defin} $\beta$-reduction and $\eta$-reduction rules for \emph{$\lambda \textbf{K}$}.
 
   1) $(\lambda x. M) N \rightarrow_{\beta} M [x := N]$;
 
@@ -387,8 +396,31 @@ Here are some examples of derivation trees.
 
   3) $\pi_2 \langle M, N \rangle \rightarrow_{\beta} N$;
 
-  4) ${\bf let \: pure \: } \vec{N_1} = \vec{M_1} \: {\bf in} \: {\bf let \: pure \:} \vec{N_2} = \vec{M_2} \: {\bf in} \: M \rightarrow_{\beta} $
+  4) $\begin{array}{llll}
+  & {\bf let \: pure \:} \langle \vec{x}, y, \vec{z} \rangle = \langle \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P} \rangle {\: in \:} R \rightarrow_{\beta} & \\
+  & {\bf let \: pure \:} \langle \vec{x}, \vec{w}, \vec{z} \rangle = \langle \vec{M}, \vec{N}, \vec{P} \rangle \: { \bf in } \: R [y := Q]
+  \end{array}$
 
+  5) ${\bf pure \:} ((\lambda x. M) N) \rightarrow_{\beta} {\bf pure \: } (M [x := N])$;
+
+  6) ${\bf pure \:} (\pi_i \langle M_1, M_2 \rangle) \rightarrow_{\beta} {\bf pure \:} M_i$, where $i \in \{ 1, 2 \}$.
+
+  7) $\begin{array}{llll}
+  & {\bf pure \:} ({\bf let \: pure \:} \langle \vec{x}, y, \vec{z} \rangle = \langle \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P} \rangle {\: in \:} R) \rightarrow_{\beta} & \\
+  & {\bf pure \:} ({\bf let \: pure \:} \langle \vec{x}, \vec{w}, \vec{z} \rangle = \langle \vec{M}, \vec{N}, \vec{P} \rangle \: { \bf in } \: R [y := Q])
+  \end{array}$
+
+  8) $\lambda x. f x \rightarrow_{\eta} f$;
+
+  9) $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
+
+  10) ${\bf let \: pure \:} x = M {\: \bf in \: } x \rightarrow_{\eta} M$;
+
+  11) ${\bf pure \:} (\lambda x. f x) \rightarrow_{\eta} {\bf pure \:} f$;
+
+  12) ${\bf pure \:} (\langle \pi_1 P, \pi_2 P \rangle) \rightarrow_{\eta} {\bf pure \:} P$;
+
+  13) ${\bf pure \:} ({\bf let \: pure \:} x = M {\: \bf in \: } x) \rightarrow_{\eta} {\bf pure \:} M$.
   \end{defin}
 
 
@@ -401,19 +433,19 @@ Here are some examples of derivation trees.
 
   \begin{defin} The domain of a context $\Gamma$:
 
-  Let $\Gamma = \{ x_1 : \alpha_1, ..., x_n : \alpha_n \}$. Then the domain of $\Gamma$, or $dom(\Gamma)$, is a set $\{  x_1, ..., x_n\}$.
+  Let $\Gamma = \{ x_1 : A_1, ..., x_n : A_n \}$. Then the domain of $\Gamma$, or $dom(\Gamma)$, is a set $\{  x_1, ..., x_n\}$.
 
   \end{defin}
 
   \begin{lemma}
 
-  If $\Gamma \vdash M : \alpha$, then $FV(M) \subseteq dom(\Gamma)$
+  If $\Gamma \vdash M : A$, then $FV(M) \subseteq dom(\Gamma)$
 
   \end{lemma}
 
   \begin{proof}
 
-  Induction on the derivation of $\Gamma \vdash M : \alpha$.
+  Induction on the derivation of $\Gamma \vdash M : A$.
 
   \end{proof}
 
@@ -440,7 +472,7 @@ Induction on the derivation of $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alph
 
   \begin{lemma} Weakening for $\lambda \textbf{K}$.
 
-  Let $\Gamma \vdash M : \alpha$ and $\Gamma \subseteq \Delta$, then $\Delta \vdash M : \alpha$.
+  Let $\Gamma \vdash M : A$ and $\Gamma \subseteq \Delta$, then $\Delta \vdash M : A$.
 
   \end{lemma}
 
@@ -448,22 +480,30 @@ Induction on the derivation of $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alph
 
   $ $
 
-  Induction on derivation of $\Gamma \vdash M : \alpha$. Let us assume $\Gamma \subseteq \Delta$.
+  Induction on derivation of $\Gamma \vdash M : A$. Let us assume $\Gamma \subseteq \Delta$.
 
-  1) Let $\Gamma \vdash x : \alpha$, such that $\Gamma = \Delta, x : \alpha$ and $\Theta \subseteq \Gamma$.
+  1) Let $\Gamma \vdash x : A$, such that $\Gamma = \Delta, x : A$ and $\Theta \subseteq \Gamma$.
   Let $\Sigma = \Theta \setminus \Gamma$, or, which is the same, $\Sigma = \Theta \setminus \Delta, x :
-  \alpha$, then $\Sigma,
-  \Delta, x : \alpha \vdash x : \alpha$, or, $\Theta \vdash x : \alpha$.
+  A$, then $\Sigma, \Delta, x : A \vdash x : A$, or, $\Theta \vdash x : A$.
 
-  2) Let $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alpha$ and $\Gamma \subseteq \Theta$.
+  \vspace{\baselineskip}
 
-  If $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alpha$, then $\Gamma \vdash M : \alpha$ by generation and, by
-  hypothesis, $\Theta \vdash M : \alpha$, so $\Theta \vdash {\bf pure \: } M : \textbf{K}\alpha$ by applying
+  2) Let $\Gamma \vdash {\bf pure \: } M : \textbf{K}A$ and $\Gamma \subseteq \Theta$.
+
+  By generation $\Gamma \vdash M : A$
+
+  By hypothesis, $\Theta \vdash M : A$, so $\Theta \vdash {\bf pure \: } M : \textbf{K}A$ by applying
   $\textbf{K}_I$-rule.
 
-  3) Let $\Gamma \vdash M \star N : \textbf{K}\beta$. So $\Gamma \vdash M : \textbf{K}(\alpha \to \beta)$ and $\Gamma
-  \vdash N : \textbf{K}\alpha$. By hypothesis $\Delta \vdash M : \textbf{K}(\alpha \to \beta)$ and $\Delta \vdash N :
-  \textbf{K}\alpha$. Then $\Delta \vdash M \star N : \textbf{K}\beta$.
+    \vspace{\baselineskip}
+
+  3) Let $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K} B$ and $\Gamma \subseteq \Theta$.
+
+  By generation $\Gamma \vdash \vec{M} : {\bf K} \vec{A}$ and $\vec{x} : \vec{A} \vdash N : B$.
+
+  By assumption $\Theta \vdash \vec{M} : {\bf K} \vec{A}$.
+
+  Hence $\Theta \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K} B$.
 
   \end{proof}
 
@@ -476,29 +516,30 @@ Induction on the derivation of $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alph
 
   \begin{proof}
 
-  Induction by derivation. We consider the base of induction and the case with $\textbf{K}_{app}$. The rest
-  cases are
-  proven by the same way.
-
   $ $
 
-  1) Let $\Gamma \vdash x : \alpha$, where $\Gamma = \Delta, x : \alpha$, $x \in \mathbb{V}$.
+  1) Let $\Gamma \vdash x : A$, where $\Gamma = \Delta, x : \alpha$, $x \in \mathbb{V}$.
 
-  $FV(x) = \{ x\}$, then $dom(\Gamma) \cap \{ x\} = \{ x\}. $ So $(\Delta, x : \alpha) \uparrow FV(x) = \{ x
-  : \alpha\}$, then $x : \alpha \vdash x : \alpha$ by axiom.
+  $FV(x) = \{ x\}$, then $dom(\Gamma) \cap \{ x\} = \{ x\}. $ So $(\Delta, x : A) \uparrow FV(x) = \{ x
+  : A\}$, then $x : A \vdash x : A$ by axiom.
 
-  2) Let $\Gamma \vdash M \star N : \textbf{K}\beta$.
+  \vspace{\baselineskip}
 
-  By generation $\Gamma \vdash M : \textbf{K}(\alpha \to \beta)$ and $\Gamma \vdash N : \textbf{K}\alpha$.
+  2) Let $\Gamma \vdash {\bf pure \: } M : {\bf K} A$.
 
-  By induction hypothesis $\Gamma \uparrow FV(M) \vdash M : \textbf{K}(\alpha \to \beta)$ and $\Gamma
-  \uparrow FV(N) \vdash N : \textbf{K}\beta$.
+  By generation, $\Gamma \vdash M : A$ and $\Gamma \uparrow FV(M) \vdash M : A$ by hypothesis.
 
-  But $\Gamma \uparrow FV(M) \subseteq \Gamma \uparrow FV(M \star N)$ and $\Gamma
-  \uparrow FV(N) \subseteq \Gamma \uparrow FV(M \star N)$, so $\Gamma \uparrow FV(M \star N) \vdash M :
-  \textbf{K}(\alpha \to \beta)$ and $\Gamma \uparrow FV(M \star N) \vdash N : \textbf{K}\alpha$ by weakening.
+  So $\Gamma \uparrow FV(M) \vdash {\bf pure \: } M : {\bf K} A$ by ${\bf K}_I$.
 
-  Then $\Gamma \uparrow FV(M \star N) \vdash M \star N : \textbf{K}\beta$ by $\textbf{K}_{app}$.
+  \vspace{\baselineskip}
+
+  3) Let $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K} B$.
+
+By generation, $\Gamma \vdash \vec{M} : {\bf K} \vec{A}$ and $\vec{x} : \vec{A} \vdash N : B$.
+
+By assumption, $\Gamma \uparrow FV(\vec{M}) \vdash \vec{M} : {\bf } \vec{A}$.
+
+By $\text{let}_{\bf K}$, $\Gamma \uparrow FV(\vec{M}) \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K} B$
 
   \end{proof}
 
@@ -506,8 +547,7 @@ Induction on the derivation of $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alph
 
   \begin{lemma}
 
-  If $\Gamma, x : \alpha \vdash M : \beta$  and $\Gamma \vdash N : \alpha$, then $\Gamma \vdash (M [x := N]) :
-  \beta $
+  If $\Gamma, x : A \vdash M : B$  and $\Gamma \vdash N : A$, then $\Gamma \vdash (M [x := N]) : B$
 
   \end{lemma}
 
@@ -515,24 +555,26 @@ Induction on the derivation of $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alph
 
   $ $
 
-  1) Let $\Gamma, x : \alpha \vdash {\bf pure \: } M : \textbf{K}\beta$ and $\Gamma \vdash N : \alpha$.
+  1) Let $\Gamma, x : A \vdash {\bf pure \: } M : \textbf{K}B$ and $\Gamma \vdash N : A$.
 
-  If $\Gamma, x : \alpha \vdash {\bf pure \: } M : \textbf{K}\beta$, then, by generation, $\Gamma, x : A \vdash
-  M : \beta$. So, by induction hypothesis, $\Gamma \vdash (M [x := N]) : \beta $, then $\Gamma \vdash
-  {\bf pure \: } (M [x := N]) : \textbf{K}\beta$ by $\textbf{K}_I$, but ${\bf pure \: } (M [x := N]) =
-  ({\bf pure \: } M) (M [x := N])$
-  by substitution definition, so $\Gamma \vdash ({\bf pure \: } M) (M [x := N]) : \textbf{K}\beta$
+  By generation, $\Gamma, x : A \vdash M : B$.
 
-  2) Let $\Gamma, x : \gamma \vdash M \star N : \textbf{K}\beta$, and $\Gamma \vdash y : \gamma$.
+  By assumption, $\Gamma \vdash (M [x := N]) : B$
 
-  So, by generation, $\Gamma, x : \gamma \vdash M : \textbf{K}(\alpha \to \beta)$ and $\Gamma, x : \gamma
-  \vdash N : \textbf{K}\alpha$.
+  Then $\Gamma \vdash {\bf pure \: } (M [x := N]) : \textbf{K}B$ by $\textbf{K}_I$.
 
-  Hence $\Gamma, x : \gamma \vdash (M [x := y]) : \textbf{K}(\alpha \to \beta)$ and
-  $\Gamma \vdash (N [x := y]): \textbf{K}\alpha$ by hypothesis.
+  But ${\bf pure \: } (M [x := N]) = ({\bf pure \: } M [x := N]) $ by substitution definition, so
+  $\Gamma \vdash ({\bf pure \: } M [x := N]) : \textbf{K}B$
 
-  So $\Gamma \vdash (M [x := y]) \star (N [x := y]) : \textbf{K}\beta$, or, $\Gamma \vdash (M \star N) ([x
-  := y]) : \textbf{K}\beta$.
+  \vspace{\baselineskip}
+
+  2) Let $\Gamma, y : A \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K} B$ and $\Gamma \vdash N : A$.
+
+  By generation, $\Gamma, y : A \vdash \vec{M} : {\bf K} \vec{A}$ and $\vec{x} : \vec{A} \vdash N : B$.
+
+  By hypothesis, $\Gamma \vdash \vec{M}[x := N] : {\bf K} \vec{A}$.
+
+  Hence $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M}[x := N] {\: \bf in \:} N : {\bf K} B$.
 
   \end{proof}
 
@@ -546,60 +588,39 @@ Induction on the derivation of $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alph
 
   \end{theorem}
 
-  We consider cases with reduction rules which are applicative laws. The general statement for $\twoheadrightarrow_{\beta}$ follows from transitivity of multi-step $\beta$-reduction.
+We consider only modal $\beta$-reduction rules. The general statement for $\twoheadrightarrow_{\beta}$ follows from transitivity of multi-step $\beta$-reduction.
 
   \begin{proof}
 
   $ $
 
-\vspace{\baselineskip}
+1) Let $\Gamma \vdash {\bf let \: pure \:} \langle \vec{x}, y, \vec{z} \rangle = \langle \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P} \rangle {\: in \:} R : {\bf K }B$
 
-  1) Let $\Gamma \vdash {\bf pure \: } (\lambda x. x) \star M : \textbf{K}\alpha$. Then $\Gamma \vdash
-  {\bf pure \: } (\lambda x.x) : \textbf{K}(\alpha \to \alpha)$ and $\Gamma \vdash M : \textbf{K}\alpha$ by
-  generation. Then $\Gamma \vdash M : \textbf{K}\alpha$ trivially.
+By generation we have $\Gamma \vdash \vec{M} : {\bf K}\vec{A_1}$, $\Gamma \vdash {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q : {\bf K}\vec{A_2}$, $\Gamma \vdash \vec{P} : {\bf K}\vec{A_3}$
+and $\vec{x} : \vec{A_1}, y : A_2, \vec{z} : \vec{A_3} \vdash R : B$.
 
-\vspace{\baselineskip}
+If $\Gamma \vdash {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q : {\bf K}\vec{A_2}$, then
 
-  2) Let $\Gamma \vdash {\bf pure \: }(\lambda f g x. f (g x)) \star M \star N \star P : \textbf{K}\gamma$.
+$\Gamma \vdash \vec{N} : {\bf K}\vec{A_4}$ and $\vec{w} : \vec{A_4} \vdash Q : A_2$.
 
-  Then $\Gamma \vdash {\bf pure \: } (\lambda f g x. f (g x)) : \textbf{K}((\beta \to \gamma) \to (\alpha \to \beta)
-  \to \alpha \to \gamma)$, $\Gamma \vdash M : \textbf{K}(\beta \to \gamma)$, $\Gamma \vdash N :
-  \textbf{K}(\alpha \to \beta)$ and $\Gamma \vdash P : \textbf{K}\alpha$ by generation.
+Then $\vec{x} : \vec{A_1}, \vec{w} : \vec{A_4}, \vec{z} : \vec{A_3} \vdash R [y := Q] : B$ by substitution lemma and weakening.
 
-  If $\Gamma \vdash N : \textbf{K}(\alpha \to \beta)$ and $\Gamma \vdash P : \textbf{K}\alpha$, then $\Gamma
-  \vdash N \star P : \textbf{K}\beta$ by $\textbf{K}_{app}$.
+Hence $\Gamma \vdash {\bf let \: pure \:} \langle \vec{x}, \vec{w}, \vec{z} \rangle = \langle \vec{M}, \vec{N}, \vec{P} \rangle \: { \bf in } \: R [y := Q] : {\bf K} B$
+by $let_{{\bf K}}$.
 
-  Hence, if $\Gamma \vdash M : \textbf{K}(\beta \to \gamma)$, then $\Gamma \vdash M \star (N \star P) :
-  \textbf{K}\gamma$ by $\textbf{K}_{app}$.
+  \vspace{\baselineskip}
 
-\vspace{\baselineskip}
+2) Let $\Gamma \vdash {\bf pure } ((\lambda x. M) N) : {\bf K} B$.
 
-  3) Let $\Gamma \vdash ({\bf pure \: } M) \star ({\bf pure \: } N) : \textbf{K}\beta$. Then $\Gamma \vdash
-  {\bf pure \: } M : \textbf{K}(\alpha \to \beta)$ and $\Gamma \vdash {\bf pure \: } N : \textbf{K}\alpha$ by
-  generation. Moreover, $\Gamma \vdash M : \alpha \to \beta$ and $\Gamma \vdash N : \alpha$.
+By generation $\Gamma \vdash (\lambda x. M) N : B$, but $\Gamma \vdash M [x := N] : B$, then, by ${\bf K}_I$, $\Gamma \vdash {\bf pure \:} (M [x := N]) : {\bf K} B$.
 
-  Then $\Gamma \vdash M N : \beta$ by application.
+  \vspace{\baselineskip}
 
-  Hence, $\Gamma \vdash {\bf pure \: } (M N) : \textbf{K}\beta$ by $K_I$.
+3) Let $\Gamma \vdash {\bf pure } (\pi_i \langle M_1, M_2 \rangle) : {\bf K} A_i$, where $i \in \{ 1,2 \}$.
 
-\vspace{\baselineskip}
+By generation $\Gamma \vdash \pi_i \langle M_1, M_2 \rangle : A_i$ and $\Gamma \vdash M_i : A_i$.
 
-  4) Let $\Gamma \vdash M \star ({\bf pure \: } N) : \textbf{K}\beta$.
-
-  Then $\Gamma \vdash M : \textbf{K}(\alpha \to \beta)$ and $\Gamma \vdash {\bf pure \: } N : \textbf{K}\alpha$.
-
-  Moreover, $\Gamma \vdash N : \alpha$ by generation.
-
-  Let $\Gamma, f : \alpha \to \beta \vdash f : \alpha \to \beta$ and $\Gamma, f : \alpha \to \beta \vdash N :
-  \alpha$ by weakening.
-
-  So $\Gamma, f : \alpha \to \beta \vdash f N : \beta$ by application, so $\Gamma \vdash \lambda f. f N :
-  (\alpha \to \beta) \to \beta$ by abstraction.
-
-  Then $\Gamma \vdash {\bf pure \: } (\lambda f. f N) : \textbf{K}((\alpha \to \beta) \to \beta)$ by $\textbf{K}_I$.
-
-  Hence, $\Gamma \vdash {\bf pure \: } (\lambda f. f N) \star M : \textbf{K}\beta$.
-
+Hence $\Gamma \vdash {\bf pure \: } M_i : { \bf K } A_i$ by ${\bf K}_I$
   \end{proof}
 
 
@@ -1202,6 +1223,8 @@ $ $
 
   \bibitem{Baren2} H.P. Barendregt. The Lambda Calculus --- Its Syntax and Semantics. Studies in Logic and
   the Foundations of Mathematics, vol. 103. Amsterdam: North-Holland, 1985.
+
+  \bibitem{ModalK} Yoshihiko KAKUTANI, A Curry-Howard Correspondence for Intuitionistic Normal Modal Logic, Computer Software, Released February 29, 2008, Online ISSN , Print ISSN 0289-6540.
   \end{thebibliography}
 
 
