@@ -7,7 +7,6 @@
 \usepackage{mathtools}
 \usepackage{verbatim}
 \usepackage{dsfont}
-\usepackage{parallel,enumitem}
 \usepackage[all, 2cell]{xy}
 \usepackage[all]{xy}
 \newtheorem{theorem}{Theorem}
@@ -108,7 +107,7 @@ strong normalization and Church-Rosser properties.
   \begin{prooftree}
   \AxiomC{}
   \RightLabel{\scriptsize{ax}}
-  \UnaryInfC{$\Gamma , A \vdash A$}
+  \UnaryInfC{$\Gamma , \alpha \vdash A$}
   \end{prooftree}
   \end{center}
 
@@ -242,66 +241,64 @@ $\begin{array}{lll}
   is a intuitionistic part (enviroment with pure types). From a logical point of view, $\Gamma | \Delta \vdash M : A$ denotes that
   $M$ is a proof of ${\bf K} \Gamma, \Delta \vdash A$. This idea similar to \cite{DePaiva}.
 
-  Our type system is based on the Curry-style typing rules.
+  Our type system is based on the Curry-style typing rules:
 
   \begin{defin} Modal typed lambda calculus $\lambda \textbf{K}$ based on NIEL$^{-}_{\land, \to}$:
 
-    \begin{minipage}{0.45\textwidth}
-\begin{prooftree}
-\AxiomC{}
-\RightLabel{$ax_1$}
-\UnaryInfC{$\Gamma | \Delta, x : A \vdash A$}
-\end{prooftree}
+  \begin{center}
+  \begin{prooftree}
+  \AxiomC{$ $}
+  \RightLabel{\scriptsize{ax}}
+  \UnaryInfC{$\Gamma , x : A \vdash x : A$}
+  \end{prooftree}
+  \end{center}
 
-\begin{prooftree}
-\AxiomC{$\Gamma | \Delta, x : A \vdash M : B$}
-\RightLabel{$\to_i$}
-\UnaryInfC{$\Gamma | \Delta \vdash (\lambda x. M) : A \to B$}
-\end{prooftree}
+  \begin{minipage}{0.5\textwidth}
+    \begin{flushleft}
+  \begin{prooftree}
+  \AxiomC{$\Gamma, x : A \vdash M : B$}
+  \RightLabel{$\rightarrow_i$}
+  \UnaryInfC{$\Gamma \vdash \lambda x. M : A \to B$}
+  \end{prooftree}
 
-\begin{prooftree}
-\AxiomC{$\Gamma | \Delta \vdash M : A$}
-\AxiomC{$\Gamma | \Delta \vdash N : B$}
-\RightLabel{$\times_i$}
-\BinaryInfC{$\Gamma | \Delta \vdash \langle M, N \rangle : A \times B$}
-\end{prooftree}
+  \begin{prooftree}
+  \AxiomC{ $\Gamma \vdash x : A$ }
+  \AxiomC{ $\Gamma \vdash y : B$ }
+  \RightLabel{$\times_i$}
+  \BinaryInfC{$\Gamma \vdash \langle x, y \rangle : A \times B$}
+  \end{prooftree}
 
-\begin{prooftree}
-\AxiomC{$\Gamma | \Delta \vdash M : A$}
-\RightLabel{${\bf K}_I$}
-\UnaryInfC{$\Gamma | \Delta \vdash {\bf pure \: } M : {\bf K} A$}
-\end{prooftree}
-\end{minipage}%
-    \hfill
-    \begin{minipage}{0.45\textwidth}
-    \begin{tabular}{p{\textwidth}}
-      \begin{prooftree}
-      \AxiomC{}
-      \RightLabel{$ax_2$}
-      \UnaryInfC{$\Gamma, x : A | \Delta \vdash x : {\bf K} A$}
-      \end{prooftree}
+  \begin{prooftree}
+    \AxiomC{$\Gamma \vdash x : A$}
+    \RightLabel{$\textbf{K}_I$}
+    \UnaryInfC{$\Gamma \vdash {\bf pure \: } \: x : \textbf{K}A $}
+  \end{prooftree}
+    \end{flushleft}
+  \end{minipage}
 
-      \begin{prooftree}
-      \AxiomC{$\Gamma | \Delta \vdash f : A \to B$}
-      \AxiomC{$\Gamma | \Delta \vdash x : A$}
-      \RightLabel{$\to_e$}
-      \BinaryInfC{$\Gamma | \Delta \vdash f x : B$}
-      \end{prooftree}
+  \begin{minipage}{0.5\textwidth}
+    \begin{flushright}
+  \begin{prooftree}
+  \AxiomC{$\Gamma \vdash f : A \to B$}
+  \AxiomC{$\Gamma \vdash x : A$}
+  \RightLabel{$\rightarrow_e$}
+  \BinaryInfC{$\Gamma \vdash fx : B$}
+  \end{prooftree}
 
-      \begin{prooftree}
-      \AxiomC{$\Gamma | \Delta \vdash M : A_1 \times A_2$}
-      \RightLabel{$\times_e, i \in \{ 1, 2 \}$}
-      \UnaryInfC{$\Gamma | \Delta \vdash \pi_i M$}
-      \end{prooftree}
+  \begin{prooftree}
+  \AxiomC{ $\Gamma \vdash M : A_1 \times A_2$ }
+  \RightLabel{$\times_e$, $i \in \{ 1, 2 \}$}
+  \UnaryInfC{$\Gamma \vdash \pi_i M : A_i$}
+  \end{prooftree}
 
-      \begin{prooftree}
-      \AxiomC{$\Gamma | \Delta \vdash M : {\bf K} A$}
-      \AxiomC{$\Gamma, x : A | \Delta \vdash N : C$}
-      \RightLabel{${\bf K}_{let}$}
-      \BinaryInfC{$\Gamma | \Delta \vdash {\bf let \: pure \: } x = M {\bf \: in \:} N : C$}
-      \end{prooftree}
-    \end{tabular}
-    \end{minipage}%
+  \begin{prooftree}
+    \AxiomC{$\Gamma \vdash \vec{M} : {\bf K} \vec{A}$}
+    \AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
+    \RightLabel{${\bf let}_{\textbf{K}}$}
+    \BinaryInfC{$\Gamma \vdash {\bf let \:\: pure} \:\: \vec{N} = \vec{M} \:\: {\bf in} \:\: N : {\bf K} B$}
+  \end{prooftree}
+    \end{flushright}
+  \end{minipage}
   \end{defin}
 
   $\textbf{K}_I$-typing rule is the same as $\bigcirc$-introduction in lax logic (also known as monadic
@@ -324,9 +321,29 @@ Here are some examples of derivation trees.
   \UnaryInfC{$\vdash (\lambda x. {\bf pure \: } x) : A \to \textbf{K}A$}
   \end{prooftree}
 
+
   \begin{prooftree}
-  \AxiomC{$\vdash \lambda f. \lambda x. {\bf let \: pure \: } g = f {\bf \: in \:} {\bf let \: pure \: }$}
+    \AxiomC{$f : {\bf K} (A \to B) \vdash f : {\bf K} (A \to B)$}
+    \AxiomC{$x : {\bf K} A \vdash x : {\bf K} A $}
+    \AxiomC{$g : A \to B$}
+    \AxiomC{$y : A$}
+    \BinaryInfC{$g : A \to B, y : A \vdash g y : B$}
+    \TrinaryInfC{$f : {\bf K} (A \to B), x : {\bf K} A \vdash {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle f, x \rangle \:\: {\bf in } \:\: g y : {\bf K} B$}
+    \UnaryInfC{$f : {\bf K} (A \to B) \vdash \lambda x. {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle f, x \rangle \:\: {\bf in } \:\: g y : {\bf K} A \to {\bf K} B$}
+    \UnaryInfC{$\vdash \lambda f. \lambda x. {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle f, x \rangle \:\: {\bf in } \:\: g y : {\bf K}(A \to B) \to {\bf K} A \to {\bf K} B$}
   \end{prooftree}
+
+\begin{prooftree}
+  \AxiomC{$f : A \to B \vdash f : A \to B$}
+  \UnaryInfC{$f : A \to B \vdash {\bf pure \:\:} f : {\bf K }(A \to B)$}
+  \AxiomC{$x : {\bf K} A \vdash x : {\bf K} A $}
+  \AxiomC{$g : A \to B$}
+  \AxiomC{$y : A$}
+  \BinaryInfC{$g : A \to B, y : A \vdash g y : B$}
+  \TrinaryInfC{$f : A \to B, x : {\bf K} A \vdash {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle {\bf pure \:\:} f, x \rangle \:\: {\bf in } \:\: g y : {\bf K} B$}
+  \UnaryInfC{$f : A \to B \vdash \lambda x. {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle {\bf pure \:\:} f, x \rangle \:\: {\bf in } \:\: g y : {\bf K} A \to {\bf K} B$}
+  \UnaryInfC{$\lambda f. \lambda x. {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle {\bf pure \:\:} f, x \rangle \:\: {\bf in } \:\: g y : (A \to B) \to {\bf K} A \to {\bf K} B$}
+\end{prooftree}
 
   \vspace{\baselineskip}
 
@@ -346,7 +363,7 @@ Here are some examples of derivation trees.
 
   6) $FV(\text{pure } M) = FV(M)$;
 
-  7) $FV({\bf let \: pure} \: x = M \: {\bf in} \: N) = FV(M)$.
+  7) $FV({\bf let \:\: pure} \:\: \vec{x} = \vec{M} \:\: {\bf in} \:\: N) = \bigcup \limits_{i = 1}^n FV(M_i), \text{where $n = |\vec{M}|$}$.
   \end{defin}
 
   \begin{defin} Substitution:
