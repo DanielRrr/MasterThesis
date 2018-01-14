@@ -594,9 +594,9 @@ We consider only modal $\beta$-reduction rules. The general statement for $\twoh
 
   $ $
 
-1) Let $\Gamma \vdash {\bf let \: pure \:} \langle \vec{x}, y, \vec{z} \rangle = \langle \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P} \rangle {\: in \:} R : {\bf K }B$
+1) Let $\Gamma \vdash {\bf let \: pure \:} \langle \vec{x}, y, \vec{z} \rangle = \langle \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} { \: \bf in \: } Q, \vec{P} \rangle { \: \bf in \: } R : {\bf K }B$
 
-By generation we have $\Gamma \vdash \vec{M} : {\bf K}\vec{A_1}$, $\Gamma \vdash {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q : {\bf K}\vec{A_2}$, $\Gamma \vdash \vec{P} : {\bf K}\vec{A_3}$
+By generation we have $\Gamma \vdash \vec{M} : {\bf K}\vec{A_1}$, $\Gamma \vdash {\bf let \: pure \: } \vec{w} = \vec{N} {\: \bf in \:} Q : {\bf K}\vec{A_2}$, $\Gamma \vdash \vec{P} : {\bf K}\vec{A_3}$
 and $\vec{x} : \vec{A_1}, y : A_2, \vec{z} : \vec{A_3} \vdash R : B$.
 
 If $\Gamma \vdash {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q : {\bf K}\vec{A_2}$, then
@@ -620,7 +620,21 @@ By generation $\Gamma \vdash (\lambda x. M) N : B$, but $\Gamma \vdash M [x := N
 
 By generation $\Gamma \vdash \pi_i \langle M_1, M_2 \rangle : A_i$ and $\Gamma \vdash M_i : A_i$.
 
-Hence $\Gamma \vdash {\bf pure \: } M_i : { \bf K } A_i$ by ${\bf K}_I$
+Hence $\Gamma \vdash {\bf pure \: } M_i : { \bf K } A_i$ by ${\bf K}_I$.
+
+\vspace{\baselineskip}
+
+4) Let $\Gamma \vdash {\bf let \: pure \:} (\langle \vec{x}, y, \vec{z} \rangle = \langle \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P} \rangle { \: \bf in \: } R) : {\bf K }^2 B$.
+
+By generation $\Gamma \vdash {\bf let \: pure \:} \langle \vec{x}, y, \vec{z} \rangle = \langle \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P} \rangle { \: \bf in \: } R : {\bf K }B$,
+
+hence $\Gamma \vdash {\bf let \: pure \:} \langle \vec{x}, \vec{w}, \vec{z} \rangle = \langle \vec{M}, \vec{N}, \vec{P} \rangle \: { \bf in } \: R [y := Q] : {\bf K} B$ by the first case.
+
+So $\Gamma \vdash {\bf pure \:} ({\bf let \: pure \:} \langle \vec{x}, \vec{w}, \vec{z} \rangle = \langle \vec{M}, \vec{N}, \vec{P} \rangle \: { \bf in } \: R [y := Q]) : {\bf K}^2 B$
+by ${\bf K}_I$.
+
+
+
   \end{proof}
 
 
