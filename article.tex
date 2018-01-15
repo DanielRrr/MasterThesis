@@ -247,60 +247,59 @@ $\begin{array}{lll}
 
   \begin{defin} Modal typed lambda calculus $\lambda \textbf{K}$ based on NIEL$^{-}_{\land, \to}$:
 
-  \begin{center}
-  \begin{prooftree}
-  \AxiomC{$ $}
-  \RightLabel{\scriptsize{ax}}
-  \UnaryInfC{$\Gamma , x : \alpha \vdash x : \alpha$}
-  \end{prooftree}
-  \end{center}
+    \begin{center}
+    \begin{prooftree}
+    \AxiomC{$ $}
+    \RightLabel{\scriptsize{ax}}
+    \UnaryInfC{$\Gamma , x : A \vdash x : A$}
+    \end{prooftree}
+    \end{center}
 
-  \begin{minipage}{0.5\textwidth}
-    \begin{flushleft}
-  \begin{prooftree}
-  \AxiomC{$\Gamma, x : \alpha \vdash M : \beta$}
-  \RightLabel{$\rightarrow_i$}
-  \UnaryInfC{$\Gamma \vdash \lambda x. M : \alpha \to \beta$}
-  \end{prooftree}
+    \begin{minipage}{0.45\textwidth}
+      \begin{prooftree}
+      \AxiomC{$\Gamma, x : A \vdash M : B$}
+      \RightLabel{$\rightarrow_i$}
+      \UnaryInfC{$\Gamma \vdash \lambda x. M : A \to B$}
+      \end{prooftree}
 
-  \begin{prooftree}
-  \AxiomC{ $\Gamma \vdash x : \alpha$ }
-  \AxiomC{ $\Gamma \vdash y : \beta$ }
-  \RightLabel{$\times_i$}
-  \BinaryInfC{$\Gamma \vdash (x, y) : \alpha \times \beta$}
-  \end{prooftree}
+      \begin{prooftree}
+      \AxiomC{ $\Gamma \vdash M : A$ }
+      \AxiomC{ $\Gamma \vdash N : B$ }
+      \RightLabel{$\times_i$}
+      \BinaryInfC{$\Gamma \vdash \langle x, y \rangle : A \times B$}
+      \end{prooftree}
 
-  \begin{prooftree}
-    \AxiomC{$\Gamma \vdash x : \alpha$}
-    \RightLabel{$\textbf{K}_I$}
-    \UnaryInfC{$\Gamma \vdash {\bf pure \: } \: x : \textbf{K}\alpha $}
-  \end{prooftree}
-    \end{flushleft}
-  \end{minipage}
+      \begin{prooftree}
+        \AxiomC{$\Gamma \vdash x : A$}
+        \RightLabel{$\textbf{K}_I$}
+        \UnaryInfC{$\Gamma \vdash {\bf pure \: } \: x : {\bf K}A $}
+      \end{prooftree}
+  \end{minipage}%
+  \hfill
+  \begin{minipage}{0.45\textwidth}
+  \begin{tabular}{p{\textwidth}}
+    \begin{prooftree}
+    \AxiomC{$\Gamma \vdash f : A \to B$}
+    \AxiomC{$\Gamma \vdash x : A$}
+    \RightLabel{$\rightarrow_e$}
+    \BinaryInfC{$\Gamma \vdash fx : B$}
+    \end{prooftree}
 
-  \begin{minipage}{0.5\textwidth}
-    \begin{flushright}
-  \begin{prooftree}
-  \AxiomC{$\Gamma \vdash f : \alpha \to \beta$}
-  \AxiomC{$\Gamma \vdash x : \alpha$}
-  \RightLabel{$\rightarrow_e$}
-  \BinaryInfC{$\Gamma \vdash fx : \beta$}
-  \end{prooftree}
+    \begin{prooftree}
+    \AxiomC{ $\Gamma \vdash M : A_1 \times A_2$ }
+    \RightLabel{$\times_e$, $i \in \{ 1, 2 \}$}
+    \UnaryInfC{$\Gamma \vdash \pi_i M : A_i$}
+    \end{prooftree}
 
-  \begin{prooftree}
-  \AxiomC{ $\Gamma \vdash p : \alpha_1 \times \alpha_2$ }
-  \RightLabel{$\times_e$, $i \in \{ 1, 2 \}$}
-  \UnaryInfC{$\Gamma \vdash \pi_i p : \alpha_i$}
-  \end{prooftree}
+    \begin{prooftree}
+      \AxiomC{$\Gamma \vdash \vec{M} : {\bf K} \vec{A}$}
+      \AxiomC{$\vec{x} : \vec{A} \vdash M : B$}
+      \RightLabel{$\text{let}_{\bf K}$}
+      \BinaryInfC{$\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } M : {\bf K} B$}
+    \end{prooftree}
+  \end{tabular}
+  \end{minipage}%
 
-  \begin{prooftree}
-    \AxiomC{$\Gamma \vdash \vec{M} : {\bf K} \vec{A}$}
-    \AxiomC{$\vec{x} : \vec{A} \vdash M : B$}
-    \RightLabel{$\text{let}_{\bf K}$}
-    \BinaryInfC{$\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } M : {\bf K} B$}
-  \end{prooftree}
-    \end{flushright}
-  \end{minipage}
   \end{defin}
 
   $\textbf{K}_I$-typing rule is the same as $\bigcirc$-introduction in lax logic (also known as monadic
