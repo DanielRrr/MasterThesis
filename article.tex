@@ -423,7 +423,7 @@ Here are some examples of derivation trees.
 
   14) ${\bf pure \:} ({\bf let \: pure \:} x = M {\: \bf in \: } x) \rightarrow_{\eta} {\bf pure \:} M$;
 
-  15) ${\bf pure \:} ({\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N) \rightarrow { \bf pure \:} ({\bf pure \:} N)$.
+  15) ${\bf pure \:} ({\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N) \rightarrow_{\eta} { \bf pure \:} ({\bf pure \:} N)$.
   \end{defin}
 
 
@@ -587,8 +587,9 @@ By $\text{let}_{\bf K}$, $\Gamma \uparrow FV(\vec{M}) \vdash {\bf let \: pure \:
 
   $ $
 
-  Let $\Gamma \vdash M : \alpha$ and $M \twoheadrightarrow_{\beta} N$, then $\Gamma \vdash N : \alpha$
+  i) Let $\Gamma \vdash M : A$ and $M \twoheadrightarrow_{\beta} N$, then $\Gamma \vdash N : A$
 
+  ii) Let $\Gamma \vdash M : A$ and $M \twoheadrightarrow_{\eta} N$, then $\Gamma \vdash N : A$
   \end{theorem}
 
 We consider only modal $\beta$-reduction rules. The general statement for $\twoheadrightarrow_{\beta}$ follows from transitivity of multi-step $\beta$-reduction.
@@ -596,6 +597,10 @@ We consider only modal $\beta$-reduction rules. The general statement for $\twoh
   \begin{proof}
 
   $ $
+
+  i) For multistep $\beta$-reduction:
+
+  \vspace{\baselineskip}
 
 1) Let $\Gamma \vdash {\bf let \: pure \:} \langle \vec{x}, y, \vec{z} \rangle = \langle \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} { \: \bf in \: } Q, \vec{P} \rangle { \: \bf in \: } R : {\bf K }B$
 
@@ -636,7 +641,47 @@ hence $\Gamma \vdash {\bf let \: pure \:} \langle \vec{x}, \vec{w}, \vec{z} \ran
 So $\Gamma \vdash {\bf pure \:} ({\bf let \: pure \:} \langle \vec{x}, \vec{w}, \vec{z} \rangle = \langle \vec{M}, \vec{N}, \vec{P} \rangle \: { \bf in } \: R [y := Q]) : {\bf K}^2 B$
 by ${\bf K}_I$.
 
+\vspace{\baselineskip}
 
+ii) For multistep $\eta$-reduction:
+
+\vspace{\baselineskip}
+
+  1) Let $\vdash {\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N : {\bf K} A$.
+
+  Then by generation $\vdash N : A$, so $\vdash {\bf pure \:} N : {\bf K} A$ by ${\bf K}_I$.
+
+  \vspace{\baselineskip}
+
+  2) Let $\Gamma \vdash {\bf let \: pure \:} x = M {\: \bf in \: } x : {\bf K} A$.
+
+  By generation $\Gamma \vdash M : {\bf K} A$ and $x : A \vdash x : A$, hence $\Gamma \vdash M : {\bf K} A$.
+
+  \vspace{\baselineskip}
+
+  3) Let $\Gamma \vdash {\bf pure \:} (\lambda x. f x) : {\bf K}(A \to B)$.
+
+  By generation $\Gamma \vdash \lambda x. f x : A \to B$, so $\Gamma \vdash f : A \to B$, then $\Gamma \vdash {\bf pure \:} f : {\bf K}(A \to B)$ by ${\bf K}_I$.
+
+  \vspace{\baselineskip}
+
+  4) Let $\Gamma \vdash {\bf pure \:} (\langle \pi_1 P, \pi_2 P \rangle) : {\bf K}(A \times B)$.
+
+  By generation $\Gamma \vdash \langle \pi_1 P, \pi_2 P \rangle : A \times B$, then $\Gamma \vdash P : A \times B$.
+
+  By ${\bf K}_I$, $\Gamma \vdash {\bf pure \:} P : {\bf K}(A \times B)$.
+
+  \vspace{\baselineskip}
+
+  5) $\Gamma \vdash {\bf pure \:} ({\bf let \: pure \:} x = M {\: \bf in \: } x) : {\bf K}^2 A$.
+
+  Then $\Gamma \vdash M : {\bf K}^2 A$ and $x : {\bf K} A \vdash x : {\bf K} A$, so $\Gamma \vdash M : {\bf K}^2 A$.
+
+  \vspace{\baselineskip}
+
+  6) Let $\vdash {\bf pure \:} ({\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N) : {\bf K}^2 A$.
+
+  By generation ${\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N : {\bf K}A$, so $\vdash N : A$, then $\vdash {\bf pure \:} N : {\bf K}$.
 
   \end{proof}
 
