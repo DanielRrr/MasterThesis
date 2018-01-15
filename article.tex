@@ -413,13 +413,17 @@ Here are some examples of derivation trees.
 
   9) $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
 
-  10) ${\bf let \: pure \:} x = M {\: \bf in \: } x \rightarrow_{\eta} M$;
+  10) ${\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N \rightarrow_{\eta} {\bf pure \:} N$;
 
-  11) ${\bf pure \:} (\lambda x. f x) \rightarrow_{\eta} {\bf pure \:} f$;
+  11) ${\bf let \: pure \:} x = M {\: \bf in \: } x \rightarrow_{\eta} M$;
 
-  12) ${\bf pure \:} (\langle \pi_1 P, \pi_2 P \rangle) \rightarrow_{\eta} {\bf pure \:} P$;
+  12) ${\bf pure \:} (\lambda x. f x) \rightarrow_{\eta} {\bf pure \:} f$;
 
-  13) ${\bf pure \:} ({\bf let \: pure \:} x = M {\: \bf in \: } x) \rightarrow_{\eta} {\bf pure \:} M$.
+  13) ${\bf pure \:} (\langle \pi_1 P, \pi_2 P \rangle) \rightarrow_{\eta} {\bf pure \:} P$;
+
+  14) ${\bf pure \:} ({\bf let \: pure \:} x = M {\: \bf in \: } x) \rightarrow_{\eta} {\bf pure \:} M$;
+
+  15) ${\bf pure \:} ({\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N) \rightarrow { \bf pure \:} ({\bf pure \:} N)$.
   \end{defin}
 
 
@@ -517,7 +521,7 @@ Induction on the derivation of $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alph
 
   $ $
 
-  1) Let $\Gamma \vdash x : A$, where $\Gamma = \Delta, x : \alpha$, $x \in \mathbb{V}$.
+  1) Let $\Gamma \vdash x : A$, where $\Gamma = \Delta, x : A$, $x \in \mathbb{V}$.
 
   $FV(x) = \{ x\}$, then $dom(\Gamma) \cap \{ x\} = \{ x\}. $ So $(\Delta, x : A) \uparrow FV(x) = \{ x
   : A\}$, then $x : A \vdash x : A$ by axiom.
