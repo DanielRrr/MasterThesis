@@ -1217,6 +1217,171 @@ $ $
 
 \end{proof}
 
+\section{Categorical semantics}
+
+\begin{defin} Lax monoidal functor
+
+  Let $\langle \mathcal{C}, \oplus_1, \mathds{1} \rangle$ and $\langle \mathcal{D}, \oplus_2, \mathds{1}' \rangle$ are monoidal categories.
+
+  A lax monoidal functor $\mathcal{F} : \langle \mathcal{C}, \oplus_1, \mathds{1} \rangle \to \langle \mathcal{D}, \oplus_2, \mathds{1}' \rangle$ is a functor
+  $\mathcal{F} : \mathcal{C} \to \mathcal{D}$ with additional natural transformations:
+
+  1) $u : \mathds{1}' \to \mathcal{F}\mathds{1}$;
+
+  2) $\ast_{A, B} \mathcal{F}A \otimes_2 \mathcal{F}B \to \mathcal{F}(A \otimes_1 B)$
+
+\end{defin}
+
+\begin{defin} Applicative functor
+
+  An applicative functor is a triple $\langle \mathcal{C}, \mathcal{K}, \eta \rangle$,
+where $\mathcal{C}$ is a symmetric monoidal category, $\mathcal{K}$ is a lax monoidal endofunctor and $\eta$ is a natural transformation, such that:
+
+1) $u = \eta_{\mathds{1}}$;
+
+2) $\ast_{A,B} \circ (\eta_A \otimes \eta_B) = \eta_{A \otimes B}$;
+
+3) Weak commutativity condition holds:
+
+\xymatrix{
+A \otimes \mathcal{K}B & \mathcal{K}A \otimes \mathcal{K}B & \mathcal{K}(A \otimes B) \\
+\mathcal{K}B \otimes A & \mathcal{K}B \otimes \mathcal{K}A & \mathcal{K}(B \otimes A)
+}
+\end{defin}
+
+By default we will consider an arbitrary closed functor on some cartersian closed category, which is the special case of an applicative functor.
+
+\subsection{Soundness}
+
+\begin{defin} Semantical translation from $\lambda_{\textbf{K}}$ to CCC with applicative functor $\mathcal{K}$:
+
+1) Interpretation for types:
+
+$[\![A]\!] := \hat{A}, A \in \mathbb{T}$;
+
+$[\![A \to B]\!] := [\![A]\!] \to [\![B]\!]$;
+
+$[\![A \times B]\!] := [\![A]\!] \times [\![B]\!]$.
+
+2) Interpretation for modal types: $[\![\textbf{K}A]\!] = \mathcal{K}[\![A]\!]$;
+
+3) Interpretaion for contexts:
+
+$[\![\Gamma = \{ x_1 : A_1, ..., x_n : A_n\}]\!] := [\![\Gamma]\!] = [\![A_1]\!] \times ... \times [\![A_n]\!]$;
+
+4) Interpretation for typing assignment: $[\![\Gamma \vdash M : A]\!] := [\![M]\!] : [\![\Gamma]\!] \to
+[\![A]\!]$.
+
+5) Interpretation for typing rules:
+
+\begin{prooftree}
+\AxiomC{$ $}
+\UnaryInfC{$[\![\Gamma, x : A \vdash x : A]\!] = \pi_2 : [\![\Gamma]\!] \times [\![A]\!] \rightarrow
+[\![A]\!]$}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$[\![\Gamma, x : A \vdash M : B]\!] = f : [\![\Gamma]\!] \times [\![A]\!] \rightarrow [\![B]\!]$}
+\UnaryInfC{$[\![\Gamma \vdash (\lambda x. M) : A \to B]\!] = \Lambda(f) : [\![\Gamma]\!]
+\rightarrow[\![B]\!]^{[\![A]\!]}$}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$[\![\Gamma \vdash M : A \to B]\!] = [\![M]\!] : [\![\Gamma]\!] \rightarrow [\![B]\!]^{[\![A]\!]}$}
+\AxiomC{$[\![\Gamma \vdash N : A]\!] = [\![N]\!] : [\![\Gamma]\!] \rightarrow [\![A]\!]$}
+\BinaryInfC{$[\![\Gamma \vdash (M N) : B]\!] = [\![\Gamma]\!] \xrightarrow{\langle [\![M]\!], [\![N]\!]
+\rangle} [\![B]\!]^{[\![A]\!]} \times [\![A]\!] \xrightarrow{\epsilon} [\![B]\!] $}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$[\![\Gamma \vdash M : A ]\!] = f : [\![\Gamma]\!] \rightarrow [\![A]\!]$}
+\AxiomC{$[\![\Gamma \vdash N : B ]\!] = g : [\![\Gamma]\!] \rightarrow [\![B]\!]$}
+\BinaryInfC{$[\![\Gamma \vdash (M, N) : A \times B]\!] = \langle f, g \rangle : [\![\Gamma]\!] \rightarrow
+[\![A]\!] \times [\![B]\!]$}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$[\![\Gamma \vdash p : A_1 \times A_2]\!] = f : [\![\Gamma]\!] \rightarrow [\![A_1]\!] \times
+[\![A_2]\!]$}
+\RightLabel{$i \in \{1,2\}$}
+\UnaryInfC{$[\![\Gamma \vdash \pi_i p : A_i]\!] = [\![\Gamma]\!] \xrightarrow{f} [\![A_1]\!] \times
+[\![A_2]\!] \xrightarrow{\pi_i} [\![A_i]\!]$}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$[\![\Gamma \vdash M : A]\!] = [\![M]\!] : [\![\Gamma]\!] \rightarrow [\![A]\!]$}
+\UnaryInfC{$[\![\Gamma \vdash {\bf pure \:} M : \textbf{K}A]\!] := [\![\Gamma]\!] \xrightarrow{[\![M]\!]}
+[\![A]\!] \xrightarrow{\eta_{[\![A]\!]}} \mathcal{K}[\![A]\!]$}
+\end{prooftree}
+
+  \begin{prooftree}
+    \AxiomC{$[\![\Gamma \vdash \vec{M} : {\bf K} \vec{A}]\!] = \langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle : [\![\Gamma]\!] \rightarrow \prod \limits_{i=i}^n \mathcal{K}[\![A_i]\!]$}
+    \AxiomC{$[\![\vec{x} : \vec{A} \vdash N : B]\!] = [\![N]\!] : \prod \limits_{i=i}^n [\![A_i]\!] \rightarrow [\![B]\!]$}
+    \BinaryInfC{$[\![\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } M : {\bf K} B]\!] = \mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ \langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle : [\![\Gamma]\!] \rightarrow \mathcal{K}[\![B]\!]$}
+  \end{prooftree}
+
+\end{defin}
+
+\begin{defin} Simultaneous substitution
+
+Let $\Gamma = \{ x_1 : A_1, ..., x_n : A_n \}$, $\Gamma \vdash M : A$ and for all $i \in \{ 1,..., n \}$,
+$\Gamma \vdash M_i : A_i$.
+
+We define simultaneous substitution $M [ \vec{x} := \vec{M}]$ recursively by:
+
+1) $x_i [ \vec{x} := \vec{M}] := M_i $;
+
+2) $(\lambda x. M) [ \vec{x} := \vec{M}] := \lambda x. (M [ \vec{x} := \vec{M}])$;
+
+3) $(M N) [ \vec{x} := \vec{M}] = (M [ \vec{x} := \vec{M}]) (N [ \vec{x} := \vec{M}])$;
+
+4) $\langle M, N \rangle = \langle (M [ \vec{x} := \vec{M}]), (N [ \vec{x} := \vec{M}])\rangle$;
+
+5) $(\pi_i P) [ \vec{x} := \vec{M}] = \pi_i (P [ \vec{x} := \vec{M}])$;
+
+6) $(\text{pure } M) [ \vec{x} := \vec{M}] = \text{pure } (M [ \vec{x} := \vec{M}])$;
+
+\end{defin}
+
+\begin{lemma}
+$ $
+
+$[\![M [x_1 := M_1,\dots, x_n := M_n]]\!] = [\![M]\!] \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle$.
+
+\end{lemma}
+
+\begin{proof}
+
+$ $
+
+1) $[\![(\text{pure } M) [ \vec{x} := \vec{M}]]\!] = [\![\text{pure } M]\!] \circ \langle [\![M_1]\!], \dots,
+[\![M_n]\!] \rangle$.
+
+\vspace{\baselineskip}
+
+$\begin{array}{lll}
+& [\![(\text{pure } M) [ \vec{x} := \vec{M}]]\!] = [\![\text{pure } (M [ \vec{x} := \vec{M}])]\!] &
+\text{Substitution definition} \\
+& \quad\quad\quad\quad\quad\quad\quad = p \circ [\![(M [ \vec{x} := \vec{M}])]\!]&
+\text{Translation for pure}\\
+& \quad\quad\quad\quad\quad\quad\quad = p \circ [\![M]\!] \circ \langle [\![M_1]\!], \dots,
+[\![M_n]\!] \rangle & \text{Induction hypothesis} \\
+& \quad\quad\quad\quad\quad\quad\quad = (p \circ [\![M]\!]) \circ \langle [\![M_1]\!], \dots,
+[\![M_n]\!] \rangle & \text{Associativity of composition}\\
+& \quad\quad\quad\quad\quad\quad\quad = [\![\text{pure } M]\!] \circ \langle [\![M_1]\!], \dots,
+[\![M_n]\!] \rangle& \text{Translation for pure}\\
+\end{array}$
+
+\vspace{\baselineskip}
+
+
+\end{proof}
+
+\begin{theorem} Soundness
+
+  Let $\Gamma \vdash M : A$ and $M =_{\beta\eta} N$, then $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$
+\end{theorem}
+
   \section{Acknowledgement.}
 
   Author would like to thank his supervisior
