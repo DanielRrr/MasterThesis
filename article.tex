@@ -106,7 +106,7 @@ strong normalization and Church-Rosser properties.
   \begin{prooftree}
   \AxiomC{}
   \RightLabel{\scriptsize{ax}}
-  \UnaryInfC{$\Gamma , \alpha \vdash A$}
+  \UnaryInfC{$\Gamma , A \vdash A$}
   \end{prooftree}
   \end{center}
 
@@ -361,9 +361,9 @@ Here are some examples of derivation trees.
 
   3) $FV(M N) = FV(M) \cup FV(N);$
 
-  4) $FV((M,N)) = FV(M) \cup FV(N)$;
+  4) $FV(\langle M,N \rangle) = FV(M) \cup FV(N)$;
 
-  5) $FV(\pi_i p) \subseteq FV(p)$, $i \in \{ 1, 2\}$;
+  5) $FV(\pi_i M) \subseteq FV(M)$, $i \in \{ 1, 2\}$;
 
   6) $FV(\text{pure } M) = FV(M)$;
 
@@ -384,7 +384,7 @@ Here are some examples of derivation trees.
 
   6) $({\bf pure \: } M) [x := P] = {\bf pure \: } (M [x := P])$;
 
-  7) $({\bf let \:\: pure} \:\: \vec{N} = \vec{M} \:\: {\bf in} \:\: M) [x := P] = {\bf let \:\: pure} \:\: \vec{N} = (\vec{M} [x := P]) \:\: {\bf in} \:\: M$.
+  7) $({\bf let \:\: pure} \:\: \vec{x} = \vec{M} \:\: {\bf in} \:\: M) [y := P] = {\bf let \:\: pure} \:\: \vec{x} = (\vec{M} [y := P]) \:\: {\bf in} \:\: M$.
   \end{defin}
 
   \begin{defin} $\beta$-reduction and $\eta$-reduction rules for \emph{$\lambda \textbf{K}$}.
@@ -1315,8 +1315,8 @@ $[\![\Gamma = \{ x_1 : A_1, ..., x_n : A_n\}]\!] := [\![\Gamma]\!] = [\![A_1]\!]
 \end{prooftree}
 
   \begin{prooftree}
-    \AxiomC{$[\![\Gamma \vdash \vec{M} : {\bf K} \vec{A}]\!] = \langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle : [\![\Gamma]\!] \rightarrow \prod \limits_{i=i}^n \mathcal{K}[\![A_i]\!]$}
-    \AxiomC{$[\![\vec{x} : \vec{A} \vdash N : B]\!] = [\![N]\!] : \prod \limits_{i=i}^n [\![A_i]\!] \rightarrow [\![B]\!]$}
+    \AxiomC{$[\![\Gamma \vdash \vec{M} : {\bf K} \vec{A}]\!] = \langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle : [\![\Gamma]\!] \rightarrow \prod \limits_{i=1}^n \mathcal{K}[\![A_i]\!]$}
+    \AxiomC{$[\![\vec{x} : \vec{A} \vdash N : B]\!] = [\![N]\!] : \prod \limits_{i=1}^n [\![A_i]\!] \rightarrow [\![B]\!]$}
     \BinaryInfC{$[\![\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } M : {\bf K} B]\!] = \mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ \langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle : [\![\Gamma]\!] \rightarrow \mathcal{K}[\![B]\!]$}
   \end{prooftree}
 
@@ -1329,17 +1329,20 @@ $\Gamma \vdash M_i : A_i$.
 
 We define simultaneous substitution $M [ \vec{x} := \vec{M}]$ recursively by:
 
-1) $x_i [ \vec{x} := \vec{M}] := M_i $;
+1) $x_i [ \vec{x} := \vec{M}] = M_i $;
 
-2) $(\lambda x. M) [ \vec{x} := \vec{M}] := \lambda x. (M [ \vec{x} := \vec{M}])$;
+2) $(\lambda x. M) [ \vec{x} := \vec{M}] = \lambda x. (M [ \vec{x} := \vec{M}])$;
 
-3) $(M N) [ \vec{x} := \vec{M}] = (M [ \vec{x} := \vec{M}]) (N [ \vec{x} := \vec{M}])$;
+3) $(M N) [ \vec{x} := \vec{M}] = (M [ \vec{x} = \vec{M}]) (N [ \vec{x} := \vec{M}])$;
 
-4) $\langle M, N \rangle = \langle (M [ \vec{x} := \vec{M}]), (N [ \vec{x} := \vec{M}])\rangle$;
+4) $\langle M, N \rangle = \langle (M [ \vec{x} = \vec{M}]), (N [ \vec{x} := \vec{M}])\rangle$;
 
-5) $(\pi_i P) [ \vec{x} := \vec{M}] = \pi_i (P [ \vec{x} := \vec{M}])$;
+5) $(\pi_i P) [ \vec{x} := \vec{M}] = \pi_i (P [ \vec{x} = \vec{M}])$;
 
-6) $(\text{pure } M) [ \vec{x} := \vec{M}] = \text{pure } (M [ \vec{x} := \vec{M}])$;
+6) $({\bf pure \:} M) [ \vec{x} := \vec{M}] = {\bf pure \:} (M [ \vec{x} = \vec{M}])$;
+
+7) $({\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N) [\vec{y} := \vec{P}] =
+{\bf let \: pure} \: \vec{x} = (\vec{M} [\vec{y} := \vec{P}]) {\: \bf in \:} N$
 
 \end{defin}
 
@@ -1354,22 +1357,43 @@ $[\![M [x_1 := M_1,\dots, x_n := M_n]]\!] = [\![M]\!] \circ \langle [\![M_1]\!],
 
 $ $
 
-1) $[\![(\text{pure } M) [ \vec{x} := \vec{M}]]\!] = [\![\text{pure } M]\!] \circ \langle [\![M_1]\!], \dots,
+1) $[\![\Gamma \vdash ({\bf pure \:} M) [ \vec{x} := \vec{M}] : {\bf K}A ]\!] = [\![ \Gamma \vdash {\bf pure \:} M : {\bf K}A]\!] \circ \langle [\![M_1]\!], \dots,
 [\![M_n]\!] \rangle$.
 
 \vspace{\baselineskip}
 
 $\begin{array}{lll}
-& [\![(\text{pure } M) [ \vec{x} := \vec{M}]]\!] = [\![\text{pure } (M [ \vec{x} := \vec{M}])]\!] &
+& [\![\Gamma \vdash ({\bf pure \:} M) [ \vec{x} := \vec{M}] : {\bf K}A]\!] = [\![ \Gamma \vdash {\bf pure \:} (M [ \vec{x} := \vec{M}]) : {\bf K}A]\!] &
 \text{Substitution definition} \\
-& \quad\quad\quad\quad\quad\quad\quad = p \circ [\![(M [ \vec{x} := \vec{M}])]\!]&
+& \quad\quad\quad\quad\quad\quad\quad = \eta_{[\![A]\!]} \circ [\![(M [ \vec{x} := \vec{M}])]\!]&
 \text{Translation for pure}\\
-& \quad\quad\quad\quad\quad\quad\quad = p \circ [\![M]\!] \circ \langle [\![M_1]\!], \dots,
-[\![M_n]\!] \rangle & \text{Induction hypothesis} \\
-& \quad\quad\quad\quad\quad\quad\quad = (p \circ [\![M]\!]) \circ \langle [\![M_1]\!], \dots,
+& \quad\quad\quad\quad\quad\quad\quad = \eta_{[\![A]\!]} \circ ([\![M]\!] \circ \langle [\![M_1]\!], \dots,
+[\![M_n]\!] \rangle) & \text{Induction hypothesis} \\
+& \quad\quad\quad\quad\quad\quad\quad = (\eta_{[\![A]\!]} \circ [\![M]\!]) \circ \langle [\![M_1]\!], \dots,
 [\![M_n]\!] \rangle & \text{Associativity of composition}\\
-& \quad\quad\quad\quad\quad\quad\quad = [\![\text{pure } M]\!] \circ \langle [\![M_1]\!], \dots,
+& \quad\quad\quad\quad\quad\quad\quad = [\![ \Gamma \vdash {\bf pure \:} M : {\bf K}A]\!] \circ \langle [\![M_1]\!], \dots,
 [\![M_n]\!] \rangle& \text{Translation for pure}\\
+\end{array}$
+
+\vspace{\baselineskip}
+
+2) $\begin{array}{lll}&[\![\Gamma \vdash ({\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N) [\vec{y} := \vec{P}] : {\bf K} B]\!]
+=[\![\Gamma \vdash {\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K}B]\!] \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle& \end{array}$
+
+\vspace{\baselineskip}
+
+$\begin{array}{lll}
+&[\![\Gamma \vdash ({\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N) [\vec{y} := \vec{P}] : {\bf K} B]\!] =& \\
+&\text{Substitution definition}& \\
+&[\![\Gamma \vdash {\bf let \: pure} \: \vec{x} = (\vec{M} [\vec{y} := \vec{P}]) {\: \bf in \:} N : {\bf K}B]\!] =& \\
+&\text{Interpretaion for $let_{\bf K}$}& \\
+&\mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ [\![\Gamma \vdash (\vec{M} [\vec{y} := \vec{P}]) \vdash : {\bf K}\vec{A}]\!] =& \\
+&\text{Induction hypothesis}& \\
+&\mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ ([\![\vec{M}]\!] \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle) = & \\
+&\text{Associativity of composition}& \\
+&(\mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ [\![\vec{M}]\!]) \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle = & \\
+&\text{By interpretation}&\\
+&[\![\Gamma \vdash ({\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N]\!] \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle&
 \end{array}$
 
 \vspace{\baselineskip}
