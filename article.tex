@@ -700,522 +700,7 @@ ii) For multistep $\eta$-reduction:
 
   \end{theorem}
 
-  \begin{proof}
-
-  We build the smallest of subset of strongly normalazing terms of modal types and show that an arbitrary
-  term belongs to this subset.
-
-  \begin{defin} The set of strongly computable terms of type $\phi \in \mathbb{T}_{\textbf{K}}$, $SC_{\phi}$:
-
-  \begin{itemize}
-  \item Let $\phi = \textbf{K}\alpha$ and $\alpha \in \mathbb{T}$ , then:
-  \begin{equation}
-  SC_{\textbf{K}\alpha} = \{ M : \textbf{K}\alpha \: | \: \text{$M$ is strongly normalizing} \}
-  \end{equation}
-
-  \item Let $\phi = \textbf{K}(\tau \to \psi)$ and $\tau, \psi \in \mathbb{T}_{\textbf{K}}$, then:
-  \begin{equation}
-  SC_{\textbf{K}(\tau \to \psi)} = \{ M : \textbf{K}(\tau \to \psi) \: | \: \forall N \in SC_{\textbf{K}\tau}, M \star N \in SC_{\textbf{K}\psi}\}
-  \end{equation}
-
-  \item Let $\phi = \textbf{K}(\tau_1 \times \tau_2)$ and $\tau_1, \tau_2 \in \mathbb{T}_{\textbf{K}}$, then:
-  \begin{equation}
-  SC_{\textbf{K}(\tau_1 \times \tau_2)} = \{ P : \textbf{K}(\tau_1 \times \tau_2) \: |
-  \: {\bf pure \:} (\lambda x. \pi_i x) \star P \in SC_{\textbf{K}\tau_i}, i \in \{1,2\} \}
-  \end{equation}
-  \end{itemize}
-  \end{defin}
-
-  \begin{lemma}
-
-  $ $
-
-  If $M \in SC_{\alpha}$, then $M$ is strongly normalizing.
-
-  \end{lemma}
-
-  \begin{proof}
-
-$ $
-
-  1) If $M \in SC_{{\bf K} \alpha}$ and $\alpha \in \mathbb{T}$, then $M$ is strongly normalizing by the
-  definition of $SC_{{\bf K} \alpha}$.
-
-  2) Let $M \in SC_{\textbf{K}(\tau \to \psi)}$, so by every $N \in SC_{\textbf{K}\tau}$,
-  $M \star N \in SC_{\textbf{K}\psi}$, which is strongly normalizing by hypothesis. So $M$ is
-  strongly normalizing.
-
-  3) Let $M \in SC_{\textbf{K}(\tau_1 \times \tau_2)}$, so ${\bf pure \:} (\lambda x. \pi_i x) \star M \in
-  SC_{\textbf{K}\tau_i}$, $i \in \{ 1,2 \}$, which are strongly normalizing. So $M$ is
-  strongly normalizing.
-
-  \end{proof}
-
-
-  \begin{lemma}
-
-  $ $
-
-  Let $M \rightarrow_{\beta} M'$ and $M \in SC_{\alpha}$, then $M' \in SC_{\alpha}$.
-
-  \end{lemma}
-
-
-  \begin{proof}
-
-$ $
-
-  1) Let $M \rightarrow_{\beta} M'$ and $M \in SC_{\textbf{K}\alpha}$, where $\alpha \in \mathbb{T}$.
-
-  $M$ has the longest reduction path (which we denote as $p(M)$). So $p(M') < p(M)$, then $M' \in SC_{\textbf{K}\alpha}$.
-
-  2) Let $M \in SC_{\textbf{K}(\alpha \to \beta)}$ and $M \rightarrow_{\beta} M'$. Let $N \in
-  SC_{\textbf{K}\alpha}$. So $M \star N \in SC_{\textbf{K}\beta}$.
-
-  If $M \rightarrow_{\beta} M'$, then $M \star N \rightarrow_{\beta} M' \star N$ by reduction
-  rule, so $M' \star N \in SC_{\textbf{K}\beta}$ and $M' \in SC_{\textbf{K}(\alpha \to \beta)}$ by
-  hypothesis.
-
-  3) Let $M \in SC_{\textbf{K}(\tau_1 \times \tau_2)}$ and $M \rightarrow_{\beta} M'$.
-
-  So ${\bf pure \: } (\lambda x. \pi_i x) \star M \rightarrow_{\beta} {\bf pure \: } (\lambda x. \pi_i x)
-  \star M'$, $i \in \{ 1, 2 \}$ by reduction rule. So ${\bf pure \: } (\lambda x. \pi_i x) \star M' \in
-  SC_{\textbf{K} \tau_i }$ and $M' \in SC_{\textbf{K}(\tau_1 \times \tau_2)}$.
-
-  \end{proof}
-
-  \begin{defin} Neutral term:
-
-  We define a term $M$ to be neutral if it has of the next forms:
-
-  1) $M = x$, where $x \in \mathbb{V}$;
-
-  2) $M = (P Q)$;
-
-  3) $M = \pi_i M$, $i \in \{ 1,2 \}$;
-
-  4) $M = P \star Q$;
-
-  5) If $M$ is a neutral, then ${\bf pure \: } M$ is a neutral.
-
-  \end{defin}
-
-  \begin{lemma}
-
-  Let $M \rightarrow_{\beta} M'$ and $M' \in SC_{\alpha}$ for every one-step reduction. So if $M'$ is a
-  neutral, then $M \in SC_{\alpha}$.
-
-  \end{lemma}
-
-  \begin{proof}
-
-  $ $
-
-  Simple induction on the structure of $M'$.
-
-  \end{proof}
-
-  \begin{lemma}
-
-  $ $
-
-  Let $x_1 : \phi_1, \dots, x_n : \phi_n \vdash M : \phi$ and for all $i \in \{ 1, \dots, n\}$, $N_i
-  \in SC_{\phi_i}$, then $(M [x_1 := N_1, \dots, x_n := N_n]) \in SC_{\phi}$.
-
-  \end{lemma}
-
-  \begin{proof}
-
-$ $
-
-  1) If $\phi$ is an atomic and $M$ is a variable, then this condition holds straightforwardly.
-
-  2) Let $\Gamma = \{ x_1 : \phi_1, \dots, x_n : \phi_n \}$, $\Gamma \vdash {\bf pure \: } M :
-  \textbf{K}\alpha$ and for all $i \in \{1, \dots, n\}, N_i \in SC_{\phi_i}$.
-
-  Then by $\Gamma \vdash M : \alpha$ by generation
-  and $(M [x_1 := N_1, \dots, x_n := N_n]) \in SC_{\alpha}$ by induction hypothesis.
-
-  Hence, $\Gamma \vdash {\bf pure \: } M : \textbf{K}\alpha$ and $({\bf pure \: } M ([x_1 := N_1, \dots, x_n := N_n])) \in SC_{\textbf{K}\alpha}$ by definition of $SC_{\textbf{K}\alpha}$.
-
-  3) Let $\Gamma = \{ x_1 : \phi_1, \dots, x_n : \phi_n \}$, $\Gamma : \phi_n \vdash M \star P : \textbf{K}\beta$ and forall $i \in \{ 1, \dots, n\}, N_i \in SC_{\phi_i}$.
-
-  Then $\Gamma \vdash M : \textbf{K}(\alpha \to \beta)$, $\Gamma \vdash P : \textbf{K}\alpha$ by generation.
-
-  But by induction hypothesis $M [x_1 := N_1, \dots, x_n := N_n] \in SC_{\textbf{K}(\alpha \to
-  \beta)}$ and $P [x_1 := N_1, \dots, x_n := N_n] \in SC_{\textbf{K}\alpha}$.
-
-  Then, by definition of $SC_{\textbf{K}\beta}$, $((M [x_1 := N_1, \dots, x_n := N_n]) \star (P [x_1 := N_1, \dots, x_n := N_n])) \in SC_{\textbf{K}\beta}$, i.e. $(M \star N ([x_1 := N_1, \dots, x_n := N_n])) \in
-  SC_{\textbf{K}\beta}$.
-  \end{proof}
-
-  \begin{col}
-
-  $ $
-
-  If $\vdash M : \alpha$, then $M$ is strongly normalizing.
-
-  \end{col}
-
-  \begin{proof}
-
-  $M \in SC_{\alpha}$ by Lemma 10, so $M$ is strongly normalizing.
-
-  \end{proof}
-
-
-  \end{proof}
-
 \section{Confluence}
-
-In the confluence proof (below) we treat the cases with ${\bf pure}$ and $\star$ similar to \cite{Baren} \cite{Baren2}.
-
-\begin{defin} Alphabet for the labelled terms:
-
-variables: $x, y, z, x_1, y_1, z_1, ...$;
-
-lambdas: $\lambda, \lambda_0, \lambda_1, \lambda_2, ...$;
-
-constructors for an applicative functor: ${\bf pure \: }, \star$;
-
-parentheses (,).
-
-\end{defin}
-
-\begin{defin} The set of labelled terms $\Lambda^{'}_{\textbf{K}}$ inductively defined as a set of words on the alphabet
-described above:
-
-1) $x \in \Lambda^{'}$;
-
-2) If $M \in \Lambda^{'}_{\textbf{K}}$, then $(\lambda x. M) \in \Lambda^{'}_{\textbf{K}}$;
-
-3) If $M, N \in \Lambda^{'}_{\textbf{K}}$, then $(MN) \in \Lambda^{'}_{\textbf{K}}$;
-
-4) If $M \in \Lambda^{'}_{\textbf{K}}$, then ${\bf pure \: } M \in \Lambda^{'}_{\textbf{K}}$;
-
-5) If $M, N \in \Lambda^{'}_{\textbf{K}}$, then $M \star N \in \Lambda^{'}_{\textbf{K}}$;
-
-6) If $M, N \in \Lambda^{'}_{\textbf{K}}$, then for all $i \in \mathbb{N}$, $((\lambda_i x. M) N) \in
-\Lambda^{'}_{\textbf{K}}$.
-
-\end{defin}
-
-\begin{defin} Erasing map
-
-Erasing map is a map $|.| : \Lambda^{'}_{\textbf{K}} \to \Lambda_{\textbf{K}}$, such that:
-
-1) $|x| = x$;
-
-2) $|(\lambda x. M)| = \lambda x. |M|$;
-
-3) $|(M N)| = |M| |N|$;
-
-4) $|({\bf pure \: } M)| = {\bf pure \: } |M|$;
-
-5) $|M \star N| = |M| \star |N|$;
-
-6) $|((\lambda_i x. M) N)| = (\lambda x. |M|) |N|$
-
-\end{defin}
-
-\begin{ex}
-
-$ $
-
-$|{\bf pure \: } ((\lambda_i x. M) N) \star P| = {\bf pure \: } (\lambda x. |M|) |N|) \star |P|$
-
-\end{ex}
-
-\begin{defin} Substitution for $\Lambda^{'}_{\textbf{K}}$:
-
-1) $x [x := N] = N$, $x [y := N] = x$;
-
-2) $(M N) [x := N] = M[x := N] N [x := N]$;
-
-3) $(\lambda x. M) [x := N] = \lambda x. M [x := N]$;
-
-4) $({\bf pure \: } M) [x := P] = {\bf pure \: } \: (M [x := P])$;
-
-5) $(M \star N) [x := P] = (M [x := P]) \star (N [x := P])$;
-
-6) $(\lambda_i x. M) N [y := P] = (\lambda_i x. M [y := P]) (N [y := P])$.
-
-\end{defin}
-
-\begin{defin} One-step reduction $\rightarrow_{\beta^{'}}$ for $\Lambda^{'}_{\textbf{K}}$:
-
-1) $(\lambda x. M) N \rightarrow_{\beta^{'}} M [x := N]$;
-
-2) ${\bf pure \: } (\lambda x. x) \star M \rightarrow_{\beta^{'}} M$;
-
-3) ${\bf pure \: } (\lambda f g x. f (g x)) \star M \star N \star P \rightarrow_{\beta^{'}} M \star (N \star
-P)$;
-
-4) $({\bf pure \: } M) \star ({\bf pure \: } N) \rightarrow_{\beta^{'}} {\bf pure \: } (M N)$;
-
-5) $M \star ({\bf pure \: } N) \rightarrow_{\beta^{'}} {\bf pure \: } (\lambda f. f N) \star M$;
-
-6) $(\lambda_i x. M) N \rightarrow_{\beta^{'}} M [x := N]$.
-
-
-Multi-step reduction $\twoheadrightarrow_{\beta^{'}}$ is a reflexive-transitive closure of
-$\rightarrow_{\beta^{'}}$.
-
-\end{defin}
-
-\begin{defin} Let us define a map $\phi : \Lambda^{'}_{\textbf{K}} \to \Lambda_{\textbf{K}}$ inductively as
-follows:
-
-1) $\phi(x) = x$;
-
-2) $\phi(M N) = \phi(M)\phi(N)$;
-
-3) $\phi(\lambda x. M) = \lambda x. \phi(M)$;
-
-4) $\phi({\bf pure \: } M) = {\bf pure \: } (\phi(M))$;
-
-5) $\phi(M \star N) = \phi(M) \star \phi(N)$;
-
-6) $\phi((\lambda_i x. M) N) = \phi(M) [x := \phi(N)]$.
-
-\end{defin}
-
-\begin{ex}
-
-$ $
-
-$\phi({\bf pure \: } ((\lambda_i x. M) N) \star P) = {\bf pure \: } (\phi(M) [x := \phi(N)]) \star \phi(P)$
-
-\end{ex}
-
-\begin{lemma}
-
-$ $
-
-1) Let $M, N \in \Lambda^{'}_{\textbf{K}}$ and $|M| \twoheadrightarrow_{\beta} |N|$, then $M \twoheadrightarrow_{\beta^{'}} N$.
-
-2) Let $M, N \in \Lambda^{'}_{\textbf{K}}$ and $M \twoheadrightarrow_{\beta^{'}} N$, then $|M| \twoheadrightarrow_{\beta} |N|$.
-
-\end{lemma}
-
-\begin{proof}
-
-$ $
-
-Induction on the generation of $\twoheadrightarrow_{\beta}$ ($\twoheadrightarrow_{\beta^{'}}$).
-
-1) Let us consider homomorphism rule. The rest applicative reduction rules are considered similary.
-
-Let $({\bf pure \: } M') \star ({\bf pure \: } N'), {\bf pure \: } (M' N') \in \Lambda^{'}_{\textbf{K}}$.
-
-So $|({\bf pure \: } M') \star ({\bf pure \: } N')| = ({\bf pure \: } |M'|) \star ({\bf pure \: } |N'|)$ and
-$|{\bf pure \: } (M' N')| = {\bf pure \: } (|M'| |N'|)$.
-
-By reduction rule, $({\bf pure \: } |M'|) \star ({\bf pure \: } |N'|) \rightarrow_{\beta} {\bf pure \: }
-(|M'||N'|)$.
-
-But $({\bf pure \: } M') \star ({\bf pure \: } N') \rightarrow_{\beta^{'}} {\bf pure \: } (M' N')$ by
-reduction rule for $\rightarrow_{\beta^{'}}$.
-
-  \vspace{\baselineskip}
-
-2) Let us consider interchange rule.
-
-Let $M \star ({\bf pure \: } N), {\bf pure \: } (\lambda f. f N) \star M \in \Lambda^{'}_{\textbf{K}}$ and
-$M \star ({\bf pure \: } N) \rightarrow_{\beta^{'}} {\bf pure \: } (\lambda f. f N) \star M$.
-
-But $|M \star ({\bf pure \: } N)| = |M| \star ({\bf pure \: } |N|)$ and $|{\bf pure \: } (\lambda f. f N)
-\star M| = {\bf pure \: } (\lambda f. f |N|) \star |M|$.
-
-So $|M| \star ({\bf pure \: } |N|) \rightarrow_{\beta} {\bf pure \: } (\lambda f. f |N|) \star |M|$ by
-$\beta$-reduction rule.
-
-\vspace{\baselineskip}
-
-It is easy to see, that the statement for $\twoheadrightarrow_{\beta^{'}}$ and $\twoheadrightarrow_{\beta}$
-immedeatly follows from transitivity of multi-step rediction for labelled terms and for usual terms
-respectively.
-
-\end{proof}
-
-\begin{lemma}
-
-$ $
-
-$\phi(M [x := N]) = \phi(M) [x := \phi(N)]$.
-
-\end{lemma}
-
-\begin{proof} Induction on $M$.
-
-1) Let $M = x$. Then $\phi(x [x := N]) = \phi(N)$.
-
-On the other hand, $\phi(x) [x := \phi(N)] = x [x := \phi(N)] = \phi(N)$.
-
-So $\phi(x [x := N]) = \phi(x) [x := \phi(N)]$.
-
-  \vspace{\baselineskip}
-
-2) Let $M = y$ and $y \neq x$. Then $\phi(y [x := N]) = \phi(y) = y$.
-
-But $\phi(y) [x := \phi(N)] = y [x := \phi(N)] = y$.
-
-Therefore $\phi(y [x := N]) = \phi(y) [x := \phi(N)]$.
-
-  \vspace{\baselineskip}
-
-3) Let $M = {\bf pure \: } M'$. Then $\phi({\bf pure \: } M' [x := N]) = {\bf pure \: } \phi(M' [x := N])$.
-
-By hypothesis, ${\bf pure \: } (\phi(M' [x := N])) = {\bf pure \: } (\phi(M') [x := \phi(N)])$, which is
-$({\bf pure \: } \phi(M')) [x := \phi(N)]$ by substitution definition.
-
-\vspace{\baselineskip}
-
-4) Let $M = M' \star N'$. So $\phi((M' \star N') [x := N])) = \phi(M' [x := N] \star N' [x := N])$.
-
-By definition of $\phi$,
-
-\quad $\phi(M' [x := N] \star N' [x := N]) = \phi(M' [x := N]) \star \phi(N' [x := N])$.
-
-But by induction hypothesis,
-
-\quad $\phi(M' [x := N]) = \phi(M') [x := \phi(N)]$ and
-
-\quad $\phi(N' [x := N]) = \phi(N') [x := \phi(N)]$.
-
-Hence,
-
-\quad $\phi(M' [x := N]) \star \phi(N' [x := N]) = \phi(M') [x := \phi(N)] \star \phi(N') [x := \phi(N)]$.
-
-So,
-
-\quad $\phi(M') [x := \phi(N)] \star \phi(N')[x := \phi(N)] = (\phi(M') \star \phi(N')) [x := \phi(N)]$.
-
-And by definition of $\phi$, $(\phi(M') \star \phi(N')) [x := \phi(N)] = \phi(M' \star N') [x := \phi(N)]$.
-
-\end{proof}
-
-\begin{lemma}
-
-$ $
-
-  Let $M, N \in \Lambda^{'}_{\textbf{K}}$ and $M \twoheadrightarrow_{\beta^{'}} N$, then $\phi(M)
-  \twoheadrightarrow_{\beta} \phi(N)$.
-
-\end{lemma}
-
-\begin{proof}
-
-$ $
-
-1) Let ${\bf pure \: } (\lambda x. x) \star M, M \in \Lambda^{'}_{\textbf{K}}$ and ${\bf pure \: } (\lambda
-x. x) \star M \rightarrow_{\beta^{'}} M$.
-
-But $\phi ({\bf pure \: } (\lambda x. x) \star M) = {\bf pure \: } (\lambda x. x) \star \phi(M)$.\
-
-So ${\bf pure \: } (\lambda x. x) \star \phi(M) \rightarrow_{\beta} \phi(M)$ by $\beta$-reduction rule.
-
-\vspace{\baselineskip}
-
-2) Let ${\bf pure \: } (\lambda f g x. f (g x)) \star M \star N \star P, M \star (N \star P) \in
-\Lambda^{'}_{\textbf{K}}$ and ${\bf pure \: } (\lambda f g x. f (g x)) \star M \star N \star P
-\rightarrow_{\beta^{'}} M \star (N \star P)$.
-
-By the definition of $\phi$:
-
-$\phi({\bf pure \: } (\lambda f g x. f (g x)) \star M \star N \star P) = {\bf pure \: } (\lambda f g x. f (g
-x)) \star \phi(M) \star \phi(N) \star \phi(P)$;
-
-$M \star (N \star P) = \phi(M) \star (\phi(N) \star \phi(P))$.
-
-Hence, ${\bf pure \: } (\lambda f g x. f (g x))
-\star \phi(M) \star \phi(N) \star \phi(P) \rightarrow_{\beta} \phi(M) \star (\phi(N) \star \phi(P))$ by
-$\beta$-reduction rule.
-
-\vspace{\baselineskip}
-
-3) Let $({\bf pure \: } M) \star ({\bf pure \: } N), {\bf pure \: } (M N) \in \Lambda^{'}_{\textbf{K}}$ and
-$({\bf pure \: } M) \star ({\bf pure \: } N) \rightarrow_{\beta} {\bf pure \: } (M N)$.
-
-By the definition of $\phi$:
-
-$\phi(({\bf pure \: } M) \star ({\bf pure \: } N)) = ({\bf pure \: } \phi(M)) \star ({\bf pure \: }
-\phi(N))$;
-
-$\phi({\bf pure \: } (M N)) = {\bf pure \: } (\phi(M) \phi(N))$.
-
-So, by reduction rule, $({\bf pure \: } \phi(M)) \star ({\bf pure \: } \phi(N)) \rightarrow_{\beta} {\bf
-pure \: } (\phi(M) \phi(N))$.
-
-\vspace{\baselineskip}
-
-4) Let $M \star ({\bf pure \: }), {\bf pure \: } (\lambda f. f N) \star M$ and $M \star ({\bf pure \: } N)
-\rightarrow_{\beta^{'}} (\lambda f. f N) \star M$.
-
-$\phi(M \star ({\bf pure \: } N)) = \phi(M) \star ({\bf pure \: } \phi(N))$
-
-$\phi((\lambda f. f N) \star M) = (\lambda f. f \phi(N)) \star \phi(M)$.
-
-So, $\phi(M) \star ({\bf pure \: } \phi(N)) \rightarrow_{\beta} {\bf pure \: } (\lambda f. f \phi(N)) \star
-\phi(M)$.
-\end{proof}
-
-\begin{lemma}
-
-$ $
-
-Let $M \in \Lambda^{'}_{\textbf{K}}$. Then $|M| \twoheadrightarrow_{\beta} \phi(M)$.
-
-\end{lemma}
-
-\begin{proof}
-
-Induction on the structure of $M$.
-
-\end{proof}
-
-\begin{lemma} Strip lemma.
-
-$ $
-
-If $M \rightarrow_{\beta} N$ and $M \twoheadrightarrow_{\beta} P$. Then there exists some term $Q$, such that
-$N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
-
-\end{lemma}
-
-\begin{proof}
-
-  Proof is similar to \cite{Baren} \cite{Baren2}. We build the following diagram
-
-\vspace{\baselineskip}
-
-\xymatrix{
-&&& M \ar[dd]_{\beta} \ar@{->>}[rrr] &&& P \ar@{-->>}[dd]^{\beta} \\
-&&&& N' \ar[ul]^{|.|} \ar[dl]_{\phi} \ar@{-->>}[rrr]^{\beta^{'}} &&& P' \ar[ul]^{|.|} \ar[dl]_{\phi} \\
-&&& N \ar@{-->>}[rrr]_{\beta} &&& Q
-}
-
-\end{proof}
-
-which is commutes by lemmas 11 -- 14.
-
-\begin{theorem} Confluence.
-
-$ $
-
-If $M \twoheadrightarrow_{\beta} N$ and $M \twoheadrightarrow_{\beta} P$. Then there exists some term $Q$,
-such that $N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
-
-\end{theorem}
-
-\begin{proof}
-
-$ $
-
-  By unfolding $M \twoheadrightarrow_{\beta} N$ as the sequence of one-step reductions $M \rightarrow_{\beta}
-  M_1 \rightarrow_{\beta} ... \rightarrow_{\beta} M_n \rightarrow_{\beta} N$ and applying strip lemma on every step.
-
-\end{proof}
 
 \section{Categorical semantics}
 
@@ -1396,8 +881,49 @@ $\begin{array}{lll}
 &[\![\Gamma \vdash ({\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N]\!] \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle&
 \end{array}$
 
+\end{proof}
+
+\begin{lemma}
+  $ $
+
+  i) Let $\Gamma \vdash M : A$ and $M \twoheadrightarrow_{\beta} N$, then $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$;
+
+  ii) Let $\Gamma \vdash M : A$ and $M \twoheadrightarrow_{\eta} N$, then $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$;
+\end{lemma}
+
+\begin{proof}
+  i) For $\beta$-reduction
+
 \vspace{\baselineskip}
 
+Cases with $\beta$-reductions for $let_{\bf K}$ are shown in \cite{ModalK1}. Let us consider cases with ${\bf pure}$.
+
+\vspace{\baselineskip}
+
+1) $[\![\Gamma \vdash {\bf pure \:} ((\lambda x. M) N) : {\bf K}B]\!] = [\![\Gamma \vdash {\bf pure \:} (M [x := N]]) : {\bf K}B]\!]$
+
+$\begin{array}{lll}
+&[\![\Gamma \vdash {\bf pure \:} (\lambda x. M) N : {\bf K}B]\!] = & \text{By interpretation} \\
+&\eta_{[\![B]\!]} \circ (\epsilon \circ \langle \Lambda([\![M]\!]), [\![N]\!]\rangle) =& \text{Property of $\times$} \\
+&\eta_{[\![B]\!]} \circ (\epsilon \circ (\Lambda([\![M]\!]) \times id_{[\![A]\!]}) \circ \langle id_{[\![\Gamma]\!]}, [\![N]\!] \rangle) = & \text{Associativity of composition} \\
+&\eta_{[\![B]\!]} \circ ((\epsilon \circ (\Lambda([\![M]\!]) \times id_{[\![A]\!]})) \circ \langle id_{[\![\Gamma]\!]}, [\![N]\!] \rangle) = & \text{Exponentiation property} \\
+&\eta_{[\![B]\!]} \circ ([\![M]\!] \circ \langle id_{[\![\Gamma]\!]}, [\![N]\!] \rangle) = & \text{Substitution lemma} \\
+&\eta_{[\![B]\!]} \circ [\![M [\vec{x}, x := \vec{x}, N]]\!] =& \text{By interpretation} \\
+&[\![\Gamma \vdash {\bf pure \:} (M [x := N]]) : {\bf K}B]\!]&
+\end{array}$
+
+\vspace{\baselineskip}
+
+2) $[\![\Gamma \vdash {\bf pure \:} (\pi_i \langle [\![M_1]\!], [\![M_2]\!] \rangle) : {\bf K}A_i ]\!] = [\![\Gamma \vdash {\bf \: pure} M_i : {\bf K}A_i ]\!]$
+
+\vspace{\baselineskip}
+
+$\begin{array}{lll}
+&[\![\Gamma \vdash {\bf pure \:} (\pi_i \langle M_1, M_2] \rangle) : {\bf K}A_i ]\!] = & \text{By interpretation} \\
+&\eta_{[\![A_i]\!]} \circ \pi_i \circ \langle [\![M_1]\!], [\![M_2]\!] \rangle = & \text{Property of $\times$} \\
+&\eta_{[\![A_i]\!]} \circ [\![M_i]\!] =& \text{By interpetation} \\
+&[\![\Gamma \vdash {\bf pure \:} M_i : {\bf K}A_i]\!]&
+\end{array}$
 
 \end{proof}
 
@@ -1476,6 +1002,8 @@ $\begin{array}{lll}
   the Foundations of Mathematics, vol. 103. Amsterdam: North-Holland, 1985.
 
   \bibitem{ModalK} Yoshihiko KAKUTANI, A Curry-Howard Correspondence for Intuitionistic Normal Modal Logic, Computer Software, Released February 29, 2008, Online ISSN , Print ISSN 0289-6540.
+
+    \bibitem{ModalK1} Kakutani Y. (2007) Call-by-Name and Call-by-Value in Normal Modal Logic. In: Shao Z. (eds) Programming Languages and Systems. APLAS 2007. Lecture Notes in Computer Science, vol 4807. Springer, Berlin, Heidelberg
   \end{thebibliography}
 
 
