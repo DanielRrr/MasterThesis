@@ -433,100 +433,6 @@ Here are some examples of derivation trees.
 
 \section{Strong normalization}
 
-  We modify and apply Tait's technique of logical relation for modalities. Strong normalization proof with Tait's method for simply typed lambda calculus is described here \cite{Pierce}.
-
-  Strong normalization for ${\bf IK}$ is proved in \cite{Abe} \cite{ModalK}. So we consider simply typed lambda calculus with ${\bf K}_I$ rule and show that $\lambda_{\to, \times} + {\bf K}_I$ is strongly normalizable.
-
-
-  \begin{theorem}
-
-    Let $M \in \Lambda_{\textbf{K}}$, then any sequence of reduction $M \rightarrow_{\beta} M_1 \dots$ terminates.
-
-  \end{theorem}
-
-  \begin{proof}
-    $ $
-
-    We build the subset of strongly normalazing terms and show that an arbitrary term belongs to this subset.
-
-    \begin{defin} The set of strongly computable terms for every type $T \in \mathbb{T_{\bf K}}$.
-      \begin{itemize}
-        \item Let $A \in \mathbb{T}$, then $SC_A = \{ M : A \: | \: \text{$M$ is strongly normalizing}\}$;
-        \item $SC_{A \to B} = \{ M : A \to B \: | \: \forall A \in SC_A, M N \in SC_B \}$;
-        \item $SC_{A_1 \times A_2} = \{ M : A \times B \: | \: \pi_i M \in SC_{A_i}, i \in \{ 1, 2 \} \}$;
-        \item $SC_{{\bf K}A} = \{ {\bf pure \:} M : {\bf K}A \: | \: M \in SC_A \}$
-      \end{itemize}
-    \end{defin}
-
-    Strong normalization proof reduces to the proof of the next lemma:
-
-    \begin{lemma}
-      $ $
-
-      i) If $M \in SC_A$, then $M$ is stronly normalizing;
-
-      ii) If $M \rightarrow_{\beta} M^{'}$ and $M \in SC_A$, then $M^{'}$;
-
-      iii) Let $M \rightarrow_{\beta} M^{'}$ and $M^{'} \in SC_A$, then, if $M$ is a neutral term, then $M \in SC_A$.
-
-      iv) Let $x_1 : A_1,\dots,x_n : A_n \vdash M : B$ and $\forall i \in \{ 1,\dots,n\}, N_i \in SC_{A_i}$, then $M [\vec{x} := \vec{N}] \in SC_B$.
-    \end{lemma}
-
-    \begin{proof}
-      $ $
-
-      i)
-
-      The base case follows from the definition.
-
-      Let us consider case with $SC_{{\bf K}A}$.
-      If ${\bf pure \:} M \in SC_{{\bf K}A}$, then $M \in SC_A$ and $M$ is strongly normalizible.
-      So ${\bf pure \:} M$ is strongly normalizible, otherwise there would be an infinite reduction path in ${\bf pure \:} M$.
-
-      \vspace{\baselineskip}
-
-      ii)
-
-      The base case is trivial.
-
-      Let ${\bf pure \:} M \rightarrow_{\beta} {\bf pure \:} M^{'}$ and ${\bf pure \:} M \in SN_{{\bf K}A}$.
-      By assumption, $M \in SN_A$ and $M \rightarrow_{\beta} M^{'}$, so $M^{'} \in SN_A$. Hence ${\bf pure \:} M^{'} \in SC_{{\bf K}A}$ by the first statement of the lemma.
-
-      \vspace{\baselineskip}
-
-      iii)
-
-      The base case is trivial.
-
-      Let ${\bf pure \:} M \rightarrow_{\beta} {\bf pure \:} M^{'}$ and ${\bf pure \:} M^{'} \in SN_{{\bf K}A}$.
-
-      ${\bf pure \:} M^{'}$ is a neutral by the definition. By assumption $M$ is a strongly normalizing. So ${\bf pure\:} M$ is a strongly normalizing by the first part of the current lemma.
-
-      \vspace{\baselineskip}
-
-      iv)
-
-      Let $x_1 : A_1,\dots,x_n : A_n \vdash {\bf pure \:} M : {\bf K}A$ and $\forall i \in \{ 1,\dots,n\}, N_i \in SC_{A_i}$.
-
-      By generation $x_1 : A_1,\dots,x_n : A_n \vdash M : A$ and by assumption $M [\vec{x} := \vec{N}] \in SC_B$.
-
-      Hence, by the first part of lemma, ${\bf pure \:} (M [\vec{x} := \vec{N}]) \in SC_{{\bf K}B}$.
-    \end{proof}
-
-    \begin{col}
-      $ $
-
-      Let $\vdash N : A$, then $N$ is strongly normalizing.
-    \end{col}
-
-    \begin{proof}
-      $ $
-
-    If $\vdash N : A$, then $N \in SC_A$, hence $N$ is strongly normalizing.
-    \end{proof}
-
-  \end{proof}
-
 \section{Confluence}
 
 \section{Categorical semantics}
@@ -810,13 +716,6 @@ $\begin{array}{lll}
 $ $
 Straightforwardly follows from two previous lemmas.
 \end{proof}
-
-  \section{Acknowledgement.}
-
-  Author would like to thank his supervisior
-  V.L.Vasukov, V.N. Krupski for general idea and wise
-  advice, V. de Paiva, V.I. Shalack, A.V. Rodin and M.
-  Taldykin for discussing, critics and consulting.
 
   \addcontentsline{toc}{section}{References}
 
