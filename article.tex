@@ -400,26 +400,21 @@ Here are some examples of derivation trees.
   & {\bf let \: pure \:} \langle \vec{x}, \vec{w}, \vec{z} \rangle = \langle \vec{M}, \vec{N}, \vec{P} \rangle \: { \bf in } \: R [y := Q]
   \end{array}$
 
-  5) $M \rightarrow_{\beta} N \Rightarrow {\bf pure \: M} \rightarrow_{\beta} {\bf pure \: N}$
+  5) ${\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N \rightarrow_{\beta} {\bf pure \:} N [\vec{x} := \vec{M}]$
 
-  6) $\lambda x. f x \rightarrow_{\eta} f$;
+  6) $M \rightarrow_{\beta} N \Rightarrow {\bf pure \: M} \rightarrow_{\beta} {\bf pure \: N}$
 
-  7) $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
+  7) $\lambda x. f x \rightarrow_{\eta} f$;
 
-  10) ${\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N \rightarrow_{\eta} {\bf pure \:} N$;
+  8) $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
 
-  11) ${\bf let \: pure \:} x = M {\: \bf in \: } x \rightarrow_{\eta} M$;
+  9) ${\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N \rightarrow_{\eta} {\bf pure \:} N$;
 
-  12) $M \rightarrow_{\beta} N \Rightarrow {\bf pure \: M} \rightarrow_{\eta} {\bf pure \: N}$
+  10) ${\bf let \: pure \:} x = M {\: \bf in \: } x \rightarrow_{\eta} M$;
+
+  11) $M \rightarrow_{\eta} N \Rightarrow {\bf pure \: M} \rightarrow_{\eta} {\bf pure \: N}$
   \end{defin}
 
-  Let us show the next simple observation, which immeadelty follows from the previous definition.
-
-  \begin{lemma}
-    $ $
-
-    If $M \rightarrow_{\beta \eta} N$, then ${\bf pure \:} M \rightarrow_{\beta \eta} {\bf pure \:} N$.
-  \end{lemma}
 
 
 
@@ -472,6 +467,13 @@ By default we will consider an arbitrary closed functor on some cartersian close
 We identify terminal objects. So $\mathcal{K}(\mathds{1}) = \mathds{1}$ and $\eta_{\mathds{1}} = id_{\mathds{1}}$ since $\mathcal{K}$ is an endofunctor.
 
 \subsection{Soundness}
+
+\begin{theorem} Soundness
+
+  Let $\Gamma \vdash M : A$ and $M =_{\beta\eta} N$, then $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$
+\end{theorem}
+
+\begin{proof}
 
 \begin{defin} Semantical translation from $\lambda_{\textbf{K}}$ to CCC with applicative functor $\mathcal{K}$:
 
@@ -637,64 +639,49 @@ Cases with $\beta$-reductions for $let_{\bf K}$ are shown in \cite{ModalK1}. Let
 
 \vspace{\baselineskip}
 
-1) $[\![\Gamma \vdash {\bf pure \:} ((\lambda x. M) N) : {\bf K}B]\!] = [\![\Gamma \vdash {\bf pure \:} (M [x := N]]) : {\bf K}B]\!]$
-
-$\begin{array}{lll}
-&[\![\Gamma \vdash {\bf pure \:} (\lambda x. M) N : {\bf K}B]\!] = & \text{By interpretation} \\
-&\eta_{[\![B]\!]} \circ (\epsilon \circ \langle \Lambda([\![M]\!]), [\![N]\!]\rangle) =& \text{Property of $\times$} \\
-&\eta_{[\![B]\!]} \circ (\epsilon \circ (\Lambda([\![M]\!]) \times id_{[\![A]\!]}) \circ \langle id_{[\![\Gamma]\!]}, [\![N]\!] \rangle) = & \text{Associativity of composition} \\
-&\eta_{[\![B]\!]} \circ ((\epsilon \circ (\Lambda([\![M]\!]) \times id_{[\![A]\!]})) \circ \langle id_{[\![\Gamma]\!]}, [\![N]\!] \rangle) = & \text{Exponentiation property} \\
-&\eta_{[\![B]\!]} \circ ([\![M]\!] \circ \langle id_{[\![\Gamma]\!]}, [\![N]\!] \rangle) = & \text{Substitution lemma} \\
-&\eta_{[\![B]\!]} \circ [\![M [\vec{x}, x := \vec{x}, N]]\!] =& \text{By interpretation} \\
-&[\![\Gamma \vdash {\bf pure \:} (M [x := N]]) : {\bf K}B]\!]&
-\end{array}$
-
-\vspace{\baselineskip}
-
-2) $[\![\Gamma \vdash {\bf pure \:} (\pi_i \langle [\![M_1]\!], [\![M_2]\!] \rangle) : {\bf K}A_i ]\!] = [\![\Gamma \vdash {\bf \: pure} M_i : {\bf K}A_i ]\!]$
+1) $[\![\Gamma \vdash {\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N : {\bf K}B]\!] = [\![\Gamma \vdash {\bf pure \:} N [\vec{x} := \vec{M}] : {\bf K}B]\!]$
 
 \vspace{\baselineskip}
 
 $\begin{array}{lll}
-&[\![\Gamma \vdash {\bf pure \:} (\pi_i \langle M_1, M_2] \rangle) : {\bf K}A_i ]\!] = & \text{By interpretation} \\
-&\eta_{[\![A_i]\!]} \circ \pi_i \circ \langle [\![M_1]\!], [\![M_2]\!] \rangle = & \text{Property of $\times$} \\
-&\eta_{[\![A_i]\!]} \circ [\![M_i]\!] =& \text{By interpetation} \\
-&[\![\Gamma \vdash {\bf pure \:} M_i : {\bf K}A_i]\!]&
+&[\![\Gamma \vdash {\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N : {\bf K}B]\!] = & \\
+&\text{\quad\quad\quad\quad\quad\quad\quad\quad\quad By interpretation}& \\
+&\mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ \langle \eta_{[\![A_1]\!]} \circ [\![M_1]\!],\dots,\eta_{[\![A_n]\!]} \circ [\![M_n]\!] \rangle = \\
+&\text{\quad\quad\quad\quad\quad\quad\quad\quad\quad By the property of a pair of morphisms}& \\
+&\mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ (\eta_{[\![A_1]\!]} \times \dots \times \eta_{[\![A_n]\!]}) \circ \langle [\![M_1]\!], \dots, [\![M_n]\!]\rangle =& \\
+&\text{\quad\quad\quad\quad\quad\quad\quad\quad\quad Associativity of composition}& \\
+&\mathcal{K}([\![N]\!]) \circ (\ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ (\eta_{[\![A_1]\!]} \times \dots \eta_{[\![A_n]\!]})) \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle =& \\
+&\text{\quad\quad\quad\quad\quad\quad\quad\quad\quad By the definition of an applicative functor}& \\
+&\mathcal{K}([\![N]\!]) \circ \eta_{[\![A_1]\!] \times \dots \times [\![A_n]\!]} \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle =& \\
+&\text{\quad\quad\quad\quad\quad\quad\quad\quad\quad Naturality of $\eta$}& \\
+&\eta_{[\![B]\!]} \circ [\![N]\!] \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle =& \\
+&\text{\quad\quad\quad\quad\quad\quad\quad\quad\quad Associativity of composition}& \\
+&\eta_{[\![B]\!]} \circ ([\![N]\!] \circ \langle [\![M_1]\!], \dots, [\![M_n]\!]) \rangle =& \\
+&\text{\quad\quad\quad\quad\quad\quad\quad\quad\quad Simultaneous substitution lemma}& \\
+&\eta_{[\![B]\!]} \circ [\![N [\vec{x} := \vec{M}]]\!]& \\
+&\text{\quad\quad\quad\quad\quad\quad\quad\quad\quad By interpetation}& \\
+&[\![\Gamma \vdash {\bf pure \:} (N [\vec{x} := \vec{M}]) : {\bf K}B]\!]&
 \end{array}$
+
+2)
+
+If $\Gamma \vdash M : A$ and $M \rightarrow_{\beta} N$, then $[\![\Gamma \vdash {\bf pure \:} M : {\bf K}A]\!] = [\![\Gamma \vdash {\bf pure \:} N : {\bf K}A]\!]$.
+
+\vspace{\baselineskip}
+
+If $\Gamma \vdash M : A$ and $M \rightarrow_{\beta} N$, then $\Gamma \vdash N : A$ by subject reduction.
+
+By assumption $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$.
+
+So $\eta_{[\![A]\!]} \circ [\![\Gamma \vdash M : A]\!] = \eta_{[\![A]\!]} \circ [\![\Gamma \vdash N : A]\!]$.
+
+Hence $[\![\Gamma \vdash {\bf pure \:} M : {\bf K}A]\!] = [\![\Gamma \vdash {\bf pure \:} N : {\bf K}A]\!]$.
 
 \vspace{\baselineskip}
 
 ii) For $\eta$-reduction.
 
-\vspace{\baselineskip}
-
-1) $[\![\Gamma \vdash {\bf pure \:} (\lambda x. M x) : {\bf K}(A \to B)]\!] = [\![\Gamma \vdash {\bf pure \:} M : {\bf K}(A \to B)]\!]$.
-
-\vspace{\baselineskip}
-
-$\begin{array}{lll}
-&[\![\Gamma \vdash {\bf pure \:} (\lambda x. M x) : {\bf K}(A \to B)]\!] = & \text{By interpetation} \\
-&\eta_{[\![B]\!]^{[\![A]\!]}} \circ \Lambda(\epsilon \circ [\![M]\!] \times id_{[\![A]\!])}& \text{Exponentiation property} \\
-&\eta_{[\![B]\!]^{[\![A]\!]}} \circ [\![M]\!] = & \text{By interpretation} \\
-&[\![\Gamma \vdash {\bf pure \:} M : {\bf K}(A \to B)]\!]&
-\end{array}$
-
-\vspace{\baselineskip}
-
-2) $[\![\Gamma \vdash {\bf pure \:} \langle \pi_1 M, \pi_2 M \rangle : {\bf K}(A \times B)]\!] = [\![\Gamma \vdash {\bf pure \:} M : {\bf K}(A \times B)]\!]$
-
-\vspace{\baselineskip}
-
-$\begin{array}{lll}
-&[\![\Gamma \vdash {\bf pure \:} \langle \pi_1 M, \pi_2 M \rangle : {\bf K}(A \times B)]\!] = & \text{By interpetation} \\
-&\eta_{[\![A]\!] \times [\![B]\!]} \circ \langle \pi_1 \circ [\![M]\!], \pi_2 \circ [\![M]\!] \rangle  = & \text{By the property of a product of morphisms} \\
-&\eta_{[\![A]\!] \times [\![B]\!]} \circ [\![M]\!] = & \text{By interpetation} \\
-&[\![\Gamma \vdash {\bf pure \:} M : {\bf K}(A \times B)]\!]&
-\end{array}$
-
-\vspace{\baselineskip}
-
-3) $[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N : {\bf }K A ]\!] = [\![\vdash {\bf pure \:} N : {\bf K A}]\!]$.
+1) $[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N : {\bf }K A ]\!] = [\![\vdash {\bf pure \:} N : {\bf K A}]\!]$.
 
 \vspace{\baselineskip}
 
@@ -705,17 +692,21 @@ $\begin{array}{lll}
 &[\![\vdash {\bf pure \:} N : {\bf K} A]\!]&
 \end{array}$
 
+\vspace{\baselineskip}
+
+2)
+
+If $\Gamma \vdash M : A$ and $M \rightarrow_{\eta} N$, then $[\![\Gamma \vdash {\bf pure \:} M : {\bf K}A]\!] = [\![\Gamma \vdash {\bf pure \:} N : {\bf K}A]\!]$.
+
+\vspace{\baselineskip}
+
+Similar to case with $\beta$-reduction.
+
 \end{proof}
 
-\begin{theorem} Soundness
-
-  Let $\Gamma \vdash M : A$ and $M =_{\beta\eta} N$, then $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$
-\end{theorem}
-
-\begin{proof}
-$ $
-Straightforwardly follows from two previous lemmas.
 \end{proof}
+
+\subsection{Completeness}
 
   \addcontentsline{toc}{section}{References}
 
