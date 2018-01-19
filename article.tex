@@ -209,6 +209,8 @@ $\begin{array}{lll}
   Straightforward derivation of modal axioms in $\text{NIEL}^{-}$. We consider this derivation below using terms.
 \end{proof}
 
+It is clearly that these lemmas could be extended for IEL$^{-}$ with $\vee$ and $\neg$ similary.
+
   \vspace{\baselineskip}
 
   At the next step we build the typed lambda-calculus based on NIEL$^{-}_{\land, \to}$ by proof-assingment in
@@ -416,14 +418,113 @@ Here are some examples of derivation trees.
   \end{defin}
 
 
-
-
   \section{Basic lemmas}
 
   Now we will prove standard lemmas for contexts in type systems\footnote{We will not prove cases with
   $\to$-constructor, they are proved standardly in the same lemmas for simply typed lambda calculus, for
   example see \cite{Neder}\cite{Morten}\cite{Girard}. We will consider only modal cases}:
 
+\begin{lemma} Generation lemma.
+
+  i) Let $\Gamma \vdash {\bf pure \:} M : {\bf K}A$, then $\Gamma \vdash M : A$;
+
+  ii) Let $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K}B$, there are some $A_1,\dots,A_n \in \mathbb{T}_{{\bf K}}$,
+  such that $\Gamma \vdash \vec{M} : {\bf K} \vec{A}$ and $\vec{x} : \vec{A} \vdash N : B$.
+\end{lemma}
+
+\begin{proof}
+  $ $
+
+  Induction on $\Gamma \vdash {\bf pure \:} M : {\bf K}A$ and $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{N} {\: \bf in \:} N : {\bf K}B$ correspondently.
+\end{proof}
+
+\begin{lemma} Weakening.
+
+  Let $\Gamma \vdash M : A$ and $\Gamma \subseteq \Delta$, then $\Delta \vdash M : A$.
+
+\end{lemma}
+
+\begin{proof}
+  $ $
+
+  1) Let $\Gamma, x : A \vdash x : A$ and $\Gamma \subseteq \Delta$, then $\Delta, x : A \vdash x : A$ trivially.
+
+  2) Let $\Gamma \vdash {\bf pure \:} M : {\bf K}A$. Then $\Gamma \vdash M : A$ by generation and $\Delta \vdash M : A$ by assumption. So $\Delta \vdash {\bf pure \:} M : {\bf K} A$ by ${\bf K}_I$.
+
+  3) Let $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K}B$ and $\Gamma \subseteq \Delta$. Then $\Gamma \vdash \vec{M} : {\bf K}\vec{A}$ and $\vec{x} : \vec{A} \vdash N : B$.
+
+  By assumption $\Delta \vdash \vec{M} : {\bf K}\vec{A}$. So $\Delta \vdash {\bf let \: pure \:} \vec{x} = \vec{N} {\: \bf in \:} N : {\bf K}B$ by $\text{let}_{{\bf K}}$.
+\end{proof}
+
+\begin{defin} Type substituition
+
+  The substituition of type $C$ for type variable $B$ in type $A$ inductively defined as follows:
+
+  1) $B [B := C] = B$ and $D [B := C] = D$, if $B \neq D$;
+
+  2) $(A_1 \alpha A_2)[B := C] = (A_1[B := C]) \alpha (A_2[B := C])$, where $\alpha \in \{ \to, \times \}$;
+
+  3) $({\bf K}A)[B := C] = {\bf K}(A [B := C])$.
+
+  4) Let $\Gamma$ be the context, then $\Gamma [B := C] = \{ x : (A[B := C]) \: | \: x : A \in \Gamma \}$
+\end{defin}
+
+\begin{lemma} Substituition lemma.
+
+    i) Let $\Gamma, x : A \vdash M : B$ and $\Gamma \vdash N : A$, then $\Gamma \vdash M [x := N] : B$.
+
+    ii) Let $\Gamma \vdash M : A$, then $\Gamma [B := C] \vdash M : (A [B := C])$.
+
+\end{lemma}
+
+\begin{proof}
+
+$ $
+
+i) For term substitution:
+
+\vspace{\baselineskip}
+
+1) Let $\Gamma, x : A \vdash x : A$ and $\Gamma \vdash N : A$, but $x [x := N] = N$, so $\Gamma \vdash N : A$.
+
+2) Let $\Gamma, x : A \vdash {\bf pure \:} M : {\bf K}B$ and $\Gamma \vdash N : A$.
+
+By generation $\Gamma, x : A \vdash M : B$ and by assumption $\Gamma \vdash M [x := N] : B$.
+
+By $K_I$, $\Gamma \vdash {\bf pure \:} (M [x := N]) : {\bf K}B$.
+
+3) Let $\Gamma, y : A \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K} B$ and $\Gamma \vdash N : A$.
+
+By generation, $\Gamma, y : A \vdash \vec{M} : {\bf K} \vec{A}$ and $\vec{x} : \vec{A} \vdash N : B$.
+
+By hypothesis, $\Gamma \vdash \vec{M}[x := N] : {\bf K} \vec{A}$.
+
+Hence $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M}[x := N] {\: \bf in \:} N : {\bf K} B$.
+
+\vspace{\baselineskip}
+
+ii) For type substitution
+
+\vspace{\baselineskip}
+
+1) Let $\Gamma, x : A \vdash x : A$, so $\Gamma [A := C], x : (A[A := C]) \vdash x : (A[A := C])$, or
+
+$\Gamma [A := C], x : C \vdash x : C$.
+
+2) Let $\Gamma \vdash {\bf pure \:} M : {\bf K}A$. By generation $\Gamma \vdash M : A$ and by assumption $\Gamma [B := C] \vdash M : A[B := C]$.
+
+By $K_I$ $\Gamma \vdash {\bf pure \:L} M : {\bf K}(A[B := C])$.
+
+3) $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K}B$. By generation $\Gamma \vdash \vec{M} : {\bf K}\vec{A}$ and $\vec{x} : \vec{A} \vdash N : B$.
+
+By assumption $\Gamma [B_1 := C] \vdash \vec{M} : {\bf }{K}\vec{A}[B_1 := C]$ and $\vec{x} : \vec{A}[B_1 := C] \vdash N : B[B_1 := C]$.
+
+So by $\text{let}_{{\bf K}}$, $\Gamma [B_1 := C] \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K}(B[B_1 := C])$. 
+
+\end{proof}
+
+\begin{theorem} Subject reduction
+\end{theorem}
 
 
 \section{Strong normalization}
