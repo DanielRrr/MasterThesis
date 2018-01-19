@@ -404,17 +404,15 @@ Here are some examples of derivation trees.
 
   5) ${\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N \rightarrow_{\beta} {\bf pure \:} N [\vec{x} := \vec{M}]$
 
-  6) $M \rightarrow_{\beta} N \Rightarrow {\bf pure \: M} \rightarrow_{\beta} {\bf pure \: N}$
+  6) $\lambda x. f x \rightarrow_{\eta} f$;
 
-  7) $\lambda x. f x \rightarrow_{\eta} f$;
+  7) $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
 
-  8) $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
+  8) ${\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N \rightarrow_{\eta} {\bf pure \:} N$;
 
-  9) ${\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N \rightarrow_{\eta} {\bf pure \:} N$;
+  9) ${\bf let \: pure \:} x = M {\: \bf in \: } x \rightarrow_{\eta} M$;
 
-  10) ${\bf let \: pure \:} x = M {\: \bf in \: } x \rightarrow_{\eta} M$;
-
-  11) $M \rightarrow_{\eta} N \Rightarrow {\bf pure \: M} \rightarrow_{\eta} {\bf pure \: N}$
+  10) $M \rightarrow_{\beta \eta} N \Rightarrow {\bf pure \: M} \rightarrow_{\beta \eta} {\bf pure \: N}$
   \end{defin}
 
 
@@ -519,12 +517,40 @@ By $K_I$ $\Gamma \vdash {\bf pure \:L} M : {\bf K}(A[B := C])$.
 
 By assumption $\Gamma [B_1 := C] \vdash \vec{M} : {\bf }{K}\vec{A}[B_1 := C]$ and $\vec{x} : \vec{A}[B_1 := C] \vdash N : B[B_1 := C]$.
 
-So by $\text{let}_{{\bf K}}$, $\Gamma [B_1 := C] \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K}(B[B_1 := C])$. 
+So by $\text{let}_{{\bf K}}$, $\Gamma [B_1 := C] \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K}(B[B_1 := C])$.
 
 \end{proof}
 
 \begin{theorem} Subject reduction
+
+  Let $\Gamma \vdash M : A$ and $M \twoheadrightarrow_{\beta \eta} N$, then $\Gamma \vdash N : A$
+
 \end{theorem}
+
+For cases with application, abstraction and pairs see \cite{Morten} \cite{Pierce}.
+
+1)
+  Let $\Gamma \vdash {\bf let \: pure \:} \langle \vec{x}, y, \vec{z} \rangle = \langle \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P} \rangle {\: in \:} R : {\bf K}B$,
+  then $\Gamma {\bf let \: pure \:} \langle \vec{x}, \vec{w}, \vec{z} \rangle = \langle \vec{M}, \vec{N}, \vec{P} \rangle \: { \bf in } \: R [y := Q] : {\bf K}B$
+
+2) Let $\Gamma \vdash {\bf let \: pure \:} x = M {\: \bf in \: } x : {\bf K}A$, then $\Gamma \vdash M : {\bf K}A$.
+
+See \cite{ModalK}.
+
+3) Let $\Gamma \vdash {\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N : {\bf K}B$.
+
+By generation $\Gamma \vdash {\bf pure \:} \vec{M} : {\bf K}\vec{A}$ and $\vec{x} : \vec{A} \vdash N : B$.
+\\ Moreover, $\Gamma \vdash \vec{M} : \vec{A}$. By weakening and substitution lemma $\Gamma \vdash N [\vec{x} = \vec{M}] : B$.
+\\ By ${\bf K}_I$, $\Gamma \vdash {\bf pure \:} N [\vec{x} := \vec{M}] : {\bf K}B$.
+
+4) Let $\vdash {\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N : {\bf K}A$
+
+By generation $\vdash N : A$. \\ So $\vdash {\bf pure \:} N : {\bf K}A$ by ${\bf K}_I$.
+
+5) Let $\Gamma \vdash {\bf pure \:} M : A$ and $M \twoheadrightarrow_{\beta \eta} N$.
+
+By generation $\Gamma \vdash M : A$ and $\Gamma \vdash N : A$ by assumption.
+\\ So $\Gamma \vdash {\bf pure \:} N : {\bf K}A$.
 
 
 \section{Strong normalization}
