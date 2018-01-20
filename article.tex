@@ -835,6 +835,48 @@ Similar to case with $\beta$-reduction.
 
 \subsection{Completeness}
 
+We will consider term model for simply typed lambda calculus $\times$ and $\to$ standardly described in \cite{LambekScott} \cite{Abramsky}.
+
+\begin{defin}
+  Let us define an endofunctor $\mathcal{K} : \mathcal{C}(\lambda) \to \mathcal{C}(\lambda)$, such that:
+  \begin{itemize}
+    \item ${\bf K} : A \mapsto {\bf K}A$;
+    \item ${\bf K} : f : A \to B \mapsto {\text fmap\: f} : {\bf K} A \to {\bf K} B$;
+  \end{itemize}
+\end{defin}
+
+\begin{lemma} Functoriality
+
+  i) ${\bf K}(g \circ f) = {\bf K}(g) \circ \mathcal{K}(f)$;
+
+  ii) ${\bf K}(id_A) = id_{{\bf K}A}$.
+
+  iii) ${\bf K} (A \times B) \cong {\bf K}A \times {\bf K}B$.
+\end{lemma}
+
+\begin{proof}
+  $ $
+
+  i-ii) See \cite{Gabbay};
+
+  iii)
+\end{proof}
+
+\begin{defin}
+
+  Let us define natural transformation $\eta : Id_{\mathcal{C}(\lambda)} \to \mathcal{K}$.
+\end{defin}
+
+\begin{lemma}
+
+  ${\bf K}$ is an applicative functor.
+\end{lemma}
+
+\begin{theorem} Completeness
+
+  Let $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$, then $M =_{\beta \eta} N$.
+\end{theorem}
+
   \addcontentsline{toc}{section}{References}
 
   %далее сам список используевой литературы
@@ -902,7 +944,13 @@ Similar to case with $\beta$-reduction.
   \bibitem{ModalK1} Kakutani Y. (2007) Call-by-Name and Call-by-Value in Normal Modal Logic. In: Shao Z. (eds) Programming Languages and Systems. APLAS 2007. Lecture Notes in Computer Science, vol 4807. Springer, Berlin, Heidelberg
 
   \bibitem{Abe} T. Abe. Completeness of modal proofs in first-order predicate logic. Computer Software, JSSST Journal, 24:165 -- 177, 2007.
-  \end{thebibliography}
 
+  \bibitem{LambekScott}
+
+  \bibitem{Abramsky}
+
+  \bibitem{Gabbay}
+
+\end{thebibliography}
 
 \end{document}
