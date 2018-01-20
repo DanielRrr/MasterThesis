@@ -841,37 +841,69 @@ We will consider term model for simply typed lambda calculus $\times$ and $\to$ 
   Let us define an endofunctor $\mathcal{K} : \mathcal{C}(\lambda) \to \mathcal{C}(\lambda)$, such that:
   \begin{itemize}
     \item ${\bf K} : A \mapsto {\bf K}A$;
-    \item ${\bf K} : f : A \to B \mapsto {\text fmap\: f} : {\bf K} A \to {\bf K} B$;
+    \item ${\bf K} : [x,M] \in Hom_{\mathcal{C}(\lambda)}(A,B) \mapsto \text{fmap } f = [y, {\bf let \: pure \:} x = y \in M] \in Hom_{\mathcal{C}(\lambda)}({\bf K} A, {\bf K} B)$.
   \end{itemize}
 \end{defin}
 
 \begin{lemma} Functoriality
 
-  i) ${\bf K}(g \circ f) = {\bf K}(g) \circ \mathcal{K}(f)$;
+  i) ${\bf K}(g \circ f) = {\bf K}(g) \circ {\bf K}(f)$;
 
   ii) ${\bf K}(id_A) = id_{{\bf K}A}$.
 \end{lemma}
 
 \begin{proof}
-  $ $
 
-  i-ii) See \cite{Gabbay};
+Easy checking.
 
-  iii)
 \end{proof}
 
 \begin{defin}
 
   Let us define natural transformations:
   \begin{itemize}
-  \item $\eta : Id_{\mathcal{C}(\lambda)} \to \mathcal{K}$;
+  \item $\eta : Id_{\mathcal{C}(\lambda)} \to \mathcal{K}$, such that forall $A \in Ob_{\mathcal{C}(\lambda)}$, $\eta_A = [x, {\bf pure \:} x] \in Hom_{\mathcal{C}(\lambda)}(A, {\bf K}A)$;
 
   \item $\ast_{A,B} : {\bf K}A \times {\bf K}B \to {\bf K}(A \times B)$
   \end{itemize}
 \end{defin}
 
 \begin{lemma} Naturality for $\eta$ and for $\ast$
+
+  i) $\text{fmap } f \circ \eta_A = \eta_B \circ f$;
+
+  ii) $\text{fmap } (f \times g) \circ \ast_{A, B} = \ast_{C,D} \circ (\text{fmap } f) \times (\text{fmap } g)$.
+
+  iii) $\ast_{A,B} \circ (\eta_{A} \times \eta_{B}) = \eta_{A \times B}$;
 \end{lemma}
+
+\begin{proof}
+  $ $
+
+  i) $\text{fmap } f \circ \eta_A = \eta_B \circ f$
+
+\vspace{\baselineskip}
+
+$\begin{array}{lll}
+&\eta_B \circ f = & \\
+&[y, {\bf pure \:} y] \circ [x, M] = & \\
+&[x, {\bf pure \:} y [y := M]] =& \\
+&[x, {\bf pure \:} M]& \\
+&\text{On the other hand}& \\
+&\text{fmap } f \circ \eta_A = &\\
+&[z, {\bf let \: pure \:} x = z {\: \bf in \:} M] \circ [x, {\bf pure \: x}] = & \\
+&[x, {\bf let \: pure \:} x = z {\: \bf in \:} M [z := {\bf pure \:} x]]& \\
+&[x, {\bf let \: pure \:} x = {\bf pure \: x} {\: \bf in \:} M]& \\
+&[x, {\bf pure \:} M [x := x]]& \\
+&[x, {\bf pure \:} M]&
+\end{array}$
+
+\vspace{\baselineskip}
+
+ii)  $\text{fmap } (f \times g) \circ \ast_{A, B} = \ast_{C,D} \circ (\text{fmap } f) \times (\text{fmap } g)$
+
+
+\end{proof}
 
 \begin{lemma} Tensorial strength
 \end{lemma}
