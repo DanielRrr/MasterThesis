@@ -816,11 +816,10 @@ Easy checking using reduction rules.
 \begin{defin}
 
   Let us define natural transformations:
-  \begin{itemize}
-  \item $\eta : Id_{\mathcal{C}(\lambda)} \to \mathcal{K}$, such that forall $A \in Ob_{\mathcal{C}(\lambda)}$, $\eta_A = [x, {\bf pure \:} x] \in Hom_{\mathcal{C}(\lambda)}(A, {\bf K}A)$;
 
-  \item $\ast_{A,B} : {\bf K}A \times {\bf K}B \to {\bf K}(A \times B)$
-  \end{itemize}
+  1) $\eta:Id \Rightarrow \mathcal{K}$, s. t. $\forall A \in Ob_{\mathcal{C}(\lambda)}$, $\eta_A = [x, {\bf pure \:} x] \in Hom_{\mathcal{C}(\lambda)}(A, {\bf K}A)$;
+
+  2) $\ast_{A,B}:{\bf K}A \times {\bf K}B \to {\bf K}(A \times B)$.
 \end{defin}
 
 \begin{lemma} Naturality for $\eta$ and for $\ast$
@@ -840,16 +839,17 @@ Easy checking using reduction rules.
 \vspace{\baselineskip}
 
 $\begin{array}{lll}
-&\eta_B \circ f = & \\
-&[y, {\bf pure \:} y] \circ [x, M] = & \\
-&[x, {\bf pure \:} y [y := M]] =& \\
+&\eta_B \circ f = & \text{By the definition} \\
+&[y, {\bf pure \:} y] \circ [x, M] = & \text{By the definition of composition}\\
+&[x, {\bf pure \:} y [y := M]] = & \text{By substitution}\\
 &[x, {\bf pure \:} M]& \\
-&\text{On the other hand}& \\
-&\text{fmap } f \circ \eta_A = &\\
-&[z, {\bf let \: pure \:} x = z {\: \bf in \:} M] \circ [x, {\bf pure \: x}] = & \\
-&[x, {\bf let \: pure \:} x = z {\: \bf in \:} M [z := {\bf pure \:} x]] = & \\
-&[x, {\bf let \: pure \:} x = {\bf pure \: x} {\: \bf in \:} M] = & \\
-&[x, {\bf pure \:} M [x := x]] = & \\
+& &\\
+&\text{On the other hand:}& \\
+&\text{fmap } f \circ \eta_A = & \text{By the definiton} \\
+&[z, {\bf let \: pure \:} x = z {\: \bf in \:} M] \circ [x, {\bf pure \: x}] = & \text{By the definition of composition}\\
+&[x, {\bf let \: pure \:} x = z {\: \bf in \:} M [z := {\bf pure \:} x]] = & \text{By substitution} \\
+&[x, {\bf let \: pure \:} x = {\bf pure \: x} {\: \bf in \:} M] = & \text{$\beta$-reduction rule}\\
+&[x, {\bf pure \:} M [x := x]] = & \text{By substitution}\\
 &[x, {\bf pure \:} M]&
 \end{array}$
 
