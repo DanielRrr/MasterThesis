@@ -314,42 +314,13 @@ $\begin{array}{lll}
 
   \vspace{\baselineskip}
 
-Here are some examples of derivation trees.
+Here are some examples of derivable terms:
 
-  \begin{prooftree}
-  \AxiomC{$x : A \vdash x : A$}
-  \RightLabel{$\textbf{K}_I$}
-  \UnaryInfC{$x : A \vdash {\bf pure \: } x : \textbf{K} A$}
-  \RightLabel{$\rightarrow_i$}
-  \UnaryInfC{$\vdash (\lambda x. {\bf pure \: } x) : A \to \textbf{K}A$}
-  \end{prooftree}
+1) $\vdash (\lambda x. {\bf pure \: } x) : A \to \textbf{K}A$;
 
+2) $\vdash \lambda f. \lambda x. {\bf let \: pure} \: \langle g, y \rangle = \langle f, x \rangle {\: \bf in \:} g y : {\bf K}(A \to B) \to {\bf K} A \to {\bf K} B$
 
-  \begin{prooftree}
-    \AxiomC{$f : {\bf K} (A \to B) \vdash f : {\bf K} (A \to B)$}
-    \AxiomC{$x : {\bf K} A \vdash x : {\bf K} A $}
-    \AxiomC{$g : A \to B$}
-    \AxiomC{$y : A$}
-    \BinaryInfC{$g : A \to B, y : A \vdash g y : B$}
-    \TrinaryInfC{$f : {\bf K} (A \to B), x : {\bf K} A \vdash {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle f, x \rangle \:\: {\bf in } \:\: g y : {\bf K} B$}
-    \UnaryInfC{$f : {\bf K} (A \to B) \vdash \lambda x. {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle f, x \rangle \:\: {\bf in } \:\: g y : {\bf K} A \to {\bf K} B$}
-    \UnaryInfC{$\vdash \lambda f. \lambda x. {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle f, x \rangle \:\: {\bf in } \:\: g y : {\bf K}(A \to B) \to {\bf K} A \to {\bf K} B$}
-  \end{prooftree}
-
-\begin{prooftree}
-  \AxiomC{$f : A \to B \vdash f : A \to B$}
-  \UnaryInfC{$f : A \to B \vdash {\bf pure \:\:} f : {\bf K }(A \to B)$}
-  \AxiomC{$x : {\bf K} A \vdash x : {\bf K} A $}
-  \AxiomC{$g : A \to B$}
-  \AxiomC{$y : A$}
-  \BinaryInfC{$g : A \to B, y : A \vdash g y : B$}
-  \TrinaryInfC{$f : A \to B, x : {\bf K} A \vdash {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle {\bf pure \:\:} f, x \rangle \:\: {\bf in } \:\: g y : {\bf K} B$}
-  \UnaryInfC{$f : A \to B \vdash \lambda x. {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle {\bf pure \:\:} f, x \rangle \:\: {\bf in } \:\: g y : {\bf K} A \to {\bf K} B$}
-  \UnaryInfC{$\lambda f. \lambda x. {\bf let \:\: pure} \:\: \langle g, y \rangle = \langle {\bf pure \:\:} f, x \rangle \:\: {\bf in } \:\: g y : (A \to B) \to {\bf K} A \to {\bf K} B$}
-\end{prooftree}
-
-
-
+3) $\lambda f. \lambda x. {\bf let \:pure} \: \langle g, y \rangle = \langle {\bf pure \:} f, x \rangle {\: \bf in \: } g y : (A \to B) \to {\bf K} A \to {\bf K} B$
 
   \vspace{\baselineskip}
 
@@ -579,14 +550,7 @@ where $\mathcal{C}$ is a symmetric monoidal category, $\mathcal{K}$ is a lax mon
 
 1) $u = \eta_{\mathds{1}}$;
 
-2) $\ast_{A,B} \circ (\eta_A \otimes \eta_B) = \eta_{A \otimes B}$;
-
-3) Weak commutativity condition holds:
-
-\xymatrix{
-A \otimes \mathcal{K}B & \mathcal{K}A \otimes \mathcal{K}B & \mathcal{K}(A \otimes B) \\
-\mathcal{K}B \otimes A & \mathcal{K}B \otimes \mathcal{K}A & \mathcal{K}(B \otimes A)
-}
+2) $\ast_{A,B} \circ (\eta_A \otimes \eta_B) = \eta_{A \otimes B}$.
 \end{defin}
 
 By default we will consider an arbitrary closed functor on some cartersian closed category, which is the special case of an applicative functor.
@@ -792,11 +756,11 @@ $\begin{array}{lll}
 
 2)
 
-If $\Gamma \vdash M : A$ and $M \rightarrow_{\beta} N$, then $[\![\Gamma \vdash {\bf pure \:} M : {\bf K}A]\!] = [\![\Gamma \vdash {\bf pure \:} N : {\bf K}A]\!]$.
+If $\Gamma \vdash M : A$ and $M \rightarrow_{\beta \eta} N$, then $[\![\Gamma \vdash {\bf pure \:} M : {\bf K}A]\!] = [\![\Gamma \vdash {\bf pure \:} N : {\bf K}A]\!]$.
 
 \vspace{\baselineskip}
 
-If $\Gamma \vdash M : A$ and $M \rightarrow_{\beta} N$, then $\Gamma \vdash N : A$ by subject reduction.
+If $\Gamma \vdash M : A$ and $M \rightarrow_{\beta \eta} N$, then $\Gamma \vdash N : A$ by subject reduction.
 
 By assumption $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$.
 
@@ -819,16 +783,6 @@ $\begin{array}{lll}
 &[\![\vdash {\bf pure \:} N : {\bf K} A]\!]&
 \end{array}$
 
-\vspace{\baselineskip}
-
-2)
-
-If $\Gamma \vdash M : A$ and $M \rightarrow_{\eta} N$, then $[\![\Gamma \vdash {\bf pure \:} M : {\bf K}A]\!] = [\![\Gamma \vdash {\bf pure \:} N : {\bf K}A]\!]$.
-
-\vspace{\baselineskip}
-
-Similar to case with $\beta$-reduction.
-
 \end{proof}
 
 \end{proof}
@@ -839,10 +793,11 @@ We will consider term model for simply typed lambda calculus $\times$ and $\to$ 
 
 \begin{defin}
   Let us define an endofunctor $\mathcal{K} : \mathcal{C}(\lambda) \to \mathcal{C}(\lambda)$, such that:
-  \begin{itemize}
-    \item ${\bf K} : A \mapsto {\bf K}A$;
-    \item ${\bf K} : [x,M] \in Hom_{\mathcal{C}(\lambda)}(A,B) \mapsto \text{fmap } f = [y, {\bf let \: pure \:} x = y \in M] \in Hom_{\mathcal{C}(\lambda)}({\bf K} A, {\bf K} B)$.
-  \end{itemize}
+
+1) ${\bf K} : A \mapsto {\bf K}A$;
+
+2) ${\bf K} : [x,M] \in Hom_{\mathcal{C}(\lambda)}(A,B) \mapsto \text{fmap } f = [y, {\bf let \: pure \:} x = y {\: \bf in \:} M] \in Hom_{\mathcal{C}(\lambda)}({\bf K} A, {\bf K} B)$.
+
 \end{defin}
 
 \begin{lemma} Functoriality
@@ -854,7 +809,7 @@ We will consider term model for simply typed lambda calculus $\times$ and $\to$ 
 
 \begin{proof}
 
-Easy checking.
+Easy checking using reduction rules.
 
 \end{proof}
 
@@ -892,9 +847,9 @@ $\begin{array}{lll}
 &\text{On the other hand}& \\
 &\text{fmap } f \circ \eta_A = &\\
 &[z, {\bf let \: pure \:} x = z {\: \bf in \:} M] \circ [x, {\bf pure \: x}] = & \\
-&[x, {\bf let \: pure \:} x = z {\: \bf in \:} M [z := {\bf pure \:} x]]& \\
-&[x, {\bf let \: pure \:} x = {\bf pure \: x} {\: \bf in \:} M]& \\
-&[x, {\bf pure \:} M [x := x]]& \\
+&[x, {\bf let \: pure \:} x = z {\: \bf in \:} M [z := {\bf pure \:} x]] = & \\
+&[x, {\bf let \: pure \:} x = {\bf pure \: x} {\: \bf in \:} M] = & \\
+&[x, {\bf pure \:} M [x := x]] = & \\
 &[x, {\bf pure \:} M]&
 \end{array}$
 
@@ -902,16 +857,32 @@ $\begin{array}{lll}
 
 ii)  $\text{fmap } (f \times g) \circ \ast_{A, B} = \ast_{C,D} \circ (\text{fmap } f) \times (\text{fmap } g)$
 
+\vspace{\baselineskip}
+
+iii) $\ast_{A,B} \circ (\eta_{A} \times \eta_{B}) = \eta_{A \times B}$
+
+Follows from ii).
 
 \end{proof}
 
 \begin{lemma} Tensorial strength
 \end{lemma}
 
+\begin{lemma} Weak commutativity.
+\end{lemma}
+
+\begin{proof}
+  Follows from tensorial strength and commutativity of product.
+\end{proof}
+
 \begin{lemma}
 
   ${\bf K}$ is an applicative functor.
 \end{lemma}
+
+\begin{proof}
+  Follows from previous lemmas.
+\end{proof}
 
 \begin{theorem} Completeness
 
