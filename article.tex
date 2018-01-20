@@ -850,8 +850,6 @@ We will consider term model for simply typed lambda calculus $\times$ and $\to$ 
   i) ${\bf K}(g \circ f) = {\bf K}(g) \circ \mathcal{K}(f)$;
 
   ii) ${\bf K}(id_A) = id_{{\bf K}A}$.
-
-  iii) ${\bf K} (A \times B) \cong {\bf K}A \times {\bf K}B$.
 \end{lemma}
 
 \begin{proof}
@@ -864,8 +862,19 @@ We will consider term model for simply typed lambda calculus $\times$ and $\to$ 
 
 \begin{defin}
 
-  Let us define natural transformation $\eta : Id_{\mathcal{C}(\lambda)} \to \mathcal{K}$.
+  Let us define natural transformations:
+  \begin{itemize}
+  \item $\eta : Id_{\mathcal{C}(\lambda)} \to \mathcal{K}$;
+
+  \item $\ast_{A,B} : {\bf K}A \times {\bf K}B \to {\bf K}(A \times B)$
+  \end{itemize}
 \end{defin}
+
+\begin{lemma} Naturality for $\eta$ and for $\ast$
+\end{lemma}
+
+\begin{lemma} Tensorial strength
+\end{lemma}
 
 \begin{lemma}
 
