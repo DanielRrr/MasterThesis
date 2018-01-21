@@ -819,8 +819,21 @@ Easy checking using reduction rules.
 
   1) $\eta:Id \Rightarrow \mathcal{K}$, s. t. $\forall A \in Ob_{\mathcal{C}(\lambda)}$, $\eta_A = [x, {\bf pure \:} x] \in Hom_{\mathcal{C}(\lambda)}(A, {\bf K}A)$;
 
-  2) $\ast_{A,B}:{\bf K}A \times {\bf K}B \to {\bf K}(A \times B)$.
+  2) $\ast_{A,B}:{\bf K}A \times {\bf K}B \to {\bf K}(A \times B)$, s. t. $\forall A, B \in Ob_{\mathcal{C}(\lambda)}, \ast_{A,B} = [p, {\bf let \: pure \:} x,y = \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, y \rangle] \in Hom_{\mathcal{C}(\lambda)}({\bf K}A \times {\bf K}B, {\bf K}(A \times B))$.
 \end{defin}
+
+Implementation for $\ast$ in our term model is a modification of ${\text{let}_{\bf K}}$-rule:
+
+\begin{prooftree}
+\AxiomC{$p : {\bf K}A \times {\bf K}B \vdash p : {\bf K}A \times {\bf K}B$}
+\UnaryInfC{$p : {\bf K}A \times {\bf K}B \vdash \pi_1 p : {\bf K} A$}
+\AxiomC{$p : {\bf K}A \times {\bf K}B \vdash p : {\bf K}A \times {\bf K}B$}
+\UnaryInfC{$p : {\bf K}A \times {\bf K}B \vdash \pi_2 p : {\bf K} B$}
+\AxiomC{$x : A \vdash x : A$}
+\AxiomC{$y : B \vdash y : B$}
+\BinaryInfC{$x : A, y : B \vdash \langle x, y \rangle : A \times B$}
+\TrinaryInfC{$p : {\bf K}A \times {\bf K}B \vdash {\bf let \: pure \:} \langle x,y \rangle = \langle \pi_1 p, \pi_2 p \rangle {\: \bf in \:} \langle x, y \rangle : {\bf K}(A \times B)$}
+\end{prooftree}
 
 \begin{lemma} Naturality for $\eta$ and for $\ast$
 
