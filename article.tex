@@ -872,16 +872,45 @@ ii)  $\text{fmap } (f \times g) \circ \ast_{A, B} = \ast_{C,D} \circ (\text{fmap
 
 \vspace{\baselineskip}
 
+See \cite{ModalK}
+
+\vspace{\baselineskip}
+
 iii) $\ast_{A,B} \circ (\eta_{A} \times \eta_{B}) = \eta_{A \times B}$
 
-Follows from ii).
+Follows from i) and ii).
 
 \end{proof}
 
-\begin{lemma} Tensorial strength
-\end{lemma}
+  Tensorial strength is defined as follows:
+
+\begin{defin} Tensorial strength
+  $ $
+  
+  Let $[p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] \in Hom_{\mathcal{C}(\lambda)}(A \times {\bf K}B, {\bf K}A \times {\bf K}B)$.
+
+  So tensorial strength is defined as $\tau_{A, B} = \ast_{A, B} \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle]$.
+\end{defin}
+
+It is clearly that tensorial strength defined above can be simplified as follows:
+
+$\begin{array}{lll}
+&\ast_{A, B} \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] = & \text{By definition} \\
+&[p^{'}, {\bf let \: pure \:} x, y = \pi_1 p^{'}, \pi_2 p^{'} {\: \bf in \:} \langle x, y \rangle] \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] = & \text{By composition} \\
+&[p, {\bf let \: pure \:} x, y = \pi_1 p^{'}, \pi_2 p^{'} {\: \bf in \:} \langle x, y \rangle [p^{'} := \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle]] = & \text{By substitution} \\
+&[p, {\bf let \: pure \:} x, y = \pi_1 (\langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle), \pi_2 (\langle \pi_1 p, {\bf pure \:} (\pi_2 p) \rangle) {\: \bf in \:} \langle x, y \rangle] = & \text{By $\beta$-reduction rules} \\
+&[p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, y \rangle]&
+\end{array}$
+
+
 
 \begin{lemma} Weak commutativity.
+  $ $
+
+  $\begin{array}{lll}
+  & \text{fmap } ([p, \langle \pi_2 p, \pi_1 p \rangle]) \circ \ast_{A, B} \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] = & \\
+  & \ast_{B, A} \circ [p^{'}, \langle \pi_1 p^{'}, {\bf pure \:} (\pi_2 p) \rangle] \circ [p, \langle \pi_2 p, \pi_1 p \rangle]&
+  \end{array}$
 \end{lemma}
 
 \begin{proof}
