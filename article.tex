@@ -872,7 +872,7 @@ ii)  $\text{fmap } (f \times g) \circ \ast_{A, B} = \ast_{C,D} \circ (\text{fmap
 
 \vspace{\baselineskip}
 
-See \cite{ModalK}
+See \cite{ModalK}.
 
 \vspace{\baselineskip}
 
@@ -886,7 +886,7 @@ Follows from i) and ii).
 
 \begin{defin} Tensorial strength
   $ $
-  
+
   Let $[p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] \in Hom_{\mathcal{C}(\lambda)}(A \times {\bf K}B, {\bf K}A \times {\bf K}B)$.
 
   So tensorial strength is defined as $\tau_{A, B} = \ast_{A, B} \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle]$.
@@ -908,28 +908,59 @@ $\begin{array}{lll}
   $ $
 
   $\begin{array}{lll}
-  & \text{fmap } ([p, \langle \pi_2 p, \pi_1 p \rangle]) \circ \ast_{A, B} \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] = & \\
-  & \ast_{B, A} \circ [p^{'}, \langle \pi_1 p^{'}, {\bf pure \:} (\pi_2 p) \rangle] \circ [p, \langle \pi_2 p, \pi_1 p \rangle]&
+  & \text{fmap } ([p, \langle \pi_2 p, \pi_1 p \rangle]) \circ \tau_{A,B} = & \\
+  & \ast_{B, A} \circ [q, \langle \pi_1 q, {\bf pure \:} (\pi_2 q) \rangle] \circ [p, \langle \pi_2 p, \pi_1 p \rangle]&
   \end{array}$
 \end{lemma}
 
 \begin{proof}
-  Follows from tensorial strength and commutativity of product.
-\end{proof}
+  $ $
 
-\begin{lemma}
-
-  ${\bf K}$ is an applicative functor.
-\end{lemma}
-
-\begin{proof}
-  Follows from previous lemmas.
+  $\begin{array}{lll}
+  & \text{fmap } ([r, \langle \pi_2 r, \pi_1 r \rangle]) \circ \tau_{A,B} = & \\
+  &\text{By the definition of $\tau$}& \\
+  & \text{fmap } ([r, \langle \pi_2 r, \pi_1 r \rangle]) \circ [p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, y \rangle] = & \\
+  &\text{By the definition of fmap}& \\
+  & [q, {\bf let \: pure \:} r = q {\: \bf in \:} \langle \pi_2 r, \pi_1 r \rangle] \circ [p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, y \rangle] = & \\
+  &\text{Composition}& \\
+  & [p, {\bf let \: pure \:} r = q {\: \bf in \:} \langle \pi_2 r, \pi_1 r \rangle [q := {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, y \rangle]] = &\\
+  &\text{By $\beta$-reduction rules}& \\
+  & [p, {\bf let \: pure \:} r = ({\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, y \rangle) {\: \bf in \:} \langle \pi_2 r, \pi_1 r \rangle] = & \\
+  &\text{By $\beta$-reduction rules}& \\
+  & [p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle \pi_2 r, \pi_1 r \rangle [r := \langle x, y \rangle]] = & \\
+  &\text{By substitution}& \\
+  & [p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle \pi_2 \langle x, y \rangle, \pi_1 \langle x, y \rangle \rangle]= & \\
+  &\text{By $\beta$-reduction rules}& \\
+  & [p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle y, x \rangle ] = & \\
+  & & \\
+  &\text{On the other hand}&\\
+  &\ast_{B, A} \circ [q, \langle \pi_1 q, {\bf pure \:} (\pi_2 q) \rangle] \circ [p, \langle \pi_2 p, \pi_1 p \rangle] = & \\
+  &\text{By the definition of $\ast$}& \\
+  &[r, {\bf let \: pure \:} y,x = \pi_1 r, \pi_2 r {\: \bf in \:} \langle y, x \rangle] \circ [q, \langle \pi_1 q, {\bf pure \:} (\pi_2 q) \rangle] \circ [p, \langle \pi_2 p, \pi_1 p \rangle] = & \\
+  &\text{Composition}& \\
+  &[r, {\bf let \: pure \:} y,x = \pi_1 r, \pi_2 r {\: \bf in \:} \langle y, x \rangle] \circ [p, \langle \pi_1 q, {\bf pure \:} (\pi_2 q) \rangle [q := \langle \pi_2 p, \pi_1 p  \rangle]] = & \\
+  &\text{By subsitution and by  $\beta$-reduction rules}& \\
+  &[r, {\bf let \: pure \:} y,x = \pi_1 r, \pi_2 r {\: \bf in \:} \langle y, x \rangle] \circ [p, \langle \pi_2 p, {\bf pure \:} (\pi_1 p) \rangle ]] = & \\
+  &\text{Composition}& \\
+  &[p, {\bf let \: pure \:} y,x = \pi_1 r, \pi_2 r {\: \bf in \:} \langle y, x \rangle [r := \langle \pi_2 p, {\bf pure \:} (\pi_1 p) \rangle]] = & \\
+  &\text{By subsitution and by  $\beta$-reduction rules}& \\
+  &[p, {\bf let \: pure \:} y,x = \pi_2 p, {\bf pure \:} (\pi_1 p) {\: \bf in \:} \langle y, x \rangle] = & \\
+  &\text{By symmetricity of assingment}&\\
+  &[p, {\bf let \: pure \:} x,y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle y, x \rangle]&
+  \end{array}$
 \end{proof}
 
 \begin{theorem} Completeness
+  $ $
 
-  Let $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$, then $M =_{\beta \eta} N$.
+  i) {\bf K} is an applicative functor;
+
+  ii) Let $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$, then $M =_{\beta \eta} N$.
 \end{theorem}
+
+\begin{proof}
+  Immediately follows from previous lemmas in the section.
+\end{proof}
 
   \addcontentsline{toc}{section}{References}
 
