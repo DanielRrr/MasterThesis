@@ -97,34 +97,12 @@ strong normalization and Church-Rosser properties.
 
   \section{Typed lambda-calculus based on IEL$^{-}$}
 
-  At first we define the natural deduction for IEL$^{-}$ with $\textbf{K}$-modality and binary connectives
-  $\to$ and $\land$ (we call that calculus NIEL$^{-}_{\land, \to}$):
+  At first we define the natural deduction for IEL$^{-}$ :
 
-  \begin{defin} Natural deduction NIEL$^{-}_{\land, \to}$ for IEL$^{-}$ with $\to$ and $\wedge$:
-
-  \begin{center}
-  \begin{prooftree}
-  \AxiomC{}
-  \RightLabel{\scriptsize{ax}}
-  \UnaryInfC{$\Gamma , A \vdash A$}
-  \end{prooftree}
-  \end{center}
+  \begin{defin} Natural deduction NIEL for IEL$^{-}$ is an extenstion of intuitionistic natural deduction with additional derivation rules for modality:
 
   \begin{minipage}{0.5\textwidth}
     \begin{flushleft}
-  	\begin{prooftree}
-  	\AxiomC{$\Gamma, A \vdash B$}
-  	\RightLabel{$\rightarrow_i$}
-  	\UnaryInfC{$\Gamma \vdash A \to B$}
-    	\end{prooftree}
-
-  	\begin{prooftree}
-  	\AxiomC{ $\Gamma \vdash A$ }
-  	\AxiomC{ $\Gamma \vdash B$ }
-  	\RightLabel{$\land_i$}
-  	\BinaryInfC{$\Gamma \vdash A \land B$}
-  	\end{prooftree}
-
   	\begin{prooftree}
     	\AxiomC{$\Gamma \vdash A$}
     	\RightLabel{$\textbf{K}_I$}
@@ -134,19 +112,6 @@ strong normalization and Church-Rosser properties.
   \end{minipage}
   \begin{minipage}{0.5\textwidth}
     \begin{flushright}
-    	\begin{prooftree}
-  	\AxiomC{$\Gamma \vdash A \to B$}
-  	\AxiomC{$\Gamma \vdash A$}
-  	\RightLabel{$\rightarrow_i$}
-  	\BinaryInfC{$\Gamma \vdash B$}
-    	\end{prooftree}
-
-  	\begin{prooftree}
-  	\AxiomC{ $\Gamma \vdash A_1 \land A_2$ }
-  	\RightLabel{$\land_e, i \in \{ 1, 2 \}$}
-  	\UnaryInfC{$\Gamma \vdash A_i$}
-  	\end{prooftree}
-
   	\begin{prooftree}
     \AxiomC{$\Gamma \vdash {\bf K} \vec{A}$}
     \AxiomC{$\vec{A} \vdash B$}
@@ -209,8 +174,6 @@ $\begin{array}{lll}
   Straightforward derivation of modal axioms in $\text{NIEL}^{-}$. We consider this derivation below using terms.
 \end{proof}
 
-It is clearly that these lemmas could be extended for IEL$^{-}$ with $\vee$ and $\neg$ similary.
-
   \vspace{\baselineskip}
 
   At the next step we build the typed lambda-calculus based on NIEL$^{-}_{\land, \to}$ by proof-assingment in
@@ -270,19 +233,19 @@ $\begin{array}{lll}
       \end{prooftree}
 
       \begin{prooftree}
-        \AxiomC{$\Gamma \vdash x : A$}
+        \AxiomC{$\Gamma \vdash M : A$}
         \RightLabel{$\textbf{K}_I$}
-        \UnaryInfC{$\Gamma \vdash {\bf pure \: } \: x : {\bf K}A $}
+        \UnaryInfC{$\Gamma \vdash {\bf pure \: } \: M : {\bf K}A $}
       \end{prooftree}
   \end{minipage}%
   \hfill
   \begin{minipage}{0.45\textwidth}
   \begin{tabular}{p{\textwidth}}
     \begin{prooftree}
-    \AxiomC{$\Gamma \vdash f : A \to B$}
-    \AxiomC{$\Gamma \vdash x : A$}
+    \AxiomC{$\Gamma \vdash M : A \to B$}
+    \AxiomC{$\Gamma \vdash N : A$}
     \RightLabel{$\rightarrow_e$}
-    \BinaryInfC{$\Gamma \vdash fx : B$}
+    \BinaryInfC{$\Gamma \vdash MN : B$}
     \end{prooftree}
 
     \begin{prooftree}
@@ -308,19 +271,19 @@ $\begin{array}{lll}
   ${\bf K}_I$ allows to inject an object of type $\alpha$ into the functor. ${\bf K}_I$  reflects the
   Haskell method {\bf pure} for Applicative class. It plays the same role as the {\bf return} method in Monad class.
 
-  $\text{let}_{{\bf K}}$ is the same as the $\Box$-rule in typed lambda calculus for intuitionistic normal modal logic {\bf IK}, which is described in \cite{ModalK}.
+  $\text{let}_{{\bf K}}$ is similar to the $\Box$-rule in typed lambda calculus for intuitionistic normal modal logic {\bf IK}, which is described in \cite{ModalK}.
 
   In fact, our calculus is the extention of typed lambda calculus for {\bf IK} with typing rule appropriate to co-reflection.
 
   \vspace{\baselineskip}
 
-Here are some examples of derivable terms:
+Here are some examples of closed terms:
 
-1) $\vdash (\lambda x. {\bf pure \: } x) : A \to \textbf{K}A$;
-
-2) $\vdash \lambda f. \lambda x. {\bf let \: pure} \: \langle g, y \rangle = \langle f, x \rangle {\: \bf in \:} g y : {\bf K}(A \to B) \to {\bf K} A \to {\bf K} B$
-
-3) $\lambda f. \lambda x. {\bf let \:pure} \: \langle g, y \rangle = \langle {\bf pure \:} f, x \rangle {\: \bf in \: } g y : (A \to B) \to {\bf K} A \to {\bf K} B$
+\begin{itemize}
+\item $(\lambda x. {\bf pure \: } x) : A \to \textbf{K}A$;
+\item $\lambda f. \lambda x. {\bf let \: pure} \: \langle g, y \rangle = \langle f, x \rangle {\: \bf in \:} g y : {\bf K}(A \to B) \to {\bf K} A \to {\bf K} B$
+\item $\lambda f. \lambda x. {\bf let \:pure} \: \langle g, y \rangle = \langle {\bf pure \:} f, x \rangle {\: \bf in \: } g y : (A \to B) \to {\bf K} A \to {\bf K} B$
+\end{itemize}
 
   \vspace{\baselineskip}
 
@@ -498,6 +461,7 @@ So by $\text{let}_{{\bf K}}$, $\Gamma [B_1 := C] \vdash {\bf let \: pure \:} \ve
 
 \end{theorem}
 
+\begin{proof}
 For cases with application, abstraction and pairs see \cite{Morten} \cite{Pierce}.
 
 1)
@@ -522,11 +486,10 @@ By generation $\vdash N : A$. \\ So $\vdash {\bf pure \:} N : {\bf K}A$ by ${\bf
 
 By generation $\Gamma \vdash M : A$ and $\Gamma \vdash N : A$ by assumption.
 \\ So $\Gamma \vdash {\bf pure \:} N : {\bf K}A$.
+\end{proof}
 
+Strong normalization and colfuence for ${\bf IK}$ was proved by Kakutani for call-by-value and for call-by name \cite{ModalK} \cite{ModalK1}.
 
-\section{Strong normalization}
-
-\section{Confluence}
 
 \section{Categorical semantics}
 
@@ -534,30 +497,37 @@ By generation $\Gamma \vdash M : A$ and $\Gamma \vdash N : A$ by assumption.
 
   Let $\langle \mathcal{C}, \otimes_1, \mathds{1} \rangle$ and $\langle \mathcal{D}, \otimes_2, \mathds{1}' \rangle$ are monoidal categories.
 
-  A lax monoidal functor $\mathcal{F} : \langle \mathcal{C}, \otimes_1, \mathds{1} \rangle \to \langle \mathcal{D}, \otimes_2, \mathds{1}' \rangle$ is a functor
-  $\mathcal{F} : \mathcal{C} \to \mathcal{D}$ with additional natural transformations:
+  A monoidal functor $\mathcal{F} : \langle \mathcal{C}, \otimes_1, \mathds{1} \rangle \to \langle \mathcal{D}, \otimes_2, \mathds{1}' \rangle$ is a functor
+  $\mathcal{F} : \mathcal{C} \to \mathcal{D}$ with additional natural transformations, which satisfy the well-known conditions described in \cite{ElKelly}:
 
   1) $u : \mathds{1}' \to \mathcal{F}\mathds{1}$;
 
-  2) $\ast_{A, B} : \mathcal{F}A \otimes_2 \mathcal{F}B \to \mathcal{F}(A \otimes_1 B)$
+  2) $\ast_{A, B} : \mathcal{F}A \otimes_2 \mathcal{F}B \to \mathcal{F}(A \otimes_1 B)$.
 
 \end{defin}
 
 \begin{defin} Applicative functor
 
   An applicative functor is a triple $\langle \mathcal{C}, \mathcal{K}, \eta \rangle$,
-where $\mathcal{C}$ is a symmetric monoidal category, $\mathcal{K}$ is a lax monoidal endofunctor and $\eta$ is a natural transformation, such that:
+where $\mathcal{C}$ is a symmetric monoidal category, $\mathcal{K}$ is a monoidal and $\eta : Id_{\mathcal{C}} \Rightarrow \mathcal{K}$ is a natural transformation (similar to unit in monad), such that:
 
 1) $u = \eta_{\mathds{1}}$;
 
-2) $\ast_{A,B} \circ (\eta_A \otimes \eta_B) = \eta_{A \otimes B}$.
+2) $\ast_{A,B} \circ (\eta_A \otimes \eta_B) = \eta_{A \otimes B}$;
+
+3) Weak commutativity condition:
+
+\xymatrix{
+&& A \otimes \mathcal{K}B \ar[d]_{\sigma_{A, \mathcal{K}B}} \ar[rr]^{\eta_{A} \otimes id_{\mathcal{K}B}} && \mathcal{K}A \otimes \mathcal{K}B \ar[rr]^{\ast_{A,B}} && \mathcal{K}(A \otimes B) \ar[d]^{\mathcal{K}(\sigma_{A,B})}\\
+&& \mathcal{K}B \otimes A \ar[rr]_{id_{\mathcal{K}B} \otimes \eta_{A}} && \mathcal{K}B \otimes \mathcal{K}A \ar[rr]_{\ast_{B,A}} && \mathcal{K}(B \otimes A)
+}
 \end{defin}
 
 By default we will consider an arbitrary closed functor on some cartersian closed category, which is the special case of an applicative functor.
 
 We identify terminal objects. So $\mathcal{K}(\mathds{1}) = \mathds{1}$ and $\eta_{\mathds{1}} = id_{\mathds{1}}$ since $\mathcal{K}$ is an endofunctor.
 
-\subsection{Soundness}
+\subsection{Soundness and completeness}
 
 \begin{theorem} Soundness
 
@@ -787,7 +757,14 @@ $\begin{array}{lll}
 
 \end{proof}
 
-\subsection{Completeness}
+\begin{theorem} Completeness
+
+Let $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$, then $M =_{\beta \eta} N$.
+\end{theorem}
+
+\begin{proof}
+
+$ $
 
 We will consider term model for simply typed lambda calculus $\times$ and $\to$ standardly described in \cite{LambekScott} \cite{Abramsky}.
 
@@ -950,16 +927,15 @@ $\begin{array}{lll}
   \end{array}$
 \end{proof}
 
-\begin{theorem} Completeness
-  $ $
+\begin{lemma}
 
-  i) {\bf K} is an applicative functor;
-
-  ii) Let $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$, then $M =_{\beta \eta} N$.
-\end{theorem}
+  {\bf K} is an applicative functor
+\end{lemma}
 
 \begin{proof}
   Immediately follows from previous lemmas in the section.
+\end{proof}
+
 \end{proof}
 
   \addcontentsline{toc}{section}{References}
