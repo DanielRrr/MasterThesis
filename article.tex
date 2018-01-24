@@ -26,8 +26,7 @@
 Modal intuitionistic epistemic logic IEL$^{-}$ was proposed by S.Artemov and T. Protopopescu as the formal
 foundation for the intuitionistic theory of knowledge. We construct a modal simply typed lambda-calculus
 which is Curry-Howard isomorphic to IEL$^{-}$ as formal theory of calculations with applicative functors in
-functional programming languages like Haskell or Idris. We prove that this typed lambda-calculus has the
-strong normalization and Church-Rosser properties.
+functional programming languages like Haskell or Idris.
 \end{abstract}
 
 
@@ -85,6 +84,11 @@ strong normalization and Church-Rosser properties.
   simple type type with kind \verb"*". For more detailed description of the type system with kinds used in
   Haskell see \cite{Morten}.
 
+  The motivation for using an applicative functor is quite natural. Applicative functor allows to generalize the action of a functor for functions with arbitrary number of arguments, for instance:
+  \begin{lstlisting}[language=Haskell]
+  liftA2 :: Applicative f => (a -> b -> c) -> f a -> f b -> f c
+  liftA2 f x y = pure f <*> x <*> y
+  \end{lstlisting}
 
   The main goal of our research is a relationship between intuitionistic epistemic logic $IEL^{-}$ and
   functional programming with effects. We show that relationship by building the type system (which is called $\lambda_{\textbf{K}}$) which is Curry-Howard isomorphic to $IEL^{-}$. So we will consider $\textbf{K}$-modality as an arbitrary applicative functor.
@@ -229,7 +233,7 @@ $\begin{array}{lll}
       \AxiomC{ $\Gamma \vdash M : A$ }
       \AxiomC{ $\Gamma \vdash N : B$ }
       \RightLabel{$\times_i$}
-      \BinaryInfC{$\Gamma \vdash \langle x, y \rangle : A \times B$}
+      \BinaryInfC{$\Gamma \vdash \langle M, N \rangle : A \times B$}
       \end{prooftree}
 
       \begin{prooftree}
@@ -281,8 +285,8 @@ Here are some examples of closed terms:
 
 \begin{itemize}
 \item $(\lambda x. {\bf pure \: } x) : A \to \textbf{K}A$;
-\item $\lambda f. \lambda x. {\bf let \: pure} \: \langle g, y \rangle = \langle f, x \rangle {\: \bf in \:} g y : {\bf K}(A \to B) \to {\bf K} A \to {\bf K} B$
-\item $\lambda f. \lambda x. {\bf let \:pure} \: \langle g, y \rangle = \langle {\bf pure \:} f, x \rangle {\: \bf in \: } g y : (A \to B) \to {\bf K} A \to {\bf K} B$
+\item $\lambda f. \lambda x. {\bf let \: pure} \: g, y  = f, x {\: \bf in \:} g y : {\bf K}(A \to B) \to {\bf K} A \to {\bf K} B$
+\item $\lambda f. \lambda x. {\bf let \:pure} \: g, y = {\bf pure \:} f, x  {\: \bf in \: } g y : (A \to B) \to {\bf K} A \to {\bf K} B$
 \end{itemize}
 
   \vspace{\baselineskip}
@@ -338,11 +342,11 @@ Here are some examples of closed terms:
 
   5) ${\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N \rightarrow_{\beta} {\bf pure \:} N [\vec{x} := \vec{M}]$
 
-  6) $\lambda x. f x \rightarrow_{\eta} f$;
+  6) ${\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N \rightarrow_{\beta} {\bf pure \:} N$;
 
-  7) $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
+  7) $\lambda x. f x \rightarrow_{\eta} f$;
 
-  8) ${\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N \rightarrow_{\eta} {\bf pure \:} N$;
+  8) $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
 
   9) ${\bf let \: pure \:} x = M {\: \bf in \: } x \rightarrow_{\eta} M$;
 
@@ -356,103 +360,46 @@ Here are some examples of closed terms:
   $\to$-constructor, they are proved standardly in the same lemmas for simply typed lambda calculus, for
   example see \cite{Neder}\cite{Morten}\cite{Girard}. We will consider only modal cases}:
 
-\begin{lemma} Generation lemma.
+  \begin{defin} Type substituition
+
+    The substituition of type $C$ for type variable $B$ in type $A$ inductively defined as follows:
+
+    1) $B [B := C] = B$ and $D [B := C] = D$, if $B \neq D$;
+
+    2) $(A_1 \alpha A_2)[B := C] = (A_1[B := C]) \alpha (A_2[B := C])$, where $\alpha \in \{ \to, \times \}$;
+
+    3) $({\bf K}A)[B := C] = {\bf K}(A [B := C])$.
+
+    4) Let $\Gamma$ be the context, then $\Gamma [B := C] = \{ x : (A[B := C]) \: | \: x : A \in \Gamma \}$
+  \end{defin}
+
+\begin{lemma} Basic lemmas for ${\bf K}_I$.
 
   i) Let $\Gamma \vdash {\bf pure \:} M : {\bf K}A$, then $\Gamma \vdash M : A$;
 
-  ii) Let $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K}B$, there are some $A_1,\dots,A_n \in \mathbb{T}_{{\bf K}}$,
-  such that $\Gamma \vdash \vec{M} : {\bf K} \vec{A}$ and $\vec{x} : \vec{A} \vdash N : B$.
+  ii) Let $\Gamma \vdash M : A$ and $\Gamma \subseteq \Delta$, then $\Delta \vdash M : A$;
+
+  iii) Let $\Gamma, x : A \vdash {\bf pure \:} M : {\bf K}B$ and $\Gamma \vdash N : A$, then $\Gamma \vdash {\bf pure \:} M [x := N] : {\bf K}B$.
+
+  iv) Let $\Gamma \vdash {\bf pure \:} M : {\bf K}A$, then $\Gamma [B := C] \vdash {\bf pure \:} M : {\bf K} (A [B := C])$.
 \end{lemma}
 
 \begin{proof}
   $ $
 
-  Induction on $\Gamma \vdash {\bf pure \:} M : {\bf K}A$ and $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{N} {\: \bf in \:} N : {\bf K}B$ correspondently.
-\end{proof}
+  i) Induction on $\Gamma \vdash {\bf pure \:} M : {\bf K}A$ and $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{N} {\: \bf in \:} N : {\bf K}B$ correspondently.
 
-\begin{lemma} Weakening.
+  ii) Let $\Gamma \vdash {\bf pure \:} M : {\bf K}A$. Then $\Gamma \vdash M : A$ by generation and $\Delta \vdash M : A$ by assumption. So $\Delta \vdash {\bf pure \:} M : {\bf K} A$ by ${\bf K}_I$.
 
-  Let $\Gamma \vdash M : A$ and $\Gamma \subseteq \Delta$, then $\Delta \vdash M : A$.
+  iii) Let $\Gamma, x : A \vdash {\bf pure \:} M : {\bf K}B$ and $\Gamma \vdash N : A$.
 
-\end{lemma}
+  By generation $\Gamma, x : A \vdash M : B$ and by assumption $\Gamma \vdash M [x := N] : B$.
 
-\begin{proof}
-  $ $
+  By $K_I$, $\Gamma \vdash {\bf pure \:} (M [x := N]) : {\bf K}B$.
 
-  1) Let $\Gamma, x : A \vdash x : A$ and $\Gamma \subseteq \Delta$, then $\Delta, x : A \vdash x : A$ trivially.
+  iv) Let $\Gamma \vdash {\bf pure \:} M : {\bf K}A$. By generation $\Gamma \vdash M : A$ and by assumption $\Gamma [B := C] \vdash M : A[B := C]$.
 
-  2) Let $\Gamma \vdash {\bf pure \:} M : {\bf K}A$. Then $\Gamma \vdash M : A$ by generation and $\Delta \vdash M : A$ by assumption. So $\Delta \vdash {\bf pure \:} M : {\bf K} A$ by ${\bf K}_I$.
-
-  3) Let $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K}B$ and $\Gamma \subseteq \Delta$. Then $\Gamma \vdash \vec{M} : {\bf K}\vec{A}$ and $\vec{x} : \vec{A} \vdash N : B$.
-
-  By assumption $\Delta \vdash \vec{M} : {\bf K}\vec{A}$. So $\Delta \vdash {\bf let \: pure \:} \vec{x} = \vec{N} {\: \bf in \:} N : {\bf K}B$ by $\text{let}_{{\bf K}}$.
-\end{proof}
-
-\begin{defin} Type substituition
-
-  The substituition of type $C$ for type variable $B$ in type $A$ inductively defined as follows:
-
-  1) $B [B := C] = B$ and $D [B := C] = D$, if $B \neq D$;
-
-  2) $(A_1 \alpha A_2)[B := C] = (A_1[B := C]) \alpha (A_2[B := C])$, where $\alpha \in \{ \to, \times \}$;
-
-  3) $({\bf K}A)[B := C] = {\bf K}(A [B := C])$.
-
-  4) Let $\Gamma$ be the context, then $\Gamma [B := C] = \{ x : (A[B := C]) \: | \: x : A \in \Gamma \}$
-\end{defin}
-
-\begin{lemma} Substituition lemma.
-
-    i) Let $\Gamma, x : A \vdash M : B$ and $\Gamma \vdash N : A$, then $\Gamma \vdash M [x := N] : B$.
-
-    ii) Let $\Gamma \vdash M : A$, then $\Gamma [B := C] \vdash M : (A [B := C])$.
-
-\end{lemma}
-
-\begin{proof}
-
-$ $
-
-i) For term substitution:
-
-\vspace{\baselineskip}
-
-1) Let $\Gamma, x : A \vdash x : A$ and $\Gamma \vdash N : A$, but $x [x := N] = N$, so $\Gamma \vdash N : A$.
-
-2) Let $\Gamma, x : A \vdash {\bf pure \:} M : {\bf K}B$ and $\Gamma \vdash N : A$.
-
-By generation $\Gamma, x : A \vdash M : B$ and by assumption $\Gamma \vdash M [x := N] : B$.
-
-By $K_I$, $\Gamma \vdash {\bf pure \:} (M [x := N]) : {\bf K}B$.
-
-3) Let $\Gamma, y : A \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K} B$ and $\Gamma \vdash N : A$.
-
-By generation, $\Gamma, y : A \vdash \vec{M} : {\bf K} \vec{A}$ and $\vec{x} : \vec{A} \vdash N : B$.
-
-By hypothesis, $\Gamma \vdash \vec{M}[x := N] : {\bf K} \vec{A}$.
-
-Hence $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M}[x := N] {\: \bf in \:} N : {\bf K} B$.
-
-\vspace{\baselineskip}
-
-ii) For type substitution
-
-\vspace{\baselineskip}
-
-1) Let $\Gamma, x : A \vdash x : A$, so $\Gamma [A := C], x : (A[A := C]) \vdash x : (A[A := C])$, or
-
-$\Gamma [A := C], x : C \vdash x : C$.
-
-2) Let $\Gamma \vdash {\bf pure \:} M : {\bf K}A$. By generation $\Gamma \vdash M : A$ and by assumption $\Gamma [B := C] \vdash M : A[B := C]$.
-
-By $K_I$ $\Gamma \vdash {\bf pure \:L} M : {\bf K}(A[B := C])$.
-
-3) $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K}B$. By generation $\Gamma \vdash \vec{M} : {\bf K}\vec{A}$ and $\vec{x} : \vec{A} \vdash N : B$.
-
-By assumption $\Gamma [B_1 := C] \vdash \vec{M} : {\bf }{K}\vec{A}[B_1 := C]$ and $\vec{x} : \vec{A}[B_1 := C] \vdash N : B[B_1 := C]$.
-
-So by $\text{let}_{{\bf K}}$, $\Gamma [B_1 := C] \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K}(B[B_1 := C])$.
-
+  By $K_I$ $\Gamma \vdash {\bf pure \:L} M : {\bf K}(A[B := C])$.
 \end{proof}
 
 \begin{theorem} Subject reduction
@@ -472,20 +419,6 @@ For cases with application, abstraction and pairs see \cite{Morten} \cite{Pierce
 
 See \cite{ModalK}.
 
-3) Let $\Gamma \vdash {\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N : {\bf K}B$.
-
-By generation $\Gamma \vdash {\bf pure \:} \vec{M} : {\bf K}\vec{A}$ and $\vec{x} : \vec{A} \vdash N : B$.
-\\ Moreover, $\Gamma \vdash \vec{M} : \vec{A}$. By weakening and substitution lemma $\Gamma \vdash N [\vec{x} = \vec{M}] : B$.
-\\ By ${\bf K}_I$, $\Gamma \vdash {\bf pure \:} N [\vec{x} := \vec{M}] : {\bf K}B$.
-
-4) Let $\vdash {\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N : {\bf K}A$
-
-By generation $\vdash N : A$. \\ So $\vdash {\bf pure \:} N : {\bf K}A$ by ${\bf K}_I$.
-
-5) Let $\Gamma \vdash {\bf pure \:} M : A$ and $M \twoheadrightarrow_{\beta \eta} N$.
-
-By generation $\Gamma \vdash M : A$ and $\Gamma \vdash N : A$ by assumption.
-\\ So $\Gamma \vdash {\bf pure \:} N : {\bf K}A$.
 \end{proof}
 
 Strong normalization and colfuence for ${\bf IK}$ was proved by Kakutani for call-by-value and for call-by name \cite{ModalK} \cite{ModalK1}.
@@ -766,7 +699,7 @@ Let $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$, then $M =_{\bet
 
 $ $
 
-We will consider term model for simply typed lambda calculus $\times$ and $\to$ standardly described in \cite{LambekScott} \cite{Abramsky}.
+We will consider term model for simply typed lambda calculus $\times$ and $\to$ standardly described in \cite{LambekScott}.
 
 \begin{defin}
   Let us define an endofunctor $\mathcal{K} : \mathcal{C}(\lambda) \to \mathcal{C}(\lambda)$, such that:
@@ -779,9 +712,9 @@ We will consider term model for simply typed lambda calculus $\times$ and $\to$ 
 
 \begin{lemma} Functoriality
 
-  i) ${\bf K}(g \circ f) = {\bf K}(g) \circ {\bf K}(f)$;
+  i) $\text{fmap }(g \circ f) = \text{fmap }(g) \circ \text{fmap }(f)$;
 
-  ii) ${\bf K}(id_A) = id_{{\bf K}A}$.
+  ii) $\text{fmap }(id_A) = id_{{\bf K}A}$.
 \end{lemma}
 
 \begin{proof}
@@ -1006,11 +939,9 @@ $\begin{array}{lll}
 
   \bibitem{Abe} T. Abe. Completeness of modal proofs in first-order predicate logic. Computer Software, JSSST Journal, 24:165 -- 177, 2007.
 
-  \bibitem{LambekScott}
+  \bibitem{LambekScott} Lambek, J. and Scott P.J. (1986) Introduction to Higher Order Categorical Logic, Cambridge Studies in Advanced Mathematics 7, Cambridge: Cambridge University Press.
 
-  \bibitem{Abramsky}
-
-  \bibitem{Gabbay}
+  \bibitem{ElKelly} Samuel Eilenberg and Max Kelly, Closed categories. Proc. Conf. Categorical Algebra (La Jolla, Calif., 1965).
 
 \end{thebibliography}
 
