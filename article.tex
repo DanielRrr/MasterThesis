@@ -10,6 +10,7 @@
 \usepackage[all, 2cell]{xy}
 \usepackage[all]{xy}
 \newtheorem{theorem}{Theorem}
+\newtheorem{prop}{Proposition}
 \newtheorem{lemma}{Lemma}
 \newtheorem{defin}{Definition}
 \newtheorem{ex}{Example}
@@ -65,7 +66,7 @@ functional programming languages like Haskell or Idris.
   non-trivial computational meaning.
 
   Functional programming languages such as Haskell \cite{Haskell}, Idris \cite{Idris}, Purescript \cite{Purs}
-  or Elm \cite{Elm} have special type classes\footnote{Type class in Haskell is a general interface for
+  Elm \cite{Elm} or Scala \cite{Scala} have special type classes\footnote{Type class in Haskell is a general interface for
   special group of datatypes.} for calculations with container types like \verb"Functor" and
   \verb"Applicative" \footnote{Reader may read more about container types in the Haskell standard library documentation\cite{Base} or in the next one textbook
   \cite{Miran}}:
@@ -421,12 +422,29 @@ See \cite{ModalK}.
 
 \end{proof}
 
-Strong normalization and colfuence for ${\bf IK}$ was proved by Kakutani for call-by-value and for call-by name \cite{ModalK} \cite{ModalK1}.
+\begin{theorem}
+  $ $
 
+  i) $\twoheadrightarrow_{\beta}$ is strongly normalizing;
+
+  ii) $\twoheadrightarrow_{\beta}$ is confluent.
+\end{theorem}
+
+\begin{proof}
+  $ $
+
+i) Strong normalization for ${\bf IK}$ was proved by Kakutani for call-by-value and for call-by name \cite{ModalK} \cite{ModalK1}.
+
+It is easy to extend Kakutani's result for ${\bf pure}$-rules.
+
+ii) Confluence can be proved by extending Barendregt's technique with term underlying for untyped or simply typed lambda calculus \cite{Baren}.
+
+Hence, it is sufficient to prove strip lemma.
+\end{proof}
 
 \section{Categorical semantics}
 
-\begin{defin} Lax monoidal functor
+\begin{defin} Monoidal functor
 
   Let $\langle \mathcal{C}, \otimes_1, \mathds{1} \rangle$ and $\langle \mathcal{D}, \otimes_2, \mathds{1}' \rangle$ are monoidal categories.
 
