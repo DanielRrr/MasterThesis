@@ -802,7 +802,27 @@ See \cite{ModalK}.
 
 iii) $\ast_{A,B} \circ (\eta_{A} \times \eta_{B}) = \eta_{A \times B}$
 
-Follows from i) and ii).
+\vspace{\baselineskip}
+
+$\begin{array}{lll}
+& \ast_{A,B} \circ (\eta_{A} \times \eta_{B}) = & \\
+& \text{By unfolding} & \\
+& [q, {\bf let \: pure \:} x, y = \pi_1 q, \pi_2 q {\: \bf in \:} \langle x, y \rangle] \circ [p, \langle {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) \rangle] = & \\
+& \text{Composition}& \\
+& [p, {\bf let \: pure \:} x, y = \pi_1 q, \pi_2 q {\: \bf in \:} \langle x, y \rangle [q := \langle {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) \rangle]] = & \\
+& \text{By substitution}& \\
+& [p, {\bf let \: pure \:} x, y = \pi_1 (\langle {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) \rangle), \pi_2 (\langle {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) \rangle) {\: \bf in \:} \langle x, y \rangle] = & \\
+& \text{Reduction rules}& \\
+& [p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) {\: \bf in \:} \langle x, y \rangle] = & \\
+& \text{Reduction rule}& \\
+& [p, {\bf pure \:} (\langle x,y \rangle [x := \pi_1 p, y := \pi_2 p])] = & \\
+& \text{Substitution}& \\
+& [p, {\bf pure \:} \langle \pi_1 p, \pi_2 p \rangle] = & \\
+& \text{$\eta$-reduction}& \\
+& [p, {\bf pure \:} p] =& \\
+& \text{By definition}& \\
+& \eta_{A \times B}&
+\end{array}$
 
 \end{proof}
 
