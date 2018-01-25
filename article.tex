@@ -60,11 +60,6 @@ functional programming languages like Haskell or Idris.
   V. Krupski and  A. Yatmanov provided the sequential calculus for IEL and proved that this calculus is
   PSPACE-complete \cite{Krupski}.
 
-  It's not difficult to see that modal axioms in $IEL^{-}$ and types of the methods of Applicative class in
-  Haskell-like languages (which is described below) are syntactically similar and we are going to show that
-  this coincidence has a
-  non-trivial computational meaning.
-
   Functional programming languages such as Haskell \cite{Haskell}, Idris \cite{Idris}, Purescript \cite{Purs}
   Elm \cite{Elm} or Scala \cite{Scala} have special type classes\footnote{Type class in Haskell is a general interface for
   special group of datatypes.} for calculations with container types like \verb"Functor" and
@@ -90,6 +85,10 @@ functional programming languages like Haskell or Idris.
   liftA2 :: Applicative f => (a -> b -> c) -> f a -> f b -> f c
   liftA2 f x y = pure f <*> x <*> y
   \end{lstlisting}
+
+  It's not difficult to see that modal axioms in $IEL^{-}$ and types of the methods of Applicative class in
+  Haskell-like languages (which is described below) are syntactically similar and we are going to show that
+  this coincidence has a non-trivial computational meaning.
 
   The main goal of our research is a relationship between intuitionistic epistemic logic $IEL^{-}$ and
   functional programming with effects. We show that relationship by building the type system (which is called $\lambda_{\textbf{K}}$) which is Curry-Howard isomorphic to $IEL^{-}$. So we will consider $\textbf{K}$-modality as an arbitrary applicative functor.
@@ -261,9 +260,9 @@ $\begin{array}{lll}
 
     \begin{prooftree}
       \AxiomC{$\Gamma \vdash \vec{M} : {\bf K} \vec{A}$}
-      \AxiomC{$\vec{x} : \vec{A} \vdash M : B$}
+      \AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
       \RightLabel{$\text{let}_{{\bf K}}$}
-      \BinaryInfC{$\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } M : {\bf K} B$}
+      \BinaryInfC{$\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N : {\bf K} B$}
     \end{prooftree}
   \end{tabular}
   \end{minipage}%
@@ -325,7 +324,20 @@ Here are some examples of closed terms:
 
   6) $({\bf pure \: } M) [x := P] = {\bf pure \: } (M [x := P])$;
 
-  7) $({\bf let \:\: pure} \:\: \vec{x} = \vec{M} \:\: {\bf in} \:\: M) [y := P] = {\bf let \:\: pure} \:\: \vec{x} = (\vec{M} [y := P]) \:\: {\bf in} \:\: M$.
+  7) $({\bf let \: pure \:}\vec{x} = \vec{M} {\: \bf in \:} N) [y := P] = {\bf let \: pure \:} \vec{x} = (\vec{M} [y := P]) {\: \bf in \:} M$.
+  \end{defin}
+
+  \begin{defin} Type substituition
+
+    The substituition of type $C$ for type variable $B$ in type $A$ inductively defined as follows:
+
+    1) $B [B := C] = B$ and $D [B := C] = D$, if $B \neq D$;
+
+    2) $(A_1 \alpha A_2)[B := C] = (A_1[B := C]) \alpha (A_2[B := C])$, where $\alpha \in \{ \to, \times \}$;
+
+    3) $({\bf K}A)[B := C] = {\bf K}(A [B := C])$.
+
+    4) Let $\Gamma$ be the context, then $\Gamma [B := C] = \{ x : (A[B := C]) \: | \: x : A \in \Gamma \}$
   \end{defin}
 
   \begin{defin} $\beta$-reduction and $\eta$-reduction rules for \emph{$\lambda \textbf{K}$}.
@@ -359,20 +371,7 @@ Here are some examples of closed terms:
 
   Now we will prove standard lemmas for contexts in type systems\footnote{We will not prove cases with
   $\to$-constructor, they are proved standardly in the same lemmas for simply typed lambda calculus, for
-  example see \cite{Neder}\cite{Morten}\cite{Girard}. We will consider only modal cases}:
-
-  \begin{defin} Type substituition
-
-    The substituition of type $C$ for type variable $B$ in type $A$ inductively defined as follows:
-
-    1) $B [B := C] = B$ and $D [B := C] = D$, if $B \neq D$;
-
-    2) $(A_1 \alpha A_2)[B := C] = (A_1[B := C]) \alpha (A_2[B := C])$, where $\alpha \in \{ \to, \times \}$;
-
-    3) $({\bf K}A)[B := C] = {\bf K}(A [B := C])$.
-
-    4) Let $\Gamma$ be the context, then $\Gamma [B := C] = \{ x : (A[B := C]) \: | \: x : A \in \Gamma \}$
-  \end{defin}
+  example see \cite{Neder} \cite{Morten} \cite{Girard}. We will consider only modal cases}:
 
 \begin{lemma} Basic lemmas for ${\bf K}_I$.
 
@@ -400,7 +399,7 @@ Here are some examples of closed terms:
 
   iv) Let $\Gamma \vdash {\bf pure \:} M : {\bf K}A$. By generation $\Gamma \vdash M : A$ and by assumption $\Gamma [B := C] \vdash M : A[B := C]$.
 
-  By $K_I$ $\Gamma \vdash {\bf pure \:L} M : {\bf K}(A[B := C])$.
+  By $K_I$ $\Gamma \vdash {\bf pure \:} M : {\bf K}(A[B := C])$.
 \end{proof}
 
 \begin{theorem} Subject reduction
@@ -442,6 +441,18 @@ ii) Confluence can be proved by extending Barendregt's technique with term under
 Hence, it is sufficient to prove strip lemma.
 \end{proof}
 
+\begin{theorem}
+  $ $
+
+  Normal form in call-by-name $\lambda_{{\bf K}}$ has the subformula property.
+
+\end{theorem}
+
+\begin{proof}
+  By induction on the structure of term. Case with ${\bf let \: pure\:} \vec{x} = \vec{M} {\: \bf in \:} N$ was considered by Kakutani \cite{ModalK} \cite{ModalK1}.
+  Similary, if ${\bf pure \:} M$ is a normal form, so $M$ is a normal form too by hypothesis.
+\end{proof}
+
 \section{Categorical semantics}
 
 \begin{defin} Monoidal functor
@@ -473,10 +484,6 @@ where $\mathcal{C}$ is a symmetric monoidal category, $\mathcal{K}$ is a monoida
 && \mathcal{K}B \otimes A \ar[rr]_{id_{\mathcal{K}B} \otimes \eta_{A}} && \mathcal{K}B \otimes \mathcal{K}A \ar[rr]_{\ast_{B,A}} && \mathcal{K}(B \otimes A)
 }
 \end{defin}
-
-By default we will consider an arbitrary closed functor on some cartersian closed category, which is the special case of an applicative functor.
-
-We identify terminal objects. So $\mathcal{K}(\mathds{1}) = \mathds{1}$ and $\eta_{\mathds{1}} = id_{\mathds{1}}$ since $\mathcal{K}$ is an endofunctor.
 
 \subsection{Soundness and completeness}
 
@@ -635,9 +642,7 @@ $\begin{array}{lll}
 \begin{lemma}
   $ $
 
-  i) Let $\Gamma \vdash M : A$ and $M \twoheadrightarrow_{\beta} N$, then $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$;
-
-  ii) Let $\Gamma \vdash M : A$ and $M \twoheadrightarrow_{\eta} N$, then $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$;
+  Let $\Gamma \vdash M : A$ and $M \twoheadrightarrow_{\beta \eta} N$, then $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$;
 \end{lemma}
 
 \begin{proof}
