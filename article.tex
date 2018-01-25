@@ -648,10 +648,6 @@ $\begin{array}{lll}
 \begin{proof}
   $ $
 
-  i) For $\beta$-reduction
-
-\vspace{\baselineskip}
-
 Cases with $\beta$-reductions for $let_{\bf K}$ are shown in \cite{ModalK1}. Let us consider cases with ${\bf pure}$.
 
 \vspace{\baselineskip}
@@ -680,7 +676,20 @@ $\begin{array}{lll}
 &[\![\Gamma \vdash {\bf pure \:} (N [\vec{x} := \vec{M}]) : {\bf K}B]\!]&
 \end{array}$
 
-2)
+2) $[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N : {\bf }K A ]\!] = [\![\vdash {\bf pure \:} N : {\bf K A}]\!]$.
+
+\vspace{\baselineskip}
+
+$\begin{array}{lll}
+&[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N : {\bf }K A ]\!] = & \text{By interpetation}\\
+&\mathcal{K}([\![N]\!]) \circ \eta_{\mathds{1}} =& \text{Naturality for $\eta$} \\
+&\eta_{[\![A]\!]} \circ [\![N]\!] =& \text{By interpretation} \\
+&[\![\vdash {\bf pure \:} N : {\bf K} A]\!]&
+\end{array}$
+
+\vspace{\baselineskip}
+
+3)
 
 If $\Gamma \vdash M : A$ and $M \rightarrow_{\beta \eta} N$, then $[\![\Gamma \vdash {\bf pure \:} M : {\bf K}A]\!] = [\![\Gamma \vdash {\bf pure \:} N : {\bf K}A]\!]$.
 
@@ -693,21 +702,6 @@ By assumption $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$.
 So $\eta_{[\![A]\!]} \circ [\![\Gamma \vdash M : A]\!] = \eta_{[\![A]\!]} \circ [\![\Gamma \vdash N : A]\!]$.
 
 Hence $[\![\Gamma \vdash {\bf pure \:} M : {\bf K}A]\!] = [\![\Gamma \vdash {\bf pure \:} N : {\bf K}A]\!]$.
-
-\vspace{\baselineskip}
-
-ii) For $\eta$-reduction.
-
-1) $[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N : {\bf }K A ]\!] = [\![\vdash {\bf pure \:} N : {\bf K A}]\!]$.
-
-\vspace{\baselineskip}
-
-$\begin{array}{lll}
-&[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N : {\bf }K A ]\!] = & \text{By interpetation}\\
-&\mathcal{K}([\![N]\!]) \circ \eta_{\mathds{1}} =& \text{Naturality for $\eta$} \\
-&\eta_{[\![A]\!]} \circ [\![N]\!] =& \text{By interpretation} \\
-&[\![\vdash {\bf pure \:} N : {\bf K} A]\!]&
-\end{array}$
 
 \end{proof}
 
@@ -725,11 +719,8 @@ $ $
 We will consider term model for simply typed lambda calculus $\times$ and $\to$ standardly described in \cite{LambekScott}.
 
 \begin{defin}
-  Let us define an endofunctor $\mathcal{K} : \mathcal{C}(\lambda) \to \mathcal{C}(\lambda)$, such that:
-
-1) ${\bf K} : A \mapsto {\bf K}A$;
-
-2) ${\bf K} : [x,M] \in Hom_{\mathcal{C}(\lambda)}(A,B) \mapsto \text{fmap } f = [y, {\bf let \: pure \:} x = y {\: \bf in \:} M] \in Hom_{\mathcal{C}(\lambda)}({\bf K} A, {\bf K} B)$.
+  Let us define an endofunctor $\mathcal{K} : \mathcal{C}(\lambda) \to \mathcal{C}(\lambda)$, such that
+forall $[x,M] \in Hom_{\mathcal{C}(\lambda)}(A,B), {\bf K}([x,M]) = [y, {\bf let \: pure \:} x = y {\: \bf in \:} M] \in Hom_{\mathcal{C}(\lambda)}({\bf K} A, {\bf K} B)$ (denotation: $\text{fmap } f$ for an arbitrary arrow $f$).
 
 \end{defin}
 
@@ -820,7 +811,7 @@ Follows from i) and ii).
 \begin{defin} Tensorial strength
   $ $
 
-  Let $[p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] \in Hom_{\mathcal{C}(\lambda)}(A \times {\bf K}B, {\bf K}A \times {\bf K}B)$.
+  Let $[p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] \in Hom_{\mathcal{C}(\lambda)}(A \times {\bf K}B, {\bf K}(A \times B))$.
 
   So tensorial strength is defined as $\tau_{A, B} = \ast_{A, B} \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle]$.
 \end{defin}
