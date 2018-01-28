@@ -355,17 +355,14 @@ Here are some examples of closed terms:
 
   5) ${\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N \rightarrow_{\beta} {\bf pure \:} N [\vec{x} := \vec{M}]$
 
-  6) ${\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N \rightarrow_{\beta} {\bf pure \:} N$;
+  6) $\lambda x. f x \rightarrow_{\eta} f$;
 
-  7) $\lambda x. f x \rightarrow_{\eta} f$;
+  7) $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
 
-  8) $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
-
-  9) ${\bf let \: pure \:} x = M {\: \bf in \: } x \rightarrow_{\eta} M$;
-
-  10) $M \rightarrow_{\beta \eta} N \Rightarrow {\bf pure \: M} \rightarrow_{\beta \eta} {\bf pure \: N}$
+  8) ${\bf let \: pure \:} x = M {\: \bf in \: } x \rightarrow_{\eta} M$;
   \end{defin}
 
+By default we use call-by-name evaluation strategy.
 
   \section{Basic lemmas}
 
@@ -373,33 +370,29 @@ Here are some examples of closed terms:
   $\to$-constructor, they are proved standardly in the same lemmas for simply typed lambda calculus, for
   example see \cite{Neder} \cite{Morten} \cite{Girard}. We will consider only modal cases}:
 
-\begin{lemma} Basic lemmas for ${\bf K}_I$.
+\begin{lemma} Generation for ${\bf K}_I$.
 
-  i) Let $\Gamma \vdash {\bf pure \:} M : {\bf K}A$, then $\Gamma \vdash M : A$;
+  Let $\Gamma \vdash {\bf pure \:} M : {\bf K}A$, then $\Gamma \vdash M : A$;
+\end{lemma}
 
-  ii) Let $\Gamma \vdash M : A$ and $\Gamma \subseteq \Delta$, then $\Delta \vdash M : A$;
+\begin{proof}
+  Induction on the structure of ${\bf pure \:} M$.
+\end{proof}
 
-  iii) Let $\Gamma, x : A \vdash {\bf pure \:} M : {\bf K}B$ and $\Gamma \vdash N : A$, then $\Gamma \vdash {\bf pure \:} M [x := N] : {\bf K}B$.
+\begin{lemma} Basic lemmas .
 
-  iv) Let $\Gamma \vdash {\bf pure \:} M : {\bf K}A$, then $\Gamma [B := C] \vdash {\bf pure \:} M : {\bf K} (A [B := C])$.
+  i) Let $\Gamma \vdash M : A$ and $\Gamma \subseteq \Delta$, then $\Delta \vdash M : A$;
+
+  ii) Let $\Gamma, x : A \vdash M : B$ and $\Gamma \vdash N : A$, then $\Gamma \vdash M [x := N] : B$.
+
+  iii) Let $\Gamma \vdash M : A$, then $\Gamma [B := C] \vdash M : (A [B := C])$.
 \end{lemma}
 
 \begin{proof}
   $ $
 
-  i) Induction on $\Gamma \vdash {\bf pure \:} M : {\bf K}A$ and $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{N} {\: \bf in \:} N : {\bf K}B$ correspondently.
+  i-ii-iii) Induction on $\Gamma \vdash M : A$.
 
-  ii) Let $\Gamma \vdash {\bf pure \:} M : {\bf K}A$. Then $\Gamma \vdash M : A$ by generation and $\Delta \vdash M : A$ by assumption. So $\Delta \vdash {\bf pure \:} M : {\bf K} A$ by ${\bf K}_I$.
-
-  iii) Let $\Gamma, x : A \vdash {\bf pure \:} M : {\bf K}B$ and $\Gamma \vdash N : A$.
-
-  By generation $\Gamma, x : A \vdash M : B$ and by assumption $\Gamma \vdash M [x := N] : B$.
-
-  By $K_I$, $\Gamma \vdash {\bf pure \:} (M [x := N]) : {\bf K}B$.
-
-  iv) Let $\Gamma \vdash {\bf pure \:} M : {\bf K}A$. By generation $\Gamma \vdash M : A$ and by assumption $\Gamma [B := C] \vdash M : A[B := C]$.
-
-  By $K_I$ $\Gamma \vdash {\bf pure \:} M : {\bf K}(A[B := C])$.
 \end{proof}
 
 \begin{theorem} Subject reduction
@@ -424,9 +417,7 @@ See \cite{ModalK}.
 \begin{theorem}
   $ $
 
-  i) $\twoheadrightarrow_{\beta}$ is strongly normalizing;
-
-  ii) $\twoheadrightarrow_{\beta}$ is confluent.
+  $\twoheadrightarrow_{\beta}$ is strongly normalizing;
 \end{theorem}
 
 \begin{proof}
@@ -434,17 +425,179 @@ See \cite{ModalK}.
 
 i) Strong normalization for ${\bf IK}$ was proved by Kakutani for call-by-value and for call-by name \cite{ModalK} \cite{ModalK1}.
 
-It is easy to extend Kakutani's result for ${\bf pure}$-rules.
-
-ii) Confluence can be proved by extending Barendregt's technique with term underlying for untyped or simply typed lambda calculus \cite{Baren}.
-
-Hence, it is sufficient to prove strip lemma.
 \end{proof}
 
 \begin{theorem}
   $ $
 
-  Normal form in call-by-name $\lambda_{{\bf K}}$ has the subformula property.
+  $\twoheadrightarrow_{\beta}$ is confluent.
+\end{theorem}
+
+\begin{proof}
+
+  We modify and apply Barendregt's technique with term underlying. We will consider the fragment of the grammar for terms without
+  constructors for pairs for simplicity.
+
+\begin{defin} The set of underlined terms.
+
+  \begin{itemize}
+    \item $x \in \mathbb{V} \Rightarrow x \in \underline{\Lambda}$;
+    \item $M \in \underline{\Lambda} \Rightarrow (\lambda x. M) \in \underline{\Lambda}$;
+    \item $M, N \in \underline{\Lambda} \Rightarrow (M N) \in \underline{\Lambda}$;
+    \item $M \in \underline{\Lambda} \Rightarrow ({\bf pure \:} M) \in \underline{\Lambda}$;
+    \item $\vec{x} \in \mathbb{V}, \vec{M}, N \in \underline{\Lambda} \Rightarrow {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N \in \underline{\Lambda}$;
+    \item $M, N \in \underline{\Lambda} \Rightarrow (\lambda_i x. M) N \in \underline{\Lambda}$, for all $i \in \mathbb{N}$.
+  \end{itemize}
+\end{defin}
+
+\begin{defin} Subsitution for term with labelled lambda:
+
+  $((\lambda_i x. M) N) [y := Z] = (\lambda_i x. M [y := Z]) (N [y := Z])$
+\end{defin}
+
+\begin{defin} Index erasing
+
+  Let us define map $|.| : \underline{\Lambda} \to \Lambda$ as follows:
+
+  \begin{itemize}
+    \item $|x| = x$;
+    \item $|\lambda x. M| = \lambda x. |M|$;
+    \item $|M N| = |M| |N|$;
+    \item $|{\bf pure \:} M| = {\bf pure \:} |M|$;
+    \item $|{\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N| = {\bf let \: pure \:} \vec{x} = \vec{|M|} {\: \bf in \:} |N|$;
+    \item $|(\lambda_i x. M) N| = (\lambda x. M) N$
+  \end{itemize}
+\end{defin}
+
+\begin{defin} Reduction rules:
+
+\begin{itemize}
+  \item $(\lambda x. M) N \rightarrow_{\underline{\beta}} M [x := N]$;
+  \item $\begin{array}{llll}
+  & {\bf let \: pure \:} \langle \vec{x}, y, \vec{z} \rangle = \langle \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P} \rangle {\: in \:} R \rightarrow_{\underline{\beta}} & \\
+  & {\bf let \: pure \:} \langle \vec{x}, \vec{w}, \vec{z} \rangle = \langle \vec{M}, \vec{N}, \vec{P} \rangle \: { \bf in } \: R [y := Q]
+  \end{array}$;
+  \item ${\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N \rightarrow_{\underline{\beta}} {\bf pure \:} N [\vec{x} := \vec{M}]$;
+  \item $(\lambda x_i. M) N \rightarrow_{\underline{\beta}} M [x := N]$
+\end{itemize}
+\end{defin}
+
+$\twoheadrightarrow_{\underline{\beta}}$ is a reflexive-transitive closure of $\rightarrow_{\underline{\beta}}$.
+
+\begin{defin} Indexed redex erasing:
+
+  Let us define the next map $\phi : \underline{\Lambda} \to \Lambda$:
+
+  \begin{itemize}
+    \item $\phi(x) = x$;
+    \item $\phi(\lambda x. M) = \lambda x. \phi(M)$;
+    \item $\phi(M N) = \phi(M) \phi(N)$;
+    \item $\phi({\bf pure \:} M) = {\bf pure \:} \phi(M)$;
+    \item $\phi({\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N) = {\bf let \: pure \:} \vec{x} = \vec{\phi(M)} {\: \bf in \:} \phi(N)$;
+    \item $\phi((\lambda_i x. M) N) = M [x := N]$
+  \end{itemize}
+\end{defin}
+
+\begin{lemma}
+
+  $\forall \underline{M}, \underline{N} \in \underline{\Lambda} \: \forall M, N \in \Lambda, \text{if } |\underline{M}| = M, |\underline{N}| = N, \text{then}$
+  \begin{itemize}
+    \item If $M \twoheadrightarrow_{\beta} N$, then $\underline{M} \twoheadrightarrow_{\underline{\beta}} \underline{N}$
+    \item Vice versa
+  \end{itemize}
+\end{lemma}
+
+\begin{proof}
+
+  Induction on the generation $\rightarrow_{\beta}$ and $\rightarrow_{\underline{\beta}}$ correspondently. The general statement follows from transitivity
+  of multi-step reductions of both types.
+\end{proof}
+
+\begin{lemma}
+  $\phi(M [x := N]) = \phi(M) [x := \phi(N)]$.
+\end{lemma}
+
+\begin{proof}
+  We treat only cases with {\bf pure} and with {\bf let}. For the rest cases see \cite{Baren}.
+
+  1)
+  $ $
+
+  $\begin{array}{lll}
+  & \phi({\bf pure \:} (M [x := N])) = & \text{By the definition of $\phi$}\\
+  & {\bf pure \:} (\phi(M [x := N])) = & \text{Induction hypothesis} \\
+  & {\bf pure \:} (\phi(M) [x := \phi(N)]) = & \text{Substitution definition}\\
+  & ({\bf pure \:} \phi (M)) [x := \phi(N)]&
+  \end{array}$
+
+  2)
+  $ $
+
+  $\begin{array}{lll}
+  &\phi(({\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N) [y := P]) = & \text{Substitution definition}\\
+  &\phi({\bf let \: pure \:} \vec{x} = (\vec{M}[y := P]) {\: \bf in \:} N) = & \text{By the definition of $\phi$}\\
+  &{\bf let \: pure \:} \vec{x} = \phi(\vec{M}[y := P]) {\: \bf in \:} \phi(N) = & \text{Induction hypothesis} \\
+  &{\bf let \: pure \:} \vec{x} = (\phi(\vec{M}) [y := \phi(P)]) {\: \bf in \:} \phi(N) =& \text{Substitution definition} \\
+  &({\bf let \: pure \:} \vec{x} = \phi(\vec{M}) {\: \bf in \:} \phi(N))[y := \phi(P)]
+  \end{array}$
+
+\end{proof}
+
+\begin{lemma}
+  $ $
+
+  \begin{itemize}
+  \item If $M \twoheadrightarrow_{\underline{\beta}} N$, then $\phi(M) \twoheadrightarrow_{\beta} \phi(N)$
+  \item If $|M| = N$ and $\phi(M) = P$, then $N \twoheadrightarrow_{\beta} P$.
+  \end{itemize}
+\end{lemma}
+
+\begin{proof}
+  $ $
+
+  i) Induction on the generation of $\twoheadrightarrow_{\underline{\beta}}$ using previous lemma.
+
+  ii) Induction on the structure of $M$.
+\end{proof}
+
+\begin{lemma} Strip lemma.
+
+$ $
+
+If $M \rightarrow_{\beta} N$ and $M \twoheadrightarrow_{\beta} P$. Then there exists some term $Q$, such that
+$N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
+\end{lemma}
+
+\begin{proof}
+
+Proof is similar to \cite{Baren} \cite{Baren2}. We build the following diagram, which commutes by lemmas 5 and 7.
+
+\vspace{\baselineskip}
+
+\xymatrix{
+&&& M \ar[dd]_{\beta} \ar@{->>}[rrr] &&& P \ar@{-->>}[dd]^{\beta} \\
+&&&& N' \ar[ul]^{|.|} \ar[dl]_{\phi} \ar@{-->>}[rrr]^{\underline{\beta}} &&& P' \ar[ul]^{|.|} \ar[dl]_{\phi} \\
+&&& N \ar@{-->>}[rrr]_{\beta} &&& Q
+}
+\end{proof}
+
+\begin{col}
+$ $
+If $M \twoheadrightarrow_{\beta} N$ and $M \twoheadrightarrow_{\beta} P$. Then there exists some term $Q$, such that
+$N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
+\end{col}
+
+\begin{proof}
+
+  Unfold $M \twoheadrightarrow_{\beta} N$ as the sequence of one-step reduction and apply strip lemma on the every step.
+\end{proof}
+
+\end{proof}
+
+\begin{theorem}
+  $ $
+
+  Normal form in $\lambda_{{\bf K}}$ has the subformula property.
 
 \end{theorem}
 
@@ -676,33 +829,6 @@ $\begin{array}{lll}
 &[\![\Gamma \vdash {\bf pure \:} (N [\vec{x} := \vec{M}]) : {\bf K}B]\!]&
 \end{array}$
 
-2) $[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N : {\bf }K A ]\!] = [\![\vdash {\bf pure \:} N : {\bf K A}]\!]$.
-
-\vspace{\baselineskip}
-
-$\begin{array}{lll}
-&[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N : {\bf }K A ]\!] = & \text{By interpetation}\\
-&\mathcal{K}([\![N]\!]) \circ \eta_{\mathds{1}} =& \text{Naturality for $\eta$} \\
-&\eta_{[\![A]\!]} \circ [\![N]\!] =& \text{By interpretation} \\
-&[\![\vdash {\bf pure \:} N : {\bf K} A]\!]&
-\end{array}$
-
-\vspace{\baselineskip}
-
-3)
-
-If $\Gamma \vdash M : A$ and $M \rightarrow_{\beta \eta} N$, then $[\![\Gamma \vdash {\bf pure \:} M : {\bf K}A]\!] = [\![\Gamma \vdash {\bf pure \:} N : {\bf K}A]\!]$.
-
-\vspace{\baselineskip}
-
-If $\Gamma \vdash M : A$ and $M \rightarrow_{\beta \eta} N$, then $\Gamma \vdash N : A$ by subject reduction.
-
-By assumption $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$.
-
-So $\eta_{[\![A]\!]} \circ [\![\Gamma \vdash M : A]\!] = \eta_{[\![A]\!]} \circ [\![\Gamma \vdash N : A]\!]$.
-
-Hence $[\![\Gamma \vdash {\bf pure \:} M : {\bf K}A]\!] = [\![\Gamma \vdash {\bf pure \:} N : {\bf K}A]\!]$.
-
 \end{proof}
 
 \end{proof}
@@ -905,9 +1031,57 @@ $\begin{array}{lll}
 
 \end{proof}
 
+\section{Monadic extention}
+
+In modern Haskell \verb"Monad" class is an extention of the \verb"Applicative" class,
+where monadic binding (\verb"(>>=)") is the single basic class method:
+
+\begin{lstlisting}[language=Haskell]
+  class Applicative m => Monad (m :: * -> *) where
+    (>>=) :: m a -> (a -> m b) -> m b
+    (>>) :: m a -> m b -> m b
+    return :: a -> m a
+    fail :: String -> m a
+\end{lstlisting}
+From a logical point of view we may consider this extention as the extention of IEL$^{-}$ with the imdepotency axiom.
+
+\begin{defin} ``Monadic'' intuitionistic epistemic logic IEL$^{-}$
+
+  1) IPC axioms;
+
+  2) ${\bf K}(A \to B) \to ({\bf K}A \to {\bf K}B)$ (normality);
+
+  3) $A \to {\bf K}A$ (co-reflection);
+
+  4) ${\bf KK} A \to {\bf K}A$
+
+  Rule: MP.
+\end{defin}
+
+Categorically \verb"Monad" class is a Kleisli triple on monoidal category, or, which is the same, strong monoidal monad:
+
+\begin{defin} Strong monoidal monad
+
+
+\end{defin}
+
+\begin{defin} Monadic $\lambda_{{\bf K}}$
+
+  Monadic $\lambda_{{\bf K}}$ is a $\lambda_{{\bf K}}$ with the next additional typing rule:
+
+  \begin{prooftree}
+    \AxiomC{$\Gamma \vdash M : {\bf KK}A$}
+    \RightLabel{${\bf K}^2$--e}
+    \UnaryInfC{$\Gamma \vdash {\bf join \:} M : {\bf K}A$}
+  \end{prooftree}
+\end{defin}
+
+\begin{defin}
+\end{defin}
+
+
   \addcontentsline{toc}{section}{References}
 
-  %далее сам список используевой литературы
   \begin{thebibliography}{}
 
   \bibitem{Artemov} Artemov S. and Protopopescu T., \/ ``Intuitionistic Epistemic Logic'', \textit{The
