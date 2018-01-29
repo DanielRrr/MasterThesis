@@ -508,6 +508,17 @@ For strong normalization proof with Tait's method for simply typed lambda calcul
 \begin{lemma}
   $ $
 
+  If $M \in SC_A$, where $A$ is a modal-free type, then ${\bf pure \:} M \in SC_{{\bf K}A}$
+\end{lemma}
+
+\begin{proof}
+
+  Induction on the structure of M.
+\end{proof}
+
+\begin{lemma}
+  $ $
+
   Let $x_1 : A_1,\dots, x_n : A_n \vdash M : A$, then forall $i, M_i \in SC_{A_i}$. Then $M [x_1 := M_1,\dots,x_n := M_n] \in SC_A$.
 \end{lemma}
 
@@ -687,7 +698,7 @@ $N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
 
 \begin{proof}
 
-Proof is similar to \cite{Baren} \cite{Baren2}. We build the following diagram, which commutes by lemmas 5 and 7.
+Proof is similar to \cite{Baren} \cite{Baren2}. We build the following diagram, which commutes by lemmas 8 and 10.
 
 \vspace{\baselineskip}
 
@@ -1168,12 +1179,12 @@ $\begin{array}{lll}
   {\bf K} is an applicative functor
 \end{lemma}
 
-Similar to \cite{Abramsky}, we apply the translation from $\lambda_{{\bf K}}$ to some cartesian closed category with an abritraty applicative functor $\mathcal{K}$, then
-we have $[\![\Gamma \vdash M : A]\!] = [x, M [x_i := \pi_i x]]$, so $M =_{\beta \eta} N \Leftrightarrow [\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$
-
 \begin{proof}
   Immediately follows from previous lemmas in the section.
 \end{proof}
+
+Similar to \cite{Abramsky}, we apply the translation from $\lambda_{{\bf K}}$ to some cartesian closed category with an abritraty applicative functor $\mathcal{K}$, then
+we have $[\![\Gamma \vdash M : A]\!] = [x, M [x_i := \pi_i x]]$, so $M =_{\beta \eta} N \Leftrightarrow [\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$.
 
 \end{proof}
 
