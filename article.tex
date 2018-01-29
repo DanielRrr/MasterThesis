@@ -448,7 +448,7 @@ For strong normalization proof with Tait's method for simply typed lambda calcul
 \begin{defin} The set of strongly computable terms:
   \begin{itemize}
     \item $SC_A = \{ M : A \: | \: M \text{ is strongly normalizing} \}$ for $A \in \mathbb{T}$;
-    \item $SC_{A \to N} = \{ M : A \to B \: | \: \forall N \in SC_A, M N \in SC_B \}$, for $A,B \in \mathbb{T}_{\bf K}$
+    \item $SC_{A \to B} = \{ M : A \to B \: | \: \forall N \in SC_A, M N \in SC_B \}$, for $A,B \in \mathbb{T}_{\bf K}$
     \item $SC_{{\bf K}A} = \{ M : {\bf K}A \: | \: M \text{ is strongly normalizing} \}$ for $A \in \mathbb{T}$;
     \item $SC_{{\bf K}(A \to B)} = \{ M : {\bf K}(A \to B) \: | \: \forall f \in SC_{A \to B}, \forall x \in SC_A, \forall N \in SC_{{\bf K}A}, {\bf let \: pure \:} f, x = M, N {\: \bf in \:} f x \}$ for $A,B \in \mathbb{T}_{\bf K}$.
   \end{itemize}
@@ -465,6 +465,8 @@ For strong normalization proof with Tait's method for simply typed lambda calcul
 \end{lemma}
 
 \begin{proof}
+  $ $
+
   By induction on the structure of $A$.
 
   1) $A \equiv {\bf K}A$, where $A \in \mathbb{T}$.
@@ -496,10 +498,49 @@ For strong normalization proof with Tait's method for simply typed lambda calcul
 
   iii) Let $M_2$ be non-introduced, $M_2 \in SC_{{\bf K}(B \to C)}$ and $M_1 \rightarrow_{\beta} M_2$.
 
-  Let $N \in SC_{{\bf K}B}$.
+  Let $N \in SC_{{\bf K}B}$. So ${\bf let \: pure \:} f, x = M_2, N {\: \bf in \:} f x \in SC_{{\bf K}C}$.
+
+  So ${\bf let \: pure \:} f, x = M_1, N {\: \bf in \:} f x \rightarrow_{\beta} {\bf let \: pure \:} f, x = M_2, N {\: \bf in \:} f x \in SC_{{\bf K}C}$.
+
+  Thus ${\bf let \: pure \:} f, x = M_1, N {\: \bf in \:} f x \in SC_{{\bf K}C}$ by IH, so $M_1 \in SC_{{\bf K}(B \to C)}$.
 \end{proof}
 
+\begin{lemma}
+  $ $
 
+  Let $x_1 : A_1,\dots, x_n : A_n \vdash M : A$, then forall $i, M_i \in SC_{A_i}$. Then $M [x_1 := M_1,\dots,x_n := M_n] \in SC_A$.
+\end{lemma}
+
+\begin{proof}
+  $ $
+
+  1) Let the derivation ends in:
+
+\begin{prooftree}
+\AxiomC{$x_1 : A_1,\dots, x_n : A_n \vdash M : A$}
+\UnaryInfC{$x_1 : A_1,\dots, x_n : A_n \vdash {\bf pure \:} M : {\bf K}A$}
+\end{prooftree}
+
+  By assumption $M [x_1 := M_1,\dots,x_n := M_n] \in SC_A$, so ${\bf pure \:} M [x_1 := M_1,\dots,x_n := M_n] \in SC_{{\bf K}A}$.
+
+\vspace{\baselineskip}
+
+  2) Let the derivation ends in:
+\begin{prooftree}
+  \AxiomC{$x_1 : A_1,\dots, x_n : A_n \vdash \vec{M^{'}} : {\bf K}\vec{A}$}
+  \AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
+  \BinaryInfC{$x_1 : A_1,\dots, x_n : A_n \vdash {\bf let \: pure \:} \vec{x} = \vec{M^{'}} {\: \bf in \:} N : {\bf K}B$}
+\end{prooftree}
+
+By IH forall $i \in \{ 1,\dots,\text{length}(\vec{M^{'}}) \}$, $M_i^{'} [x_1 := M_1,\dots,x_n := M_n] \in SC_{{\bf K}A_i}$.
+
+So ${\bf let \: pure \:} \vec{x} = \vec{M^{'}} [x_1 := M_1,\dots,x_n := M_n] {\: \bf in \:} N \in SC_{{\bf K} B}$.
+\end{proof}
+
+\begin{col}
+
+  All terms are strongly computable, therefore are strongly normalizing.
+\end{col}
 
 \end{proof}
 
