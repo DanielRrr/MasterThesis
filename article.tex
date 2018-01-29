@@ -412,6 +412,25 @@ For cases with application, abstraction and pairs see \cite{Morten} \cite{Pierce
 
 See \cite{ModalK}.
 
+3) If the derivation ends in
+
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash {\bf pure \:} \vec{M} : {\bf K}\vec{A}$}
+\AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
+\BinaryInfC{$\Gamma \vdash {\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N : {\bf K}B$}
+\end{prooftree}
+
+So $\Gamma \vdash \vec{M} : \vec{A}$ by generation and $\Gamma \vdash N [\vec{x} := \vec{M}] : B$ by weakening and substitution.
+
+Then we can transform this into the next derivation:
+
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash N [\vec{x} := \vec{M}] : B$}
+\RightLabel{${\bf K}_I$}
+\UnaryInfC{$\Gamma \vdash {\bf pure \:} N [\vec{x} := \vec{M}] : {\bf K}B$}
+\end{prooftree}
+
+
 \end{proof}
 
 \begin{theorem}
@@ -423,7 +442,64 @@ See \cite{ModalK}.
 \begin{proof}
   $ $
 
-i) Strong normalization for ${\bf IK}$ was proved by Kakutani for call-by-value and for call-by name \cite{ModalK} \cite{ModalK1}.
+We modify and apply Tait's technique of logical relation for modalities.
+For strong normalization proof with Tait's method for simply typed lambda calculus see \cite{Pierce}.
+
+\begin{defin} The set of strongly computable terms:
+  \begin{itemize}
+    \item $SC_A = \{ M : A \: | \: M \text{ is strongly normalizing} \}$ for $A \in \mathbb{T}$;
+    \item $SC_{A \to N} = \{ M : A \to B \: | \: \forall N \in SC_A, M N \in SC_B \}$, for $A,B \in \mathbb{T}_{\bf K}$
+    \item $SC_{{\bf K}A} = \{ M : {\bf K}A \: | \: M \text{ is strongly normalizing} \}$ for $A \in \mathbb{T}$;
+    \item $SC_{{\bf K}(A \to B)} = \{ M : {\bf K}(A \to B) \: | \: \forall f \in SC_{A \to B}, \forall x \in SC_A, \forall N \in SC_{{\bf K}A}, {\bf let \: pure \:} f, x = M, N {\: \bf in \:} f x \}$ for $A,B \in \mathbb{T}_{\bf K}$.
+  \end{itemize}
+\end{defin}
+
+\begin{lemma}
+  $ $
+
+\begin{itemize}
+\item If $M \in SC_A$, then $M$ is strongly normalizing;
+\item Let $M \in SC_A$ and $M \rightarrow_{\beta} N$, then $N \in SC_A$;
+\item Let $N$ is non-introduced, $N \in SC_A$. Then, if $M \rightarrow_{\beta} N$, then $M \in SC_A$;
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+  By induction on the structure of $A$.
+
+  1) $A \equiv {\bf K}A$, where $A \in \mathbb{T}$.
+
+  i) Follows from the definition;
+
+  ii) Immediately;
+
+  iii) Let $N$ is non-introduced and $N \in SC_A$, such that $M \rightarrow_{\beta} N$.
+  Any reduction path $M \rightarrow_{\beta} \dots$ passes through $M \rightarrow_{\beta} N$.
+
+  $N$ is strongly normalizing, so $M$ too.
+
+    \vspace{\baselineskip}
+
+  2) $A \equiv {\bf K}(B \to C)$
+
+  i) Suppose $M \in SC_{{\bf K}(B \to C)}$. Let $N \in SC_{{\bf K}B}$. So ${\bf let \: pure \:} f, x = M, N {\: \bf in \: } f x \in SC_{{\bf K}C}$.
+
+  So $M$ is strongly normalizing, since ${\bf let \: pure \:} f, x = M, N {\: \bf in \: } f x$ is strongly normalizing.
+
+  ii) Let $M_1 \in SC_{{\bf K}(B \to C)}$ and $M_1 \rightarrow_{\beta} M_2$. Fix $N \in SC_{{\bf K}B}$.
+
+  Then ${\bf let \: pure \:} f, x = M_1, N {\: \bf in \: } f x \in SC_{{\bf K}C}$.
+
+  Hence, ${\bf let \: pure \:} f, x = M_1, N {\: \bf in \: } f x \in SC_{{\bf K}C} \rightarrow_{\beta} {\bf let \: pure \:} f, x = M_2, N {\: \bf in \: } f x$.
+
+  So ${\bf let \: pure \:} f, x = M_2, N {\: \bf in \: } f x \in SC_{{\bf K}C}$. Then $M_2 \in SC_{{\bf K}(B \to C)}$.
+
+  iii) Let $M_2$ be non-introduced, $M_2 \in SC_{{\bf K}(B \to C)}$ and $M_1 \rightarrow_{\beta} M_2$.
+
+  Let $N \in SC_{{\bf K}B}$.
+\end{proof}
+
+
 
 \end{proof}
 
@@ -589,7 +665,7 @@ $N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
 
 \begin{proof}
 
-  Unfold $M \twoheadrightarrow_{\beta} N$ as the sequence of one-step reduction and apply strip lemma on the every step.
+  Unfold $M \twoheadrightarrow_{\beta} N$ as the sequence of one-step reductions and apply strip lemma on the every step.
 \end{proof}
 
 \end{proof}
@@ -1030,54 +1106,6 @@ $\begin{array}{lll}
 \end{proof}
 
 \end{proof}
-
-\section{Monadic extention}
-
-In modern Haskell \verb"Monad" class is an extention of the \verb"Applicative" class,
-where monadic binding (\verb"(>>=)") is the single basic class method:
-
-\begin{lstlisting}[language=Haskell]
-  class Applicative m => Monad (m :: * -> *) where
-    (>>=) :: m a -> (a -> m b) -> m b
-    (>>) :: m a -> m b -> m b
-    return :: a -> m a
-    fail :: String -> m a
-\end{lstlisting}
-From a logical point of view we may consider this extention as the extention of IEL$^{-}$ with the imdepotency axiom.
-
-\begin{defin} ``Monadic'' intuitionistic epistemic logic IEL$^{-}$
-
-  1) IPC axioms;
-
-  2) ${\bf K}(A \to B) \to ({\bf K}A \to {\bf K}B)$ (normality);
-
-  3) $A \to {\bf K}A$ (co-reflection);
-
-  4) ${\bf KK} A \to {\bf K}A$
-
-  Rule: MP.
-\end{defin}
-
-Categorically \verb"Monad" class is a Kleisli triple on monoidal category, or, which is the same, strong monoidal monad:
-
-\begin{defin} Strong monoidal monad
-
-
-\end{defin}
-
-\begin{defin} Monadic $\lambda_{{\bf K}}$
-
-  Monadic $\lambda_{{\bf K}}$ is a $\lambda_{{\bf K}}$ with the next additional typing rule:
-
-  \begin{prooftree}
-    \AxiomC{$\Gamma \vdash M : {\bf KK}A$}
-    \RightLabel{${\bf K}^2$--e}
-    \UnaryInfC{$\Gamma \vdash {\bf join \:} M : {\bf K}A$}
-  \end{prooftree}
-\end{defin}
-
-\begin{defin}
-\end{defin}
 
 
   \addcontentsline{toc}{section}{References}
