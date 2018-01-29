@@ -545,7 +545,8 @@ For strong normalization proof with Tait's method for simply typed lambda calcul
 
 By IH forall $i \in \{ 1,\dots,\text{length}(\vec{M^{'}}) \}$, $M_i^{'} [x_1 := M_1,\dots,x_n := M_n] \in SC_{{\bf K}A_i}$.
 
-So ${\bf let \: pure \:} \vec{x} = \vec{M^{'}} [x_1 := M_1,\dots,x_n := M_n] {\: \bf in \:} N \in SC_{{\bf K} B}$.
+So ${\bf let \: pure \:} \vec{x} = \vec{M^{'}} [x_1 := M_1,\dots,x_n := M_n] {\: \bf in \:} N \in SC_{{\bf K} B}$,
+otherwise we can build infinite reduction path in $\vec{M^{'}} [x_1 := M_1,\dots,x_n := M_n]$. 
 \end{proof}
 
 \begin{col}
