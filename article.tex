@@ -508,7 +508,7 @@ For strong normalization proof with Tait's method for simply typed lambda calcul
 \begin{lemma}
   $ $
 
-  If $M \in SC_A$, where $A$ is a modal-free type, then ${\bf pure \:} M \in SC_{{\bf K}A}$
+  If $M \in SC_A$, then ${\bf pure \:} M \in SC_{{\bf K}A}$
 \end{lemma}
 
 \begin{proof}
@@ -546,7 +546,7 @@ For strong normalization proof with Tait's method for simply typed lambda calcul
 By IH forall $i \in \{ 1,\dots,\text{length}(\vec{M^{'}}) \}$, $M_i^{'} [x_1 := M_1,\dots,x_n := M_n] \in SC_{{\bf K}A_i}$.
 
 So ${\bf let \: pure \:} \vec{x} = \vec{M^{'}} [x_1 := M_1,\dots,x_n := M_n] {\: \bf in \:} N \in SC_{{\bf K} B}$,
-otherwise we can build infinite reduction path in $\vec{M^{'}} [x_1 := M_1,\dots,x_n := M_n]$. 
+otherwise we can build infinite reduction path in $\vec{M^{'}} [x_1 := M_1,\dots,x_n := M_n]$.
 \end{proof}
 
 \begin{col}
@@ -976,17 +976,18 @@ We will consider term model for simply typed lambda calculus $\times$ and $\to$ 
 \begin{defin} Equivalence on term pairs:
   $ $
 
-  1) $(x, M) \sim_{A, B} (y, N) \Leftrightarrow x : A \vdash M : B \:\: \& \:\: y : A \vdash N : A \:\: \& \:\: M =_{\beta \eta} N [y := x]$;
+  Let us define relation $\sim_{A, B} \subseteq \mathbb{V} \times \Lambda_{{\bf K}}$, such that:
 
-  2) $[x, M]_{A, B} = \{ (y, N) \: | \: (x, M) \sim_{A, B} (y, N) \}$.
+  $(x, M) \sim_{A, B} (y, N) \Leftrightarrow x : A \vdash M : B \:\: \& \:\: y : A \vdash N : A \:\: \& \:\: M =_{\beta \eta} N [y := x]$;
 \end{defin}
 
-We will drop indeces below.
+We will denote equivalence class as $[x, M]_{A, B} = \{ (y, N) \: | \: (x, M) \sim_{A, B} (y, N) \}$ (we will drop indeces below).
+
 
 \begin{defin} Category $\mathcal{C}(\lambda)$:
 \begin{itemize}
   \item $Ob_{\mathcal{C}} = \{ \hat{A} \: | \: A \in \mathbb{T} \} \cup \{ \mathds{1} \}$;
-  \item $Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B}) = \{ [x,M] \: | \: x : A \vdash M : B \}$;
+  \item $Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B}) = (\mathbb{V} \times \Lambda_{{\bf K}})/_{\sim_{A, B}}$;
   \item Let $[x, M] \in Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B})$ and $[y,N] \in Hom_{\mathcal{C}(\lambda)}(\hat{B},\hat{C})$, then $[y,M] \circ [x, M] = [x, N [y := M]]$;
   \item Identity morphism $id_{\hat{A}} = [x,x] \in Hom_{\mathcal{C}(\lambda)(\hat{A})}$;
   \item $\mathds{1}$ is a terminal object;
@@ -1007,9 +1008,10 @@ forall $[x,M] \in Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B}), {\bf K}([x,M]) = 
 
 \begin{lemma} Functoriality
 
-  i) $\text{fmap }(g \circ f) = \text{fmap }(g) \circ \text{fmap }(f)$;
-
-  ii) $\text{fmap }(id_{\hat{A}}) = id_{{\bf K}\hat{A}}$.
+\begin{itemize}
+  \item $\text{fmap }(g \circ f) = \text{fmap }(g) \circ \text{fmap }(f)$;
+  \item $\text{fmap }(id_{\hat{A}}) = id_{{\bf K}\hat{A}}$.
+\end{itemize}
 \end{lemma}
 
 \begin{proof}
@@ -1040,13 +1042,24 @@ Implementation for $\ast$ in our term model is a modification of ${\text{let}_{\
 \TrinaryInfC{$p : {\bf K}A \times {\bf K}B \vdash {\bf let \: pure \:} \langle x,y \rangle = \langle \pi_1 p, \pi_2 p \rangle {\: \bf in \:} \langle x, y \rangle : {\bf K}(A \times B)$}
 \end{prooftree}
 
+\begin{lemma}
+  $ $
+
+  {\bf K} is a monoidal endofunctor
+\end{lemma}
+
+\begin{proof}
+$ $
+
+See \cite{ModalK}
+\end{proof}
+
 \begin{lemma} Naturality for $\eta$ and for $\ast$
 
-  i) $\text{fmap } f \circ \eta_A = \eta_B \circ f$;
-
-  ii) $\text{fmap } (f \times g) \circ \ast_{\hat{A}, \hat{B}} = \ast_{\hat{C},\hat{D}} \circ (\text{fmap } f) \times (\text{fmap } g)$.
-
-  iii) $\ast_{\hat{A},\hat{B}} \circ (\eta_{A} \times \eta_{B}) = \eta_{\hat{A} \times \hat{B}}$;
+\begin{itemize}
+  \item $\text{fmap } f \circ \eta_A = \eta_B \circ f$;
+  \item $\ast_{\hat{A},\hat{B}} \circ (\eta_{A} \times \eta_{B}) = \eta_{\hat{A} \times \hat{B}}$;
+\end{itemize}
 \end{lemma}
 
 \begin{proof}
@@ -1073,15 +1086,7 @@ $\begin{array}{lll}
 
 \vspace{\baselineskip}
 
-ii)  $\text{fmap } (f \times g) \circ \ast_{\hat{A}, \hat{B}} = \ast_{\hat{C},\hat{D}} \circ (\text{fmap } f) \times (\text{fmap } g)$
-
-\vspace{\baselineskip}
-
-See \cite{ModalK}.
-
-\vspace{\baselineskip}
-
-iii) $\ast_{\hat{A},\hat{B}} \circ (\eta_{\hat{A}} \times \eta_{\hat{B}}) = \eta_{\hat{A} \times \hat{B}}$
+ii) $\ast_{\hat{A},\hat{B}} \circ (\eta_{\hat{A}} \times \eta_{\hat{B}}) = \eta_{\hat{A} \times \hat{B}}$
 
 \vspace{\baselineskip}
 
