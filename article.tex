@@ -405,8 +405,8 @@ By default we use call-by-name evaluation strategy.
 For cases with application, abstraction and pairs see \cite{Morten} \cite{Pierce}.
 
 1)
-  Let $\Gamma \vdash {\bf let \: pure \:} \langle \vec{x}, y, \vec{z} \rangle = \langle \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P} \rangle {\: in \:} R : {\bf K}B$,
-  then $\Gamma {\bf let \: pure \:} \langle \vec{x}, \vec{w}, \vec{z} \rangle = \langle \vec{M}, \vec{N}, \vec{P} \rangle \: { \bf in } \: R [y := Q] : {\bf K}B$
+  Let $\Gamma \vdash {\bf let \: pure \:} \vec{x}, y, \vec{z}  = \langle \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P} \rangle {\: in \:} R : {\bf K}B$,
+  then $\Gamma \vdash {\bf let \: pure \:} \vec{x}, \vec{w}, \vec{z} = \langle \vec{M}, \vec{N}, \vec{P} \rangle \: { \bf in } \: R [y := Q] : {\bf K}B$
 
 2) Let $\Gamma \vdash {\bf let \: pure \:} x = M {\: \bf in \: } x : {\bf K}A$, then $\Gamma \vdash M : {\bf K}A$.
 
@@ -741,7 +741,7 @@ $N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
 \begin{defin} Applicative functor
 
   An applicative functor is a triple $\langle \mathcal{C}, \mathcal{K}, \eta \rangle$,
-where $\mathcal{C}$ is a symmetric monoidal category, $\mathcal{K}$ is a monoidal and $\eta : Id_{\mathcal{C}} \Rightarrow \mathcal{K}$ is a natural transformation (similar to unit in monad), such that:
+where $\mathcal{C}$ is a symmetric monoidal category, $\mathcal{K}$ is a monoidal endofunctor and $\eta : Id_{\mathcal{C}} \Rightarrow \mathcal{K}$ is a natural transformation (similar to unit in monad), such that:
 
 1) $u = \eta_{\mathds{1}}$;
 
@@ -764,11 +764,11 @@ where $\mathcal{C}$ is a symmetric monoidal category, $\mathcal{K}$ is a monoida
 
 \begin{proof}
 
-\begin{defin} Semantical translation from $\lambda_{\textbf{K}}$ to CCC with applicative functor $\mathcal{K}$:
+\begin{defin} Semantical translation from $\lambda_{\textbf{K}}$ to some cartesian closed category $\mathcal{C}$ with applicative functor $\mathcal{K}$:
 
 1) Interpretation for types:
 
-$[\![A]\!] := \hat{A}, A \in \mathbb{T}$;
+$[\![A]\!] := \hat{A}, A \in \mathbb{T}$, where $\hat{A}$ is an object of $\mathcal{C}$ obtained by some given assignment;
 
 $[\![A \to B]\!] := [\![A]\!] \to [\![B]\!]$;
 
@@ -959,11 +959,37 @@ Let $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$, then $M =_{\bet
 
 $ $
 
-We will consider term model for simply typed lambda calculus $\times$ and $\to$ standardly described in \cite{LambekScott}.
+We will consider term model for simply typed lambda calculus $\times$ and $\to$ standardly described in \cite{LambekScott}:
+
+\begin{defin} Equivalence on term pairs:
+  $ $
+
+  1) $(x, M) \sim_{A, B} (y, N) \Leftrightarrow x : A \vdash M : B \:\: \& \:\: y : A \vdash N : A \:\: \& \:\: M =_{\beta \eta} N [y := x]$;
+
+  2) $[x, M]_{A, B} = \{ (y, N) \: | \: (x, M) \sim_{A, B} (y, N) \}$.
+\end{defin}
+
+We will drop indeces below.
+
+\begin{defin} Category $\mathcal{C}(\lambda)$:
+\begin{itemize}
+  \item $Ob_{\mathcal{C}} = \{ \hat{A} \: | \: A \in \mathbb{T} \} \cup \{ \mathds{1} \}$;
+  \item $Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B}) = \{ [x,M] \: | \: x : A \vdash M : B \}$;
+  \item Let $[x, M] \in Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B})$ and $[y,N] \in Hom_{\mathcal{C}(\lambda)}(\hat{B},\hat{C})$, then $[y,M] \circ [x, M] = [x, N [y := M]]$;
+  \item Identity morphism $id_{\hat{A}} = [x,x] \in Hom_{\mathcal{C}(\lambda)(\hat{A})}$;
+  \item $\mathds{1}$ is a terminal object;
+  \item $\widehat{A \times B} = \hat{A} \times \hat{B}$;
+  \item Canonical projection is defined as $[x, \pi_i x] \in Hom_{\mathcal{C}(\lambda)}(\hat{A_1} \times \hat{A_2},\hat{A_i})$ for $i \in \{ 1, 2 \}$;
+  \item $\widehat{A \to B} = \hat{B}^{\hat{A}}$;
+  \item Evaluation arrow $\epsilon = [x, (\pi_2 x) (\pi_1 x)] \in Hom_{\mathcal{C}(\lambda)(\hat{B}^{\hat{A}} \times \hat{A}, \hat{B})}$.
+\end{itemize}
+\end{defin}
+
+It is sufficient to show ${\bf K}$ is an applicative functor on $\mathcal{C}(\lambda)$.
 
 \begin{defin}
   Let us define an endofunctor $\mathcal{K} : \mathcal{C}(\lambda) \to \mathcal{C}(\lambda)$, such that
-forall $[x,M] \in Hom_{\mathcal{C}(\lambda)}(A,B), {\bf K}([x,M]) = [y, {\bf let \: pure \:} x = y {\: \bf in \:} M] \in Hom_{\mathcal{C}(\lambda)}({\bf K} A, {\bf K} B)$ (denotation: $\text{fmap } f$ for an arbitrary arrow $f$).
+forall $[x,M] \in Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B}), {\bf K}([x,M]) = [y, {\bf let \: pure \:} x = y {\: \bf in \:} M] \in Hom_{\mathcal{C}(\lambda)}({\bf K} \hat{A}, {\bf K} \hat{B})$ (denotation: $\text{fmap } f$ for an arbitrary arrow $f$).
 
 \end{defin}
 
@@ -971,7 +997,7 @@ forall $[x,M] \in Hom_{\mathcal{C}(\lambda)}(A,B), {\bf K}([x,M]) = [y, {\bf let
 
   i) $\text{fmap }(g \circ f) = \text{fmap }(g) \circ \text{fmap }(f)$;
 
-  ii) $\text{fmap }(id_A) = id_{{\bf K}A}$.
+  ii) $\text{fmap }(id_{\hat{A}}) = id_{{\bf K}\hat{A}}$.
 \end{lemma}
 
 \begin{proof}
@@ -984,9 +1010,9 @@ Easy checking using reduction rules.
 
   Let us define natural transformations:
 
-  1) $\eta:Id \Rightarrow \mathcal{K}$, s. t. $\forall A \in Ob_{\mathcal{C}(\lambda)}$, $\eta_A = [x, {\bf pure \:} x] \in Hom_{\mathcal{C}(\lambda)}(A, {\bf K}A)$;
+  1) $\eta:Id \Rightarrow \mathcal{K}$, s. t. $\forall \hat{A} \in Ob_{\mathcal{C}(\lambda)}$, $\eta_{\hat{A}} = [x, {\bf pure \:} x] \in Hom_{\mathcal{C}(\lambda)}(\hat{A}, {\bf K}\hat{A})$;
 
-  2) $\ast_{A,B}:{\bf K}A \times {\bf K}B \to {\bf K}(A \times B)$, s. t. $\forall A, B \in Ob_{\mathcal{C}(\lambda)}, \ast_{A,B} = [p, {\bf let \: pure \:} x,y = \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, y \rangle] \in Hom_{\mathcal{C}(\lambda)}({\bf K}A \times {\bf K}B, {\bf K}(A \times B))$.
+  2) $\ast_{A,B}:{\bf K}\hat{A} \times {\bf K}\hat{B} \to {\bf K}(\hat{A} \times \hat{B})$, s. t. $\forall \hat{A}, \hat{B} \in Ob_{\mathcal{C}(\lambda)}, \ast_{\hat{A},\hat{B}} = [p, {\bf let \: pure \:} x,y = \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, y \rangle] \in Hom_{\mathcal{C}(\lambda)}({\bf K}A \times {\bf K}B, {\bf K}(A \times B))$.
 \end{defin}
 
 Implementation for $\ast$ in our term model is a modification of ${\text{let}_{\bf K}}$-rule:
@@ -1006,36 +1032,36 @@ Implementation for $\ast$ in our term model is a modification of ${\text{let}_{\
 
   i) $\text{fmap } f \circ \eta_A = \eta_B \circ f$;
 
-  ii) $\text{fmap } (f \times g) \circ \ast_{A, B} = \ast_{C,D} \circ (\text{fmap } f) \times (\text{fmap } g)$.
+  ii) $\text{fmap } (f \times g) \circ \ast_{\hat{A}, \hat{B}} = \ast_{\hat{C},\hat{D}} \circ (\text{fmap } f) \times (\text{fmap } g)$.
 
-  iii) $\ast_{A,B} \circ (\eta_{A} \times \eta_{B}) = \eta_{A \times B}$;
+  iii) $\ast_{\hat{A},\hat{B}} \circ (\eta_{A} \times \eta_{B}) = \eta_{\hat{A} \times \hat{B}}$;
 \end{lemma}
 
 \begin{proof}
   $ $
 
-  i) $\text{fmap } f \circ \eta_A = \eta_B \circ f$
+  i) $\text{fmap } f \circ \eta_{\hat{A}} = \eta_{\hat{B}} \circ f$
 
 \vspace{\baselineskip}
 
 $\begin{array}{lll}
-&\eta_B \circ f = & \text{By the definition} \\
+&\eta_{\hat{B}} \circ f = & \text{By the definition} \\
 &[y, {\bf pure \:} y] \circ [x, M] = & \text{By the definition of composition}\\
 &[x, {\bf pure \:} y [y := M]] = & \text{By substitution}\\
 &[x, {\bf pure \:} M]& \\
 & &\\
 &\text{On the other hand:}& \\
-&\text{fmap } f \circ \eta_A = & \text{By the definiton} \\
+&\text{fmap } f \circ \eta_{\hat{A}} = & \text{By the definiton} \\
 &[z, {\bf let \: pure \:} x = z {\: \bf in \:} M] \circ [x, {\bf pure \: x}] = & \text{By the definition of composition}\\
 &[x, {\bf let \: pure \:} x = z {\: \bf in \:} M [z := {\bf pure \:} x]] = & \text{By substitution} \\
-&[x, {\bf let \: pure \:} x = {\bf pure \: x} {\: \bf in \:} M] = & \text{$\beta$-reduction rule}\\
+&[x, {\bf let \: pure \:} x = {\bf pure \:} x {\: \bf in \:} M] = & \text{$\beta$-reduction rule}\\
 &[x, {\bf pure \:} M [x := x]] = & \text{By substitution}\\
 &[x, {\bf pure \:} M]&
 \end{array}$
 
 \vspace{\baselineskip}
 
-ii)  $\text{fmap } (f \times g) \circ \ast_{A, B} = \ast_{C,D} \circ (\text{fmap } f) \times (\text{fmap } g)$
+ii)  $\text{fmap } (f \times g) \circ \ast_{\hat{A}, \hat{B}} = \ast_{\hat{C},\hat{D}} \circ (\text{fmap } f) \times (\text{fmap } g)$
 
 \vspace{\baselineskip}
 
@@ -1043,12 +1069,12 @@ See \cite{ModalK}.
 
 \vspace{\baselineskip}
 
-iii) $\ast_{A,B} \circ (\eta_{A} \times \eta_{B}) = \eta_{A \times B}$
+iii) $\ast_{\hat{A},\hat{B}} \circ (\eta_{\hat{A}} \times \eta_{\hat{B}}) = \eta_{\hat{A} \times \hat{B}}$
 
 \vspace{\baselineskip}
 
 $\begin{array}{lll}
-& \ast_{A,B} \circ (\eta_{A} \times \eta_{B}) = & \\
+& \ast_{\hat{A},\hat{B}} \circ (\eta_{\hat{A}} \times \eta_{\hat{B}}) = & \\
 & \text{By unfolding} & \\
 & [q, {\bf let \: pure \:} x, y = \pi_1 q, \pi_2 q {\: \bf in \:} \langle x, y \rangle] \circ [p, \langle {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) \rangle] = & \\
 & \text{Composition}& \\
@@ -1064,7 +1090,7 @@ $\begin{array}{lll}
 & \text{$\eta$-reduction}& \\
 & [p, {\bf pure \:} p] =& \\
 & \text{By definition}& \\
-& \eta_{A \times B}&
+& \eta_{\hat{A} \times \hat{B}}&
 \end{array}$
 
 \end{proof}
@@ -1074,15 +1100,15 @@ $\begin{array}{lll}
 \begin{defin} Tensorial strength
   $ $
 
-  Let $[p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] \in Hom_{\mathcal{C}(\lambda)}(A \times {\bf K}B, {\bf K}(A \times B))$.
+  Let $[p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] \in Hom_{\mathcal{C}(\lambda)}(\hat{A} \times {\bf K}\hat{B}, {\bf K}\hat{A} \times {\bf K}\hat{B})$.
 
-  So tensorial strength is defined as $\tau_{A, B} = \ast_{A, B} \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle]$.
+  So tensorial strength is defined as $\tau_{\hat{A}, \hat{B}} = \ast_{\hat{A}, \hat{B}} \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle]$.
 \end{defin}
 
 It is clearly that tensorial strength defined above can be simplified as follows:
 
 $\begin{array}{lll}
-&\ast_{A, B} \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] = & \text{By definition} \\
+&\ast_{\hat{A}, \hat{B}} \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] = & \text{By definition} \\
 &[p^{'}, {\bf let \: pure \:} x, y = \pi_1 p^{'}, \pi_2 p^{'} {\: \bf in \:} \langle x, y \rangle] \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] = & \text{By composition} \\
 &[p, {\bf let \: pure \:} x, y = \pi_1 p^{'}, \pi_2 p^{'} {\: \bf in \:} \langle x, y \rangle [p^{'} := \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle]] = & \text{By substitution} \\
 &[p, {\bf let \: pure \:} x, y = \pi_1 (\langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle), \pi_2 (\langle \pi_1 p, {\bf pure \:} (\pi_2 p) \rangle) {\: \bf in \:} \langle x, y \rangle] = & \text{By $\beta$-reduction rules} \\
@@ -1095,8 +1121,8 @@ $\begin{array}{lll}
   $ $
 
   $\begin{array}{lll}
-  & \text{fmap } ([p, \langle \pi_2 p, \pi_1 p \rangle]) \circ \tau_{A,B} = & \\
-  & \ast_{B, A} \circ [q, \langle \pi_1 q, {\bf pure \:} (\pi_2 q) \rangle] \circ [p, \langle \pi_2 p, \pi_1 p \rangle]&
+  & \text{fmap } ([p, \langle \pi_2 p, \pi_1 p \rangle]) \circ \tau_{\hat{A},\hat{B}} = & \\
+  & \ast_{\hat{B}, \hat{A}} \circ [q, \langle \pi_1 q, {\bf pure \:} (\pi_2 q) \rangle] \circ [p, \langle \pi_2 p, \pi_1 p \rangle]&
   \end{array}$
 \end{lemma}
 
@@ -1104,7 +1130,7 @@ $\begin{array}{lll}
   $ $
 
   $\begin{array}{lll}
-  & \text{fmap } ([r, \langle \pi_2 r, \pi_1 r \rangle]) \circ \tau_{A,B} = & \\
+  & \text{fmap } ([r, \langle \pi_2 r, \pi_1 r \rangle]) \circ \tau_{\hat{A},\hat{B}} = & \\
   &\text{By the definition of $\tau$}& \\
   & \text{fmap } ([r, \langle \pi_2 r, \pi_1 r \rangle]) \circ [p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, y \rangle] = & \\
   &\text{By the definition of fmap}& \\
@@ -1121,7 +1147,7 @@ $\begin{array}{lll}
   & [p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle y, x \rangle ] = & \\
   & & \\
   &\text{On the other hand}&\\
-  &\ast_{B, A} \circ [q, \langle \pi_1 q, {\bf pure \:} (\pi_2 q) \rangle] \circ [p, \langle \pi_2 p, \pi_1 p \rangle] = & \\
+  &\ast_{\hat{B}, \hat{A}} \circ [q, \langle \pi_1 q, {\bf pure \:} (\pi_2 q) \rangle] \circ [p, \langle \pi_2 p, \pi_1 p \rangle] = & \\
   &\text{By the definition of $\ast$}& \\
   &[r, {\bf let \: pure \:} y,x = \pi_1 r, \pi_2 r {\: \bf in \:} \langle y, x \rangle] \circ [q, \langle \pi_1 q, {\bf pure \:} (\pi_2 q) \rangle] \circ [p, \langle \pi_2 p, \pi_1 p \rangle] = & \\
   &\text{Composition}& \\
@@ -1141,6 +1167,9 @@ $\begin{array}{lll}
 
   {\bf K} is an applicative functor
 \end{lemma}
+
+Similar to \cite{Abramsky}, we apply the translation from $\lambda_{{\bf K}}$ to some cartesian closed category with an abritraty applicative functor $\mathcal{K}$, then
+we have $[\![\Gamma \vdash M : A]\!] = [x, M [x_i := \pi_i x]]$, so $M =_{\beta \eta} N \Leftrightarrow [\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$
 
 \begin{proof}
   Immediately follows from previous lemmas in the section.
@@ -1220,6 +1249,7 @@ $\begin{array}{lll}
 
   \bibitem{ElKelly} Samuel Eilenberg and Max Kelly, Closed categories. Proc. Conf. Categorical Algebra (La Jolla, Calif., 1965).
 
+  \bibitem{Abramsky} Samson Abramsky and Nikos Tzevelekos, Introduction to Categories and Categorical Logic
 \end{thebibliography}
 
 \end{document}
