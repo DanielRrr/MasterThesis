@@ -7,6 +7,7 @@
 \usepackage{mathtools}
 \usepackage{verbatim}
 \usepackage{dsfont}
+\usepackage{mathabx}
 \usepackage[all, 2cell]{xy}
 \usepackage[all]{xy}
 \newtheorem{theorem}{Theorem}
@@ -355,20 +356,22 @@ Here are some examples of closed terms:
 
   5) ${\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N \rightarrow_{\beta} {\bf pure \:} N [\vec{x} := \vec{M}]$
 
-  6) $\lambda x. f x \rightarrow_{\eta} f$;
+  6) ${\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M \rightarrow_{\beta} {\bf pure \:} M$
 
-  7) $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
+  7) $\lambda x. f x \rightarrow_{\eta} f$;
 
-  8) ${\bf let \: pure \:} x = M {\: \bf in \: } x \rightarrow_{\eta} M$;
+  8) $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
+
+  9) ${\bf let \: pure \:} x = M {\: \bf in \: } x \rightarrow_{\eta} M$;
+
   \end{defin}
 
 By default we use call-by-name evaluation strategy.
 
-  \section{Basic lemmas}
 
-  Now we will prove standard lemmas for contexts in type systems\footnote{We will not prove cases with
-  $\to$-constructor, they are proved standardly in the same lemmas for simply typed lambda calculus, for
-  example see \cite{Neder} \cite{Morten} \cite{Girard}. We will consider only modal cases}:
+Now we will prove standard lemmas for contexts in type systems\footnote{We will not prove cases with
+$\to$-constructor, they are proved standardly in the same lemmas for simply typed lambda calculus, for
+example see \cite{Neder} \cite{Morten}. We will consider only modal cases}:
 
 \begin{lemma} Generation for ${\bf K}_I$.
 
@@ -430,7 +433,16 @@ Then we can transform this into the next derivation:
 \UnaryInfC{$\Gamma \vdash {\bf pure \:} N [\vec{x} := \vec{M}] : {\bf K}B$}
 \end{prooftree}
 
+4) If the derivation ends in
 
+\begin{prooftree}
+\AxiomC{$\vdash M : A$}
+\UnaryInfC{$\vdash {\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M : {\bf K} A$}
+\end{prooftree}
+
+So, if $\vdash M : A$, then $\vdash {\bf pure \:} M : {\bf K}A$.
+
+Note that this part of the lemma works conversly too.
 \end{proof}
 
 \begin{theorem}
@@ -450,7 +462,7 @@ For strong normalization proof with Tait's method for simply typed lambda calcul
     \item $SC_A = \{ M : A \: | \: M \text{ is strongly normalizing} \}$ for $A \in \mathbb{T}$;
     \item $SC_{A \to B} = \{ M : A \to B \: | \: \forall N \in SC_A, M N \in SC_B \}$, for $A,B \in \mathbb{T}_{\bf K}$
     \item $SC_{{\bf K}A} = \{ M : {\bf K}A \: | \: M \text{ is strongly normalizing} \}$ for $A \in \mathbb{T}$;
-    \item $SC_{{\bf K}(A \to B)} = \{ M : {\bf K}(A \to B) \: | \: \forall f \in SC_{A \to B}, \forall x \in SC_A, \forall N \in SC_{{\bf K}A}, {\bf let \: pure \:} f, x = M, N {\: \bf in \:} f x \}$ for $A,B \in \mathbb{T}_{\bf K}$.
+    \item $SC_{{\bf K}(A \to B)} = \{ M : {\bf K}(A \to B) \: | \: \forall f \in SC_{A \to B}, \forall x \in SC_A, \forall N \in SC_{{\bf K}A}, {\bf let \: pure \:} f, x = M, N {\: \bf in \:} f x \in SC_{{\bf K}B} \}$ for $A,B \in \mathbb{T}_{\bf K}$.
   \end{itemize}
 \end{defin}
 
@@ -607,6 +619,7 @@ otherwise we can build infinite reduction path in $\vec{M^{'}} [x_1 := M_1,\dots
   & {\bf let \: pure \:} \vec{x}, \vec{w}, \vec{z} = \vec{M}, \vec{N}, \vec{P} \: { \bf in } \: R [y := Q]
   \end{array}$;
   \item ${\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N \rightarrow_{\underline{\beta}} {\bf pure \:} N [\vec{x} := \vec{M}]$;
+  \item ${\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M \rightarrow_{\underline{\beta}} {\bf pure \:} M$
   \item $(\lambda x_i. M) N \rightarrow_{\underline{\beta}} M [x := N]$
 \end{itemize}
 \end{defin}
@@ -623,9 +636,15 @@ $\twoheadrightarrow_{\underline{\beta}}$ is a reflexive-transitive closure of $\
     \item $\phi(M N) = \phi(M) \phi(N)$;
     \item $\phi({\bf pure \:} M) = {\bf pure \:} \phi(M)$;
     \item $\phi({\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N) = {\bf let \: pure \:} \vec{x} = \vec{\phi(M)} {\: \bf in \:} \phi(N)$;
-    \item $\phi((\lambda_i x. M) N) = M [x := N]$
+    \item $\phi((\lambda_i x. M) N) = \phi(M) [x := \phi(N)]$
   \end{itemize}
 \end{defin}
+
+\begin{ex}
+  $ $
+
+  $\phi((\lambda_i x. {\bf let \: pure \:} y = x {\: \bf in \:} x) N) = {\bf let \: pure \:} y = \phi(N) {\: \bf in \:} \phi(N)$
+\end{ex}
 
 \begin{lemma}
 
@@ -955,6 +974,17 @@ $\begin{array}{lll}
 &[\![\Gamma \vdash {\bf pure \:} (N [\vec{x} := \vec{M}]) : {\bf K}B]\!]&
 \end{array}$
 
+\vspace{\baselineskip}
+
+2) $[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M : {\bf K} A]\!] = [\![\vdash {\bf pure \:} M : {\bf K} A]\!]$
+
+$\begin{array}{lll}
+&[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M : {\bf K} A]\!] = & \text{By interpretation} \\
+&\mathcal{K}([\![M]\!]) \circ u_{\mathds{1}} = & \text{By the definition of an applicative functor} \\
+&\mathcal{K}([\![M]\!]) \circ \eta_{\mathds{1}} = & \text{By naturality of $\eta$} \\
+&\eta_{[\![A]\!]} \circ [\![M]\!] = & \text{By interpretation} \\
+&[\![\vdash {\bf pure \:} M : {\bf K} A]\!]&
+\end{array}$
 \end{proof}
 
 \end{proof}
@@ -1051,7 +1081,7 @@ $ $
 See \cite{ModalK}
 \end{proof}
 
-\begin{lemma} Naturality for $\eta$ and for $\ast$
+\begin{lemma} Properties of $\eta$:
 
 \begin{itemize}
   \item $\text{fmap } f \circ \eta_A = \eta_B \circ f$;
@@ -1107,6 +1137,24 @@ $\begin{array}{lll}
 & \eta_{\hat{A} \times \hat{B}}&
 \end{array}$
 
+\end{proof}
+
+\begin{defin}
+  $ $
+
+  $u_{\mathds{1}} = [\sqbullet, {\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} \sqbullet] \in Hom_{\mathcal{C}(\lambda)}(\mathds{1}, {\bf K}\mathds{1})$.
+\end{defin}
+
+\begin{lemma}
+  $ $
+
+  $u_{\mathds{1}} = \eta_{\mathds{1}}$
+
+\end{lemma}
+
+\begin{proof}
+
+  Immediately.
 \end{proof}
 
   Tensorial strength is defined as follows:
