@@ -42,7 +42,7 @@ functional programming languages like Haskell or Idris.
   IEL$^{-}$  is a variant of IEL, that corresponds to intuitionistic belief.
   Informally, ${\bf K}A$ denotes that $A$ is verified intuitionistically.
 
-  Intuitionistic epistemic logic IEL$^{-}$ is defined with by following axioms and derivation rules:
+  Intuitionistic epistemic logic IEL$^{-}$ is defined by following axioms and derivation rules:
 
   \begin{defin} Intuitionistic epistemic logic IEL:
 
@@ -55,8 +55,6 @@ functional programming languages like Haskell or Idris.
     Rule: MP.
 
   \end{defin}
-
-  We have the deduction theorem and necessitation rule which is derivable.
 
   V. Krupski and  A. Yatmanov provided the sequential calculus for IEL and proved that this calculus is
   PSPACE-complete \cite{Krupski}.
@@ -77,34 +75,36 @@ functional programming languages like Haskell or Idris.
   \end{lstlisting}
 
   By \emph{container} (or \emph{computational context}) type we mean some type-operator $f$, where $f$ is a
-  ``function'' from $*$ to $*$: type operator takes a simple type (which has kind $*$) and returns another
-  simple type type with kind \verb"*". For more detailed description of the type system with kinds used in
+  ``function'' from $*$ to $*$: type operator takes a simple type (ща kind $*$) and returns another
+  simple type of kind \verb"*". For more detailed description of the type system with kinds used in
   Haskell see \cite{Morten}.
 
-  The motivation for using an applicative functor is quite natural. Applicative functor allows to generalize the action of a functor for functions with arbitrary number of arguments, for instance:
+Applicative functor allows to generalize the action of a functor for functions with arbitrary number of arguments, for instance:
   \begin{lstlisting}[language=Haskell]
   liftA2 :: Applicative f => (a -> b -> c) -> f a -> f b -> f c
-  liftA2 f x y = pure f <*> x <*> y
+  liftA2 f x y = ((pure f) <*> x) <*> y
   \end{lstlisting}
 
   It's not difficult to see that modal axioms in $IEL^{-}$ and types of the methods of Applicative class in
   Haskell-like languages (which is described below) are syntactically similar and we are going to show that
   this coincidence has a non-trivial computational meaning.
 
-  The main goal of our research is a relationship between intuitionistic epistemic logic $IEL^{-}$ and
-  functional programming with effects. We show that relationship by building the type system (which is called $\lambda_{{\bf K}}$) which is Curry-Howard isomorphic to $IEL^{-}$. So we will consider ${\bf K}$-modality as an arbitrary applicative functor.
+  We investigate the relationship between intuitionistic epistemic logic IEL$^{-}$ and applicative programming with side-effects
+  by constructing the type system (which is called $\lambda_{{\bf K}}$) which is Curry-Howard isomorphic to $IEL^{-}$.
+  So we will consider ${\bf K}$-modality as an arbitrary applicative functor and we prove that obtained type system
+  is sound and complete for applicative functor on cartesian closed category (using the categorical definition proposed by Paterson \cite{Cons}).
 
   $\lambda_{{\bf K}}$ consists of the rules for simply typed lambda-calculus and special typing rules for
   lifting types into the applicative functor ${\bf K}$. We assume that our type system will
-  axiomatize the simplest case of computation with effects with one container. We provide proof-theoretical
-  view on
-  this kind of computations in functional programming and prove strong normalization and confluence.
+  axiomatize the simplest case of computation with effects with one container. We provide a proof-theoretical
+  view at this kind of computations in functional programming and prove strong normalization and confluence.
 
   \section{Typed lambda-calculus based on IEL$^{-}$}
 
-  At first we define the natural deduction for IEL$^{-}$ :
+  The first is to define the natural deduction calculus for NIEL$^{-}$ :
 
-  \begin{defin} Natural deduction NIEL for IEL$^{-}$ is an extenstion of intuitionistic natural deduction with additional derivation rules for modality:
+  \begin{defin} Natural deduction NIEL$^{-}$ for IEL$^{-}$ is an extenstion of intuitionistic natural deduction calculus
+    with additional inference rules for modality:
 
   \begin{minipage}{0.5\textwidth}
     \begin{flushleft}
@@ -118,20 +118,23 @@ functional programming languages like Haskell or Idris.
   \begin{minipage}{0.5\textwidth}
     \begin{flushright}
   	\begin{prooftree}
-    \AxiomC{$\Gamma \vdash {\bf K} \vec{A}$}
-    \AxiomC{$\vec{A} \vdash B$}
+    \AxiomC{$\Gamma \vdash {\bf K} A_1, \dots, \Gamma \vdash {\bf K} A_n $}
+    \AxiomC{$A_1,\dots,A_n \vdash B$}
     \BinaryInfC{$\Gamma \vdash {\bf K} B$}
   	\end{prooftree}
     \end{flushright}
   \end{minipage}
   \end{defin}
 
-Where $\Gamma \vdash {\bf K} \vec{A}$ is a syntax sugar for $\Gamma \vdash {\bf K} A_1 ,\dots, \Gamma \vdash {\bf K} A_n$.
+The first rule allows to derive co-reflextion. The second modal rule is a counterpart of $\Box_I$
+rule in natural deduction calculus for constructive K (see \cite{ModalLa}).
+
+We will denote $\Gamma \vdash {\bf K} A_1, \dots, \Gamma \vdash {\bf K} A_n$ and $\Gamma \vdash {\bf K} B$ as $\Gamma \vdash {\bf K} \vec{A}$ and $\vec{A} \vdash B$ for brevity.
 
   \vspace{\baselineskip}
 
   \begin{lemma}
-    $\Gamma \vdash_{\text{NIEL}^{-}_{\land, \to}} A \Rightarrow$ IEL$^{-} \vdash \bigwedge \Gamma \rightarrow A$.
+    $\Gamma \vdash_{\text{NIEL}^{-}} A \Rightarrow$ IEL$^{-} \vdash \bigwedge \Gamma \rightarrow A$.
   \end{lemma}
 
   \begin{proof}
@@ -143,7 +146,7 @@ Let us consider cases with modality.
 
 \vspace{\baselineskip}
 
-1) If $\Gamma \vdash_{NIEL^{-}_{\land, \to}} A$, then $IEL^{-} \vdash \bigwedge \Gamma \rightarrow {\bf K}A$.
+1) If $\Gamma \vdash_{\text{NIEL}^{-}} A$, then $\text{IEL}^{-} \vdash \bigwedge \Gamma \rightarrow {\bf K}A$.
 
 $\begin{array}{lll}
 (1) & \bigwedge \Gamma \rightarrow A & \text{assumption}\\
@@ -155,11 +158,11 @@ $\begin{array}{lll}
 
 \vspace{\baselineskip}
 
-2) If $\Gamma \vdash_{NIEL^{-}_{\land, \to}} {\bf K} \vec{A}$ and $\vec{A} \vdash B$, then $IEL^{-} \vdash \bigwedge \Gamma \rightarrow {\bf K}B$.
+2) If $\Gamma \vdash_{\text{NIEL}^{-}} {\bf K} \vec{A}$ and $\vec{A} \vdash B$, then $\text{IEL}^{-} \vdash \bigwedge \Gamma \rightarrow {\bf K}B$.
 
 $\begin{array}{lll}
 (1) &\bigwedge \Gamma \rightarrow \bigwedge \limits_{i = 1}^{n} {\bf K} A_i & \text{assumption} \\
-(2) &\bigwedge \limits_{i = 1}^{n} {\bf K} A_i \rightarrow {\bf K} \bigwedge \limits_{i = 1}^{n} A_i& \text{IEL theorem} \\
+(2) &\bigwedge \limits_{i = 1}^{n} {\bf K} A_i \rightarrow {\bf K} \bigwedge \limits_{i = 1}^{n} A_i& \text{IEL$^{-}$ theorem} \\
 (3) &\bigwedge \Gamma \rightarrow {\bf K} \bigwedge \limits_{i = 1}^{n} A_i & \text{from (1), (2) and transitivity} \\
 (4) &\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B& \text{assumption} \\
 (5) &(\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B) \rightarrow {\bf K} (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{co-reflection}\\
@@ -278,17 +281,33 @@ $\begin{array}{lll}
 
   $\text{let}_{{\bf K}}$ is similar to the $\Box$-rule in typed lambda calculus for intuitionistic normal modal logic {\bf IK}, which is described in \cite{ModalK}.
 
+  $\Gamma \vdash \vec{M} : {\bf K} \vec{A}$ is a syntax sugar for the sequence $\Gamma \vdash M_1 : {\bf K}A_1,\dots,\Gamma \vdash M_n : {\bf K}A_n$ and $\vec{x} : \vec{A} \vdash N : B$ is an abbrevation for $x_1 : A_1, \dots, x_n : A_n \vdash N : B$.
+${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N$ is a simultaneous local binding in $N$. We use abbreviated notation instead of ${\bf let \: pure\:} x_1,\dots,x_n = M_1,\dots,M_n {\: \bf in \:} N$.
+
   In fact, our calculus is the extention of typed lambda calculus for {\bf IK} with typing rule appropriate to co-reflection.
 
   \vspace{\baselineskip}
 
 Here are some examples of closed terms:
 
-\begin{itemize}
-\item $(\lambda x. {\bf pure \: } x) : A \to {\bf K}A$;
-\item $\lambda f. \lambda x. {\bf let \: pure} \: g, y  = f, x {\: \bf in \:} g y : {\bf K}(A \to B) \to {\bf K} A \to {\bf K} B$
-\item $\lambda f. \lambda x. {\bf let \:pure} \: g, y = {\bf pure \:} f, x  {\: \bf in \: } g y : (A \to B) \to {\bf K} A \to {\bf K} B$
-\end{itemize}
+\begin{prooftree}
+\AxiomC{$x : A \vdash x : A$}
+\UnaryInfC{$x : A \vdash {\bf pure \:} x : {\bf K} A$}
+\UnaryInfC{$\vdash (\lambda x. {\bf pure \: } x) : A \to {\bf K}A$}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$f : {\bf K} (A \to B) \vdash f : {\bf K} (A \to B)$}
+\AxiomC{$x : {\bf K} A \vdash x : {\bf K} A $}
+\AxiomC{$g : A \to B \vdash g : A \to B$}
+\AxiomC{$y : A \vdash y : A$}
+\RightLabel{$\to_e$}
+\BinaryInfC{$g : A \to B, y : A \vdash g y : B$}
+\RightLabel{$\text{let}_{{\bf K}}$}
+\TrinaryInfC{$f : {\bf K} (A \to B), x : {\bf K} A \vdash {\bf let \: pure \:} g, y  = f, x {\: \bf in \:} g y : {\bf K} B$}
+\UnaryInfC{$f : {\bf K} (A \to B) \vdash \lambda x. {\bf let \: pure\:} g, y = f, x {\: \bf in \:} g y : {\bf K} A \to {\bf K} B$}
+\UnaryInfC{$\vdash \lambda f. \lambda x. {\bf let \:pure \:} g, y = f, x {\: \bf in \:} g y : {\bf K}(A \to B) \to {\bf K} A \to {\bf K} B$}
+\end{prooftree}
 
   \vspace{\baselineskip}
 
@@ -308,7 +327,7 @@ Here are some examples of closed terms:
 
   6) $FV(\text{pure } M) = FV(M)$;
 
-  7) $FV({\bf let \:\: pure} \:\: \vec{N} = \vec{M} \:\: {\bf in} \:\: M) = \bigcup \limits_{i = 1}^n FV(M), \text{where $n = |\vec{M}|$}$.
+  7) $FV({\bf let \:\: pure} \:\: \vec{x} = \vec{M} \:\: {\bf in} \:\: N) = \bigcup \limits_{i = 1}^n FV(M), \text{where $n = |\vec{M}|$}$.
   \end{defin}
 
   \begin{defin} Substitution:
@@ -325,7 +344,7 @@ Here are some examples of closed terms:
 
   6) $({\bf pure \: } M) [x := P] = {\bf pure \: } (M [x := P])$;
 
-  7) $({\bf let \: pure \:}\vec{x} = \vec{M} {\: \bf in \:} N) [y := P] = {\bf let \: pure \:} \vec{x} = (\vec{M} [y := P]) {\: \bf in \:} M$.
+  7) $({\bf let \: pure \:}\vec{x} = \vec{M} {\: \bf in \:} N) [y := P] = {\bf let \: pure \:} \vec{x} = (\vec{M} [y := P]) {\: \bf in \:} N$.
   \end{defin}
 
   \begin{defin} Type substituition
@@ -384,17 +403,18 @@ example see \cite{Neder} \cite{Morten}. We will consider only modal cases}:
 
 \begin{lemma} Basic lemmas .
 
-  i) Let $\Gamma \vdash M : A$ and $\Gamma \subseteq \Delta$, then $\Delta \vdash M : A$;
-
-  ii) Let $\Gamma, x : A \vdash M : B$ and $\Gamma \vdash N : A$, then $\Gamma \vdash M [x := N] : B$.
-
-  iii) Let $\Gamma \vdash M : A$, then $\Gamma [B := C] \vdash M : (A [B := C])$.
+\begin{itemize}
+  \item Let $\Gamma \vdash M : A$ and $\Gamma \subseteq \Delta$, then $\Delta \vdash M : A$;
+  \item Let $\Gamma \vdash M : A$, then $\Delta \vdash M : A$, where $\Delta = \{ x_i : A_i \: | \: (x_i : A_i) \in \Gamma \: \& \: x_i \in FV(M) \}$
+  \item Let $\Gamma, x : A \vdash M : B$ and $\Gamma \vdash N : A$, then $\Gamma \vdash M [x := N] : B$.
+  \item Let $\Gamma \vdash M : A$, then $\Gamma [B := C] \vdash M : (A [B := C])$
+\end{itemize}
 \end{lemma}
 
 \begin{proof}
   $ $
 
-  i-ii-iii) Induction on $\Gamma \vdash M : A$.
+  i--iv) Induction on $\Gamma \vdash M : A$.
 
 \end{proof}
 
@@ -462,7 +482,7 @@ For strong normalization proof with Tait's method for simply typed lambda calcul
     \item $SC_A = \{ M : A \: | \: M \text{ is strongly normalizing} \}$ for $A \in \mathbb{T}$;
     \item $SC_{A \to B} = \{ M : A \to B \: | \: \forall N \in SC_A, M N \in SC_B \}$, for $A,B \in \mathbb{T}_{\bf K}$
     \item $SC_{{\bf K}A} = \{ M : {\bf K}A \: | \: M \text{ is strongly normalizing} \}$ for $A \in \mathbb{T}$;
-    \item $SC_{{\bf K}(A \to B)} = \{ M : {\bf K}(A \to B) \: | \: \forall f \in SC_{A \to B}, \forall x \in SC_A, \forall N \in SC_{{\bf K}A}, {\bf let \: pure \:} f, x = M, N {\: \bf in \:} f x \in SC_{{\bf K}B} \}$ for $A,B \in \mathbb{T}_{\bf K}$.
+    \item $\forall i \in \{ 1,\dots,n\}, \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i} = \{ \vec{M} = (M_1,\dots,M_n) \:\: | \:\: \forall N \in SC_{B}, FV(N) = \{ x_1,\dots,x_n\} \: \& \: \forall i, x_i \in SC_{A_i} \Rightarrow {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N \in SC_{{\bf K} B}\}$
   \end{itemize}
 \end{defin}
 
@@ -494,27 +514,33 @@ For strong normalization proof with Tait's method for simply typed lambda calcul
 
     \vspace{\baselineskip}
 
-  2) $A \equiv {\bf K}(B \to C)$
+2)
 
-  i) Suppose $M \in SC_{{\bf K}(B \to C)}$. Let $N \in SC_{{\bf K}B}$. So ${\bf let \: pure \:} f, x = M, N {\: \bf in \: } f x \in SC_{{\bf K}C}$.
+i) Suppose $(M_1,\dots,M_n) \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$.
 
-  So $M$ is strongly normalizing, since ${\bf let \: pure \:} f, x = M, N {\: \bf in \: } f x$ is strongly normalizing.
+Let $N \in SC_{B}$, such that $FV(N) = \{ x_1,\dots,x_n \}$ and $\forall i, x_i \in SC_{A_i}$.
 
-  ii) Let $M_1 \in SC_{{\bf K}(B \to C)}$ and $M_1 \rightarrow_{\beta} M_2$. Fix $N \in SC_{{\bf K}B}$.
+So ${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N \in SC_{{\bf K}B}$ by IH.
 
-  Then ${\bf let \: pure \:} f, x = M_1, N {\: \bf in \: } f x \in SC_{{\bf K}C}$.
+So $\vec{M}$ are strongly normalizing, since ${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N$ is strongly normalizing by IH.
 
-  Hence, ${\bf let \: pure \:} f, x = M_1, N {\: \bf in \: } f x \in SC_{{\bf K}C} \rightarrow_{\beta} {\bf let \: pure \:} f, x = M_2, N {\: \bf in \: } f x$.
+ii) Let $\vec{M_1} \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$ and $\vec{M_1} \rightarrow_{\beta} \vec{M_2}$.
 
-  So ${\bf let \: pure \:} f, x = M_2, N {\: \bf in \: } f x \in SC_{{\bf K}C}$. Then $M_2 \in SC_{{\bf K}(B \to C)}$.
+Let $N \in SC_{B}$, such that $FV(N) = \{ x_1,\dots,x_n \}$ and $\forall i, x_i \in SC_{A_i}$.
 
-  iii) Let $M_2$ be non-introduced, $M_2 \in SC_{{\bf K}(B \to C)}$ and $M_1 \rightarrow_{\beta} M_2$.
+So ${\bf let \: pure \:} \vec{x} = \vec{M_1} {\: \bf in \:} N \rightarrow_{\beta} {\bf let \: pure \:} \vec{x} = \vec{M_2} {\: \bf in \:} N$
 
-  Let $N \in SC_{{\bf K}B}$. So ${\bf let \: pure \:} f, x = M_2, N {\: \bf in \:} f x \in SC_{{\bf K}C}$.
+and ${\bf let \: pure \:} \vec{x} = \vec{M_2} {\: \bf in \:} N \in SC_{{\bf K}B}$ by assumption.
 
-  So ${\bf let \: pure \:} f, x = M_1, N {\: \bf in \:} f x \rightarrow_{\beta} {\bf let \: pure \:} f, x = M_2, N {\: \bf in \:} f x \in SC_{{\bf K}C}$.
+So $\vec{M_2} \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$.
 
-  Thus ${\bf let \: pure \:} f, x = M_1, N {\: \bf in \:} f x \in SC_{{\bf K}C}$ by IH, so $M_1 \in SC_{{\bf K}(B \to C)}$.
+iii) Let $M_2$ be non-introduced, $M_2 \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$ and $M_1 \rightarrow_{\beta} M_2$.
+
+Let $N \in SC_{B}$. So ${\bf let \: pure \:} \vec{x} = \vec{M_2} {\: \bf in \:} N \in SC_{{\bf K}B}$.
+
+So ${\bf let \: pure \:} \vec{x} = \vec{M_1} {\: \bf in \:} N \rightarrow_{\beta} {\bf let \: pure \:} \vec{x} = \vec{M_2} {\: \bf in \:} \in N$.
+
+Thus ${\bf let \: pure \:} \vec{x} = \vec{M_1} {\: \bf in \:} N\in SC_{{\bf K}B}$ by IH, so $\vec{M_1} \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$.
 \end{proof}
 
 \begin{lemma}
@@ -576,8 +602,7 @@ otherwise we can build infinite reduction path in $\vec{M^{'}} [x_1 := M_1,\dots
 
 \begin{proof}
 
-  We modify and apply Barendregt's technique with term underlying. We will consider the fragment of the grammar for terms without
-  constructors for pairs for simplicity.
+  We modify and apply Barendregt's technique with term underlying. We will consider the grammar without constructors for pairs.
 
 \begin{defin} The set of underlined terms.
 
@@ -1311,6 +1336,10 @@ we have $[\![\Gamma \vdash M : A]\!] = [x, M [x_i := \pi_i x]]$, so $M =_{\beta 
   \bibitem{ElKelly} Samuel Eilenberg and Max Kelly, Closed categories. Proc. Conf. Categorical Algebra (La Jolla, Calif., 1965).
 
   \bibitem{Abramsky} Samson Abramsky and Nikos Tzevelekos, Introduction to Categories and Categorical Logic
+
+  \bibitem{ModalLa} G. A. Kavvos. The Many Worlds of Modal $\Lambda$--calculi: I. Curry-Howard for Necessity, Possibility and Time
+
+  \bibitem{Cons} Ross Paterson. in Mathematics of Program Construction, Madrid, 2012, Lecture Notes in Computer Science, vol. 7342, pp. 300--323, Springer, 2012.
 \end{thebibliography}
 
 \end{document}
