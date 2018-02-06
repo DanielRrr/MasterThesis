@@ -129,7 +129,7 @@ Applicative functor allows to generalize the action of a functor for functions w
 The first rule allows to derive co-reflextion. The second modal rule is a counterpart of $\Box_I$
 rule in natural deduction calculus for constructive K (see \cite{ModalLa}).
 
-We will denote $\Gamma \vdash {\bf K} A_1, \dots, \Gamma \vdash {\bf K} A_n$ and $\Gamma \vdash {\bf K} B$ as $\Gamma \vdash {\bf K} \vec{A}$ and $\vec{A} \vdash B$ for brevity.
+We will denote $\Gamma \vdash {\bf K} A_1, \dots, \Gamma \vdash {\bf K} A_n$ and $A_1,\dots,A_n \vdash B$ as $\Gamma \vdash {\bf K} \vec{A}$ and $\vec{A} \vdash B$ for brevity.
 
   \vspace{\baselineskip}
 
@@ -184,8 +184,8 @@ $\begin{array}{lll}
 
   \vspace{\baselineskip}
 
-  At the next step we build the typed lambda-calculus based on NIEL$^{-}_{\land, \to}$ by proof-assingment in
-  rules.
+  At the next step we build the typed lambda-calculus based on the NIEL$^{-}$ with implication and dijunction
+by proof-assingment in rules. Obtained fragment is equivalent to IEL$^{-}$ without axioms for negation and disjunction.
 
   At first, we define lambda-terms and types for this lambda-calculus.
 
@@ -196,11 +196,15 @@ $\begin{array}{lll}
   Let $\mathbb{V}$ be the set of variables. The set $\Lambda_{{\bf K}}$ of terms is defined by the grammar:
 
 $\begin{array}{lll}
-& \Lambda_{{\bf K}} ::= \mathbb{V} \: | \:  (\lambda \Lambda.\Lambda_{{\bf K}}) \: | \: (\Lambda_{{\bf K}}\Lambda_{{\bf K}}) \: | \: (\Lambda_{{\bf K}} , \Lambda_{{\bf K}}) \: | \: (\pi_1 \Lambda_{{\bf K}}) \: | \: (\pi_2 \Lambda_{{\bf K}}) \: | & \\
-& \quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad ({\bf pure \: } \: \Lambda_{{\bf K}}) \: | \: ({\bf let \:\: pure} \:\: \Lambda_{{\bf K}} = \Lambda_{{\bf K}} \:\: {\bf in} \:\: \Lambda_{{\bf K}})
+& \Lambda_{{\bf K}} ::= \mathbb{V} \: | \:  (\lambda \mathbb{V}.\Lambda_{{\bf K}}) \: | \: (\Lambda_{{\bf K}}\Lambda_{{\bf K}}) \: | \: (\Lambda_{{\bf K}} , \Lambda_{{\bf K}}) \: | \: (\pi_1 \Lambda_{{\bf K}}) \: | \: (\pi_2 \Lambda_{{\bf K}}) \: | & \\
+& \quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad ({\bf pure \: } \: \Lambda_{{\bf K}}) \: | \: ({\bf let \:\: pure} \:\: \mathbb{V}^{*} = \Lambda_{{\bf K}}^{*} \:\: {\bf in} \:\: \Lambda_{{\bf K}})
 \end{array}$
 
   \end{defin}
+
+Where $\mathbb{V}^{*}$ and $\Lambda_{{\bf K}}^{*}$ denote the set of finite sequences of variables $\mathbb{V}^0 \times \mathbb{V}^1 \times \dots$
+and the set of finite sequences of terms $\Lambda_{{\bf K}}^0 \times \Lambda_{{\bf K}}^1 \times \dots$. Note that the sequence of variables $\vec{x}$ and the sequence of terms $\vec{M}$ should have the same length.
+Otherwise, term is not well-formed.
 
   \begin{defin} The set of types:
 
@@ -281,10 +285,11 @@ $\begin{array}{lll}
 
   $\text{let}_{{\bf K}}$ is similar to the $\Box$-rule in typed lambda calculus for intuitionistic normal modal logic {\bf IK}, which is described in \cite{ModalK}.
 
-  $\Gamma \vdash \vec{M} : {\bf K} \vec{A}$ is a syntax sugar for the sequence $\Gamma \vdash M_1 : {\bf K}A_1,\dots,\Gamma \vdash M_n : {\bf K}A_n$ and $\vec{x} : \vec{A} \vdash N : B$ is an abbrevation for $x_1 : A_1, \dots, x_n : A_n \vdash N : B$.
-${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N$ is a simultaneous local binding in $N$. We use abbreviated notation instead of ${\bf let \: pure\:} x_1,\dots,x_n = M_1,\dots,M_n {\: \bf in \:} N$.
+$\Gamma \vdash \vec{M} : {\bf K} \vec{A}$ is a syntax sugar for the sequence $\Gamma \vdash M_1 : {\bf K}A_1,\dots,\Gamma \vdash M_n : {\bf K}A_n$ and $\vec{x} : \vec{A} \vdash N : B$ is a short form for $x_1 : A_1, \dots, x_n : A_n \vdash N : B$.
+${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N$ is a simultaneous local binding in $N$.
+We use this short form instead of ${\bf let \: pure\:} x_1,\dots,x_n = M_1,\dots,M_n {\: \bf in \:} N$.
 
-  In fact, our calculus is the extention of typed lambda calculus for {\bf IK} with typing rule appropriate to co-reflection.
+In fact, our calculus is the extention of typed lambda calculus for {\bf IK} by ${\bf K}_I$-rule that is appropriate to co-reflection.
 
   \vspace{\baselineskip}
 
@@ -313,7 +318,7 @@ Here are some examples of closed terms:
 
   Now we define free variables and substitutions. $\beta$-reduction, multi-step $\beta$-reduction and $\beta$-equality are defined standardly:
 
-  \begin{defin} Set $FV(M)$ of free variables for arbitrary term $M$:
+  \begin{defin} The set $FV(M)$ of free variables for a term $M$:
 
   1) $FV(x) = \{ x \}$;
 
@@ -327,7 +332,7 @@ Here are some examples of closed terms:
 
   6) $FV(\text{pure } M) = FV(M)$;
 
-  7) $FV({\bf let \:\: pure} \:\: \vec{x} = \vec{M} \:\: {\bf in} \:\: N) = \bigcup \limits_{i = 1}^n FV(M), \text{where $n = |\vec{M}|$}$.
+  7) $FV({\bf let \: pure} \: \vec{x} = \vec{M} \:\: {\bf in} \:\: N) = \bigcup \limits_{i = 1}^n FV(M), \text{where $n = |\vec{M}|$}$.
   \end{defin}
 
   \begin{defin} Substitution:
@@ -336,7 +341,7 @@ Here are some examples of closed terms:
 
   2) $(M N) [x := N] = M[x := N] N [x := N]$;
 
-  3) $(\lambda x. M) [x := N] = \lambda x. M [x := N]$;
+  3) $(\lambda x. M) [x := N] = \lambda x. M [y := N]$, $y \in FV(M)$;
 
   4) $(M, N)[x := P] = (M[x := P], N [x := P])$;
 
@@ -347,17 +352,24 @@ Here are some examples of closed terms:
   7) $({\bf let \: pure \:}\vec{x} = \vec{M} {\: \bf in \:} N) [y := P] = {\bf let \: pure \:} \vec{x} = (\vec{M} [y := P]) {\: \bf in \:} N$.
   \end{defin}
 
+Substitution and free variable for terms of kind ${\bf let \: pure}$ are defined similary to \cite{ModalK}.
+
+Because the local binding
+
+
+
+
   \begin{defin} Type substituition
 
-    The substituition of type $C$ for type variable $B$ in type $A$ inductively defined as follows:
+    The substituition of type $C$ for type variable $B$ in type $A$ is defined inductively:
 
     1) $B [B := C] = B$ and $D [B := C] = D$, if $B \neq D$;
 
     2) $(A_1 \alpha A_2)[B := C] = (A_1[B := C]) \alpha (A_2[B := C])$, where $\alpha \in \{ \to, \times \}$;
 
-    3) $({\bf K}A)[B := C] = {\bf K}(A [B := C])$.
+    3) $({\bf K}A)[B := C] = {\bf K}(A [B := C])$;
 
-    4) Let $\Gamma$ be the context, then $\Gamma [B := C] = \{ x : (A[B := C]) \: | \: x : A \in \Gamma \}$
+    4) Let $\Gamma$ be the context, then $\Gamma [B := C] = \{ x : (A[B := C]) \: | \: x : A \in \Gamma \}$.
   \end{defin}
 
   \begin{defin} $\beta$-reduction and $\eta$-reduction rules for $\lambda_{{\bf K}}$.
@@ -375,7 +387,7 @@ Here are some examples of closed terms:
 
   5) ${\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N \rightarrow_{\beta} {\bf pure \:} N [\vec{x} := \vec{M}]$
 
-  6) ${\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M \rightarrow_{\beta} {\bf pure \:} M$
+  6) ${\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} M \rightarrow_{\beta} {\bf pure \:} M$, where \underline{\quad} is an empty sequence of terms.
 
   7) $\lambda x. f x \rightarrow_{\eta} f$;
 
@@ -398,44 +410,90 @@ example see \cite{Neder} \cite{Morten}. We will consider only modal cases}:
 \end{lemma}
 
 \begin{proof}
-  Induction on the structure of ${\bf pure \:} M$.
+  Straightforwardly.
 \end{proof}
 
-\begin{lemma} Basic lemmas .
+\begin{lemma} Basic lemmas.
 
 \begin{itemize}
-  \item Let $\Gamma \vdash M : A$ and $\Gamma \subseteq \Delta$, then $\Delta \vdash M : A$;
-  \item Let $\Gamma \vdash M : A$, then $\Delta \vdash M : A$, where $\Delta = \{ x_i : A_i \: | \: (x_i : A_i) \in \Gamma \: \& \: x_i \in FV(M) \}$
-  \item Let $\Gamma, x : A \vdash M : B$ and $\Gamma \vdash N : A$, then $\Gamma \vdash M [x := N] : B$.
-  \item Let $\Gamma \vdash M : A$, then $\Gamma [B := C] \vdash M : (A [B := C])$
+  \item If $\Gamma \vdash M : A$ and $\Gamma \subseteq \Delta$, then $\Delta \vdash M : A$;
+  \item If $\Gamma \vdash M : A$, then $\Delta \vdash M : A$, where $\Delta = \{ x_i : A_i \: | \: (x_i : A_i) \in \Gamma \: \& \: x_i \in FV(M) \}$
+  \item If $\Gamma, x : A \vdash M : B$ and $\Gamma \vdash N : A$, then $\Gamma \vdash M [x := N] : B$.
+  \item If $\Gamma \vdash M : A$, then $\Gamma [B := C] \vdash M : (A [B := C])$;
+  \item If $\Gamma \vdash M : A$ and $\Delta$ is a permutation of $\Gamma$, then $\Delta \vdash M : A$.
 \end{itemize}
 \end{lemma}
 
 \begin{proof}
   $ $
 
-  i--iv) Induction on $\Gamma \vdash M : A$.
+1) The derivation ends in
 
+\begin{prooftree}
+  \AxiomC{$\Gamma \vdash \vec{M} : {\bf K} \vec{A}$}
+  \AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
+  \RightLabel{$\text{let}_{{\bf K}}$}
+  \BinaryInfC{$\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N : {\bf K}B$}
+\end{prooftree}
+
+By IH $\Delta \vdash \vec{M} : {\bf K} \vec{A}$, so $\Delta \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N : {\bf K}B$.
+
+  \vspace{\baselineskip}
+
+2) Similary.
+
+  \vspace{\baselineskip}
+
+3) The derivation ends in
+
+\begin{prooftree}
+  \AxiomC{$\Gamma, z : C \vdash \vec{M} : {\bf K} \vec{A}$}
+  \AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
+  \RightLabel{$\text{let}_{{\bf K}}$}
+  \BinaryInfC{$\Gamma, z : C \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N : {\bf K}B$}
+\end{prooftree}
+
+Let $\Gamma \vdash P : C$.
+
+By IH, $\Gamma \vdash \vec{M} [z := P] : {\bf K} \vec{A}$. So $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} [z := P] {\: \bf in \: } N : {\bf K}B$
+
+  \vspace{\baselineskip}
+
+4-5) Similary.
+
+\end{proof}
+
+\begin{prop} Simmetricity of local binding
+
+  If $\Gamma \vdash {\bf let \: pure \:} \vec{x}, \vec{y} = \vec{M}, \vec{N} {\: \bf in \:} P$, then
+  $\Gamma \vdash {\bf let \: pure \:} \vec{y}, \vec{x} = \vec{N}, \vec{M} {\: \bf in \:} P$
+\end{prop}
+
+\begin{proof}
+
+  Follows from the part 5 of the previous lemma.
 \end{proof}
 
 \begin{theorem} Subject reduction
 
-  Let $\Gamma \vdash M : A$ and $M \twoheadrightarrow_{\beta \eta} N$, then $\Gamma \vdash N : A$
+  If $\Gamma \vdash M : A$ and $M \twoheadrightarrow_{\beta \eta} N$, then $\Gamma \vdash N : A$
 
 \end{theorem}
 
 \begin{proof}
+
+Induction on the derivation $\Gamma \vdash M : A$ and on the generation of $\rightarrow_{\beta \eta}$.
+
 For cases with application, abstraction and pairs see \cite{Morten} \cite{Pierce}.
 
-1)
-  Let $\Gamma \vdash {\bf let \: pure \:} \vec{x}, y, \vec{z} = \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P}  {\: \bf in \:} R : {\bf K}B$,
-  then $\Gamma \vdash {\bf let \: pure \:} \vec{x}, \vec{w}, \vec{z} = \vec{M}, \vec{N}, \vec{P} \: { \bf in } \: R [y := Q] : {\bf K}B$
+1) If $\Gamma \vdash {\bf let \: pure \:} \vec{x}, y, \vec{z} = \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P}  {\: \bf in \:} R : {\bf K}B$,
+  then $\Gamma \vdash {\bf let \: pure \:} \vec{x}, \vec{w}, \vec{z} = \vec{M}, \vec{N}, \vec{P} \: { \bf in } \: R [y := Q] : {\bf K}B$ by rule 4).
 
-2) Let $\Gamma \vdash {\bf let \: pure \:} x = M {\: \bf in \: } x : {\bf K}A$, then $\Gamma \vdash M : {\bf K}A$.
+2) Let $\Gamma \vdash {\bf let \: pure \:} x = M {\: \bf in \: } x : {\bf K}A$, then $\Gamma \vdash M : {\bf K}A$ by rule 9).
 
 See \cite{ModalK}.
 
-3) If the derivation ends in
+3) The derivation ends in
 
 \begin{prooftree}
 \AxiomC{$\Gamma \vdash {\bf pure \:} \vec{M} : {\bf K}\vec{A}$}
@@ -443,9 +501,9 @@ See \cite{ModalK}.
 \BinaryInfC{$\Gamma \vdash {\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N : {\bf K}B$}
 \end{prooftree}
 
-So $\Gamma \vdash \vec{M} : \vec{A}$ by generation and $\Gamma \vdash N [\vec{x} := \vec{M}] : B$ by weakening and substitution.
+So $\Gamma \vdash \vec{M} : \vec{A}$ by Lemma 4 and $\Gamma \vdash N [\vec{x} := \vec{M}] : B$ by Lemma 4, part 3.
 
-Then we can transform this into the next derivation:
+Then we can transform this into the following derivation:
 
 \begin{prooftree}
 \AxiomC{$\Gamma \vdash N [\vec{x} := \vec{M}] : B$}
@@ -453,7 +511,7 @@ Then we can transform this into the next derivation:
 \UnaryInfC{$\Gamma \vdash {\bf pure \:} N [\vec{x} := \vec{M}] : {\bf K}B$}
 \end{prooftree}
 
-4) If the derivation ends in
+4) The derivation ends in
 
 \begin{prooftree}
 \AxiomC{$\vdash M : A$}
@@ -474,15 +532,26 @@ Note that this part of the lemma works conversly too.
 \begin{proof}
   $ $
 
-We modify and apply Tait's technique of logical relation for modalities.
-For strong normalization proof with Tait's method for simply typed lambda calculus see \cite{Pierce}.
+We modify and apply Tait's technique of logical relation for modalities. See \cite{Pierce} \cite{Troelstra}.
+
+We treat only modal cases below.
 
 \begin{defin} The set of strongly computable terms:
   \begin{itemize}
     \item $SC_A = \{ M : A \: | \: M \text{ is strongly normalizing} \}$ for $A \in \mathbb{T}$;
-    \item $SC_{A \to B} = \{ M : A \to B \: | \: \forall N \in SC_A, M N \in SC_B \}$, for $A,B \in \mathbb{T}_{\bf K}$
+    \item $SC_{A \to B} = \{ M : A \to B \: | \: \forall N \in SC_A, M N \in SC_B \}$, for $A,B \in \mathbb{T}_{\bf K}$ for $A, B \in \mathbb{T}_{{\bf K}}$;
     \item $SC_{{\bf K}A} = \{ M : {\bf K}A \: | \: M \text{ is strongly normalizing} \}$ for $A \in \mathbb{T}$;
     \item $\forall i \in \{ 1,\dots,n\}, \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i} = \{ \vec{M} = (M_1,\dots,M_n) \:\: | \:\: \forall N \in SC_{B}, FV(N) = \{ x_1,\dots,x_n\} \: \& \: \forall i, x_i \in SC_{A_i} \Rightarrow {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N \in SC_{{\bf K} B}\}$
+  \end{itemize}
+\end{defin}
+
+\begin{defin}
+  A term $M$ is neutral, if it has one of the following forms:
+  \begin{itemize}
+    \item $M N$;
+    \item If $M$ is neutral, then ${\bf pure \:} M$ is neutral;
+    \item If $\vec{M}$ and $N$ are neutral, then ${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: N}$ is neutral.
+    $\vec{x}$ is a sequence of free variables of a term $N$.
   \end{itemize}
 \end{defin}
 
@@ -490,9 +559,9 @@ For strong normalization proof with Tait's method for simply typed lambda calcul
   $ $
 
 \begin{itemize}
-\item If $M \in SC_A$, then $M$ is strongly normalizing;
-\item Let $M \in SC_A$ and $M \rightarrow_{\beta} N$, then $N \in SC_A$;
-\item Let $N$ is non-introduced, $N \in SC_A$. Then, if $M \rightarrow_{\beta} N$, then $M \in SC_A$;
+\item If $M \in SC_A$ and $A \in \mathbb{T}_{{\bf K}}$, then $M$ is strongly normalizing;
+\item If $M \in SC_A$, $A \in \mathbb{T}_{{\bf K}}$ and $M \rightarrow_{\beta} N$, then $N \in SC_A$;
+\item If $N$ is neutral, $N \in SC_A$. Then, if $M \rightarrow_{\beta} N$, then $M \in SC_A$;
 \end{itemize}
 \end{lemma}
 
@@ -501,28 +570,23 @@ For strong normalization proof with Tait's method for simply typed lambda calcul
 
   By induction on the structure of $A$.
 
-  1) $A \equiv {\bf K}A$, where $A \in \mathbb{T}$.
+1) $A \equiv {\bf K}A$, where $A \in \mathbb{T}$.
 
-  i) Follows from the definition;
-
-  ii) Immediately;
-
-  iii) Let $N$ is non-introduced and $N \in SC_A$, such that $M \rightarrow_{\beta} N$.
-  Any reduction path $M \rightarrow_{\beta} \dots$ passes through $M \rightarrow_{\beta} N$.
-
-  $N$ is strongly normalizing, so $M$ too.
+i-ii-iii) Immediately.
 
     \vspace{\baselineskip}
 
 2)
 
-i) Suppose $(M_1,\dots,M_n) \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$.
+i) Suppose $\vec{M} = (M_1,\dots,M_n) \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$.
 
-Let $N \in SC_{B}$, such that $FV(N) = \{ x_1,\dots,x_n \}$ and $\forall i, x_i \in SC_{A_i}$.
+Let $N \in SC_{B}$, such that $FV(N) = \{ x_1,\dots, x_n \}$ and $\forall i, x_i \in SC_{A_i}$.
 
 So ${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N \in SC_{{\bf K}B}$ by IH.
 
 So $\vec{M}$ are strongly normalizing, since ${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N$ is strongly normalizing by IH.
+
+\vspace{\baselineskip}
 
 ii) Let $\vec{M_1} \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$ and $\vec{M_1} \rightarrow_{\beta} \vec{M_2}$.
 
@@ -534,13 +598,15 @@ and ${\bf let \: pure \:} \vec{x} = \vec{M_2} {\: \bf in \:} N \in SC_{{\bf K}B}
 
 So $\vec{M_2} \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$.
 
-iii) Let $M_2$ be non-introduced, $M_2 \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$ and $M_1 \rightarrow_{\beta} M_2$.
+iii) Let $M_2$ be neutral, $M_2 \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$ and $M_1 \rightarrow_{\beta} M_2$.
 
-Let $N \in SC_{B}$. So ${\bf let \: pure \:} \vec{x} = \vec{M_2} {\: \bf in \:} N \in SC_{{\bf K}B}$.
+Let $N \in SC_{B}$, , such that $FV(N) = \{ x_1,\dots,x_n \}$ and $\forall i, x_i \in SC_{A_i}$.
 
-So ${\bf let \: pure \:} \vec{x} = \vec{M_1} {\: \bf in \:} N \rightarrow_{\beta} {\bf let \: pure \:} \vec{x} = \vec{M_2} {\: \bf in \:} \in N$.
+So ${\bf let \: pure \:} \vec{x} = \vec{M_2} {\: \bf in \:} N \in SC_{{\bf K}B}$.
 
-Thus ${\bf let \: pure \:} \vec{x} = \vec{M_1} {\: \bf in \:} N\in SC_{{\bf K}B}$ by IH, so $\vec{M_1} \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$.
+Thus ${\bf let \: pure \:} \vec{x} = \vec{M_1} {\: \bf in \:} N \rightarrow_{\beta} {\bf let \: pure \:} \vec{x} = \vec{M_2} {\: \bf in \:} \in N$.
+
+Hence ${\bf let \: pure \:} \vec{x} = \vec{M_1} {\: \bf in \:} N\in SC_{{\bf K}B}$ by IH, so $\vec{M_1} \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$.
 \end{proof}
 
 \begin{lemma}
@@ -563,7 +629,9 @@ Thus ${\bf let \: pure \:} \vec{x} = \vec{M_1} {\: \bf in \:} N\in SC_{{\bf K}B}
 \begin{proof}
   $ $
 
-  1) Let the derivation ends in:
+Induction on the derivation of $x_1 : A_1,\dots, x_n : A_n \vdash M : A$.
+
+  1) The derivation ends in:
 
 \begin{prooftree}
 \AxiomC{$x_1 : A_1,\dots, x_n : A_n \vdash M : A$}
@@ -574,7 +642,7 @@ Thus ${\bf let \: pure \:} \vec{x} = \vec{M_1} {\: \bf in \:} N\in SC_{{\bf K}B}
 
 \vspace{\baselineskip}
 
-  2) Let the derivation ends in:
+  2) The derivation ends in:
 \begin{prooftree}
   \AxiomC{$x_1 : A_1,\dots, x_n : A_n \vdash \vec{M^{'}} : {\bf K}\vec{A}$}
   \AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
@@ -631,7 +699,7 @@ otherwise we can build infinite reduction path in $\vec{M^{'}} [x_1 := M_1,\dots
     \item $|M N| = |M| |N|$;
     \item $|{\bf pure \:} M| = {\bf pure \:} |M|$;
     \item $|{\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N| = {\bf let \: pure \:} \vec{x} = \vec{|M|} {\: \bf in \:} |N|$;
-    \item $|(\lambda_i x. M) N| = (\lambda x. M) N$
+    \item $|(\lambda_i x. M) N| = (\lambda x. |M|) |N|$
   \end{itemize}
 \end{defin}
 
@@ -777,7 +845,10 @@ $N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
 \begin{proof}
   By induction on the structure of $M$.
   Case with ${\bf let \: pure\:} \vec{x} = \vec{M} {\: \bf in \:} N$ was considered by Kakutani \cite{ModalK} \cite{ModalK1}.
-  Similary, if ${\bf pure \:} M$ is in normal form, so $M$ is in normal form to and its subterms are in normal form too by hypothesis.
+
+  If ${\bf pure \:} M$ is in normal form, so $M$ is in normal form and its subterms are in normal form too by hypothesis.
+
+  Thus if ${\bf pure \:} M$ is in normal form, then all its subterms are in normal form too.
 \end{proof}
 
 \section{Categorical semantics}
@@ -802,7 +873,13 @@ where $\mathcal{C}$ is a symmetric monoidal category, $\mathcal{K}$ is a monoida
 
 1) $u = \eta_{\mathds{1}}$;
 
-2) $\ast_{A,B} \circ (\eta_A \otimes \eta_B) = \eta_{A \otimes B}$;
+2) $\ast_{A,B} \circ (\eta_A \otimes \eta_B) = \eta_{A \otimes B}$, i.e. the following diagram commutes:
+
+\xymatrix
+{
+&&& A \otimes B \ar[rr]^{\eta_A \otimes \eta_B} \ar[drr]_{\eta_{A \otimes B}} && \mathcal{K}A \otimes \mathcal{K}B \ar[d]^{\ast_{A,B}} \\
+&&&&& \mathcal{K}(A \otimes B)
+}
 
 3) Weak commutativity condition:
 
