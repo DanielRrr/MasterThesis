@@ -202,8 +202,8 @@ $\begin{array}{lll}
 
   \end{defin}
 
-Where $\mathbb{V}^{*}$ and $\Lambda_{{\bf K}}^{*}$ denote the set of finite sequences of variables $\mathbb{V}^0 \times \mathbb{V}^1 \times \dots$
-and the set of finite sequences of terms $\Lambda_{{\bf K}}^0 \times \Lambda_{{\bf K}}^1 \times \dots$. Note that the sequence of variables $\vec{x}$ and the sequence of terms $\vec{M}$ should have the same length.
+Where $\mathbb{V}^{*}$ and $\Lambda_{{\bf K}}^{*}$ denote the set of finite sequences of variables $\bigcup \limits_{i=0}^{\infty} \mathbb{V}_i$
+and the set of finite sequences of terms $\bigcup \limits_{i = 0}^{\infty} {\Lambda_{{\bf K}}}_i $. Note that the sequence of variables $\vec{x}$ and the sequence of terms $\vec{M}$ should have the same length.
 Otherwise, term is not well-formed.
 
   \begin{defin} The set of types:
@@ -354,11 +354,6 @@ Here are some examples of closed terms:
 
 Substitution and free variable for terms of kind ${\bf let \: pure}$ are defined similary to \cite{ModalK}.
 
-Because the local binding
-
-
-
-
   \begin{defin} Type substituition
 
     The substituition of type $C$ for type variable $B$ in type $A$ is defined inductively:
@@ -399,6 +394,15 @@ Because the local binding
 
 By default we use call-by-name evaluation strategy.
 
+Also we accept the following equality, so called symmetricity of local binding:
+
+\begin{defin} Symmetricity of local binding
+
+  ${\bf let \: pure \:} \vec{x}, \vec{y} = \vec{M}, \vec{N} {\: \bf in \:} P \equiv {\bf let \: pure \:} \vec{y}, \vec{x} = \vec{N}, \vec{M} {\: \bf in \:} P$
+
+\end{defin}
+
+This commuting relation denotes that we identify terms of kind {\bf let pure} if they are differ in the order of binding.
 
 Now we will prove standard lemmas for contexts in type systems\footnote{We will not prove cases with
 $\to$-constructor, they are proved standardly in the same lemmas for simply typed lambda calculus, for
@@ -463,10 +467,10 @@ By IH, $\Gamma \vdash \vec{M} [z := P] : {\bf K} \vec{A}$. So $\Gamma \vdash {\b
 
 \end{proof}
 
-\begin{prop} Simmetricity of local binding
+\begin{prop}
 
-  If $\Gamma \vdash {\bf let \: pure \:} \vec{x}, \vec{y} = \vec{M}, \vec{N} {\: \bf in \:} P$, then
-  $\Gamma \vdash {\bf let \: pure \:} \vec{y}, \vec{x} = \vec{N}, \vec{M} {\: \bf in \:} P$
+  If $\Gamma \vdash {\bf let \: pure \:} \vec{x}, \vec{y} = \vec{M}, \vec{N} {\: \bf in \:} P : {\bf K}A$, then
+  $\Gamma \vdash {\bf let \: pure \:} \vec{y}, \vec{x} = \vec{N}, \vec{M} {\: \bf in \:} P : {\bf K}A$.
 \end{prop}
 
 \begin{proof}
@@ -853,11 +857,11 @@ $N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
 
 \section{Categorical semantics}
 
-\begin{defin} Monoidal functor
+\begin{defin} Lax monoidal functor
 
   Let $\langle \mathcal{C}, \otimes_1, \mathds{1} \rangle$ and $\langle \mathcal{D}, \otimes_2, \mathds{1}' \rangle$ are monoidal categories.
 
-  A monoidal functor $\mathcal{F} : \langle \mathcal{C}, \otimes_1, \mathds{1} \rangle \to \langle \mathcal{D}, \otimes_2, \mathds{1}' \rangle$ is a functor
+  A lax monoidal functor $\mathcal{F} : \langle \mathcal{C}, \otimes_1, \mathds{1} \rangle \to \langle \mathcal{D}, \otimes_2, \mathds{1}' \rangle$ is a functor
   $\mathcal{F} : \mathcal{C} \to \mathcal{D}$ with additional natural transformations, which satisfy the well-known conditions described in \cite{ElKelly}:
 
   1) $u : \mathds{1}' \to \mathcal{F}\mathds{1}$;
@@ -869,7 +873,7 @@ $N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
 \begin{defin} Applicative functor
 
   An applicative functor is a triple $\langle \mathcal{C}, \mathcal{K}, \eta \rangle$,
-where $\mathcal{C}$ is a symmetric monoidal category, $\mathcal{K}$ is a monoidal endofunctor and $\eta : Id_{\mathcal{C}} \Rightarrow \mathcal{K}$ is a natural transformation (similar to unit in monad), such that:
+where $\mathcal{C}$ is a symmetric monoidal category, $\mathcal{K}$ is a lax monoidal endofunctor and $\eta : Id_{\mathcal{C}} \Rightarrow \mathcal{K}$ is a natural transformation (similar to unit in monad), such that:
 
 1) $u = \eta_{\mathds{1}}$;
 
@@ -889,6 +893,8 @@ where $\mathcal{C}$ is a symmetric monoidal category, $\mathcal{K}$ is a monoida
 }
 \end{defin}
 
+By default we will consider a strong functor on cartesian closed category with $\eta$ \cite{Cons}.
+
 \subsection{Soundness and completeness}
 
 \begin{theorem} Soundness
@@ -904,7 +910,7 @@ where $\mathcal{C}$ is a symmetric monoidal category, $\mathcal{K}$ is a monoida
 
 $[\![A]\!] := \hat{A}, A \in \mathbb{T}$, where $\hat{A}$ is an object of $\mathcal{C}$ obtained by some given assignment;
 
-$[\![A \to B]\!] := [\![A]\!] \to [\![B]\!]$;
+$[\![A \to B]\!] := [\![B]\!]^{[\![A]\!]}$;
 
 $[\![A \times B]\!] := [\![A]\!] \times [\![B]\!]$.
 
@@ -1088,6 +1094,25 @@ $\begin{array}{lll}
 \end{array}$
 \end{proof}
 
+\begin{prop}
+$ $
+
+  $[\![\Gamma \vdash {\bf let \: pure \:} \vec{x}, \vec{y} = \vec{M}, \vec{N} {\: \bf in \:} P : {\bf K} C]\!] = [\![\Gamma \vdash {\bf let \: pure \:} \vec{y}, \vec{x} = \vec{N}, \vec{M} {\: \bf in \:} P : {\bf K} C]\!]$
+\end{prop}
+
+\begin{proof}
+  $ $
+
+  Follows from the commutativity of the following diagram:
+
+\xymatrix{
+[\![\Gamma]\!] \ar[rr]^{\langle g, f \rangle} \ar[d]_{\langle f, g \rangle} && \mathcal{K}[\![B]\!] \times \mathcal{K}[\![A]\!] \ar[rr]^{\ast_{[\![B]\!], [\![A]\!]}}
+\ar[d]_{\ast_{[\![A]\!], [\![B]\!]} \circ \langle \pi_2, \pi_1 \rangle} && \mathcal{K}([\![B]\!] \times [\![A\!]) \ar[d]^{\mathcal{K}{[\![N]\!]} \circ \mathcal{K}(\langle \pi_2, \pi_1 \rangle)} \\
+\mathcal{K}[\![A\!] \times \mathcal{K}[\![B]\!] \ar[rr]_{\ast_{[\![A]\!], [\![B]\!]}} && \mathcal{K}([\![A]\!] \times [\![B]\!]) \ar[rr]_{[\![N]\!]}&& \mathcal{K}[\![C]\!]
+}
+
+\end{proof}
+
 \end{proof}
 
 \begin{theorem} Completeness
@@ -1109,7 +1134,7 @@ We will consider term model for simply typed lambda calculus $\times$ and $\to$ 
   $(x, M) \sim_{A, B} (y, N) \Leftrightarrow x : A \vdash M : B \:\: \& \:\: y : A \vdash N : A \:\: \& \:\: M =_{\beta \eta} N [y := x]$;
 \end{defin}
 
-We will denote equivalence class as $[x, M]_{A, B} = \{ (y, N) \: | \: (x, M) \sim_{A, B} (y, N) \}$ (we will drop indeces below).
+We will denote equivalence class as $[x, M]_{A, B} = \{ (y, N) \: | \: (x, M) \sim_{A, B} (y, N) \}$ (we will drop indices below).
 
 
 \begin{defin} Category $\mathcal{C}(\lambda)$:
