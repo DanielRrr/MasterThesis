@@ -875,7 +875,7 @@ A \otimes (B \otimes \mathcal{K}C) \ar[rr]_{id_A \otimes \tau_{B,C}} && A \otime
 \begin{defin} Applicative functor
 
   An applicative functor is a triple $\langle \mathcal{C}, \mathcal{K}, \eta \rangle$,
-where $\mathcal{C}$ is a symmetric monoidal category, $\mathcal{K}$ is a lax monoidal endofunctor and $\eta : Id_{\mathcal{C}} \Rightarrow \mathcal{K}$ is a natural transformation (similar to unit in monad), such that:
+where $\mathcal{C}$ is a monoidal category, $\mathcal{K}$ is a strong lax monoidal endofunctor and $\eta : Id_{\mathcal{C}} \Rightarrow \mathcal{K}$ is a natural transformation (similar to unit in monad), such that:
 
 1) $u = \eta_{\mathds{1}}$;
 
@@ -1294,7 +1294,7 @@ $\begin{array}{lll}
 \begin{proof}
   $ $
 
-Routine checking.
+Simple, but routine checking.
 \end{proof}
 
 \begin{lemma}
