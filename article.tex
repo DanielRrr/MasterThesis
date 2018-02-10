@@ -394,14 +394,6 @@ Substitution and free variable for terms of kind ${\bf let \: pure}$ are defined
 
 By default we use call-by-name evaluation strategy.
 
-Also we accept the following equality, so called symmetricity of local binding:
-
-\begin{defin} Symmetricity of local binding
-
-  ${\bf let \: pure \:} \vec{x}, \vec{y} = \vec{M}, \vec{N} {\: \bf in \:} P \equiv {\bf let \: pure \:} \vec{y}, \vec{x} = \vec{N}, \vec{M} {\: \bf in \:} P$
-
-\end{defin}
-
 This commuting relation denotes that we identify terms of kind {\bf let pure} if they are differ in the order of binding.
 
 Now we will prove standard lemmas for contexts in type systems\footnote{We will not prove cases with
@@ -465,17 +457,6 @@ By IH, $\Gamma \vdash \vec{M} [z := P] : {\bf K} \vec{A}$. So $\Gamma \vdash {\b
 
 4-5) Similary.
 
-\end{proof}
-
-\begin{prop}
-
-  If $\Gamma \vdash {\bf let \: pure \:} \vec{x}, \vec{y} = \vec{M}, \vec{N} {\: \bf in \:} P : {\bf K}A$, then
-  $\Gamma \vdash {\bf let \: pure \:} \vec{y}, \vec{x} = \vec{N}, \vec{M} {\: \bf in \:} P : {\bf K}A$.
-\end{prop}
-
-\begin{proof}
-
-  Follows from the part 5 of the previous lemma.
 \end{proof}
 
 \begin{theorem} Subject reduction
@@ -870,6 +851,27 @@ $N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
 
 \end{defin}
 
+\begin{defin}
+
+Strong endofunctor on a monoidal category is a with a natural transformation so called tensorial strength
+
+\begin{equation}
+  \tau_{A, B} : A \otimes \mathcal{K}B \rightarrow \mathcal{K}(A \otimes B)
+\end{equation}
+
+making two diagrams commute:
+
+\xymatrix{
+(A \otimes B) \otimes \mathcal{K}C \ar[d]_{\alpha_{A, B, \mathcal{K}C}}\ar[rrrr]^{\tau_{A \otimes B, C}} &&&& \mathcal{K}((A \otimes B) \otimes C) \ar[d]^{\mathcal{K}(\alpha_{A,B,C})}\\
+A \otimes (B \otimes \mathcal{K}C) \ar[rr]_{id_A \otimes \tau_{B,C}} && A \otimes \mathcal{K}(B \otimes C) \ar[rr]_{\quad \tau_{A, (B \otimes C)}} && \mathcal{K}(A \otimes (B \otimes C)) \\
+}
+
+\xymatrix{
+&&& \mathds{1} \otimes \mathcal{K}A \ar[drr]_{\rho_{\mathcal{K}A}} \ar[rr]^{\mu_{\mathds{1}, A}} && \mathcal{K}(\mathds{1} \otimes A) \ar[d]^{\mathcal{K}(\rho_A)}\\
+&&&&& \mathcal{K}A
+}
+\end{defin}
+
 \begin{defin} Applicative functor
 
   An applicative functor is a triple $\langle \mathcal{C}, \mathcal{K}, \eta \rangle$,
@@ -885,12 +887,7 @@ where $\mathcal{C}$ is a symmetric monoidal category, $\mathcal{K}$ is a lax mon
 &&&&& \mathcal{K}(A \otimes B)
 }
 
-3) Weak commutativity condition:
-
-\xymatrix{
-&& A \otimes \mathcal{K}B \ar[d]_{\sigma_{A, \mathcal{K}B}} \ar[rr]^{\eta_{A} \otimes id_{\mathcal{K}B}} && \mathcal{K}A \otimes \mathcal{K}B \ar[rr]^{\ast_{A,B}} && \mathcal{K}(A \otimes B) \ar[d]^{\mathcal{K}(\sigma_{A,B})}\\
-&& \mathcal{K}B \otimes A \ar[rr]_{id_{\mathcal{K}B} \otimes \eta_{A}} && \mathcal{K}B \otimes \mathcal{K}A \ar[rr]_{\ast_{B,A}} && \mathcal{K}(B \otimes A)
-}
+3) $\tau_{A, B} = \ast_{A, B} \circ \eta_{A} \otimes id_{\mathcal{K}B}$.
 \end{defin}
 
 By default we will consider a strong functor on cartesian closed category with $\eta$ \cite{Cons}.
@@ -1094,25 +1091,6 @@ $\begin{array}{lll}
 \end{array}$
 \end{proof}
 
-\begin{prop}
-$ $
-
-  $[\![\Gamma \vdash {\bf let \: pure \:} \vec{x}, \vec{y} = \vec{M}, \vec{N} {\: \bf in \:} P : {\bf K} C]\!] = [\![\Gamma \vdash {\bf let \: pure \:} \vec{y}, \vec{x} = \vec{N}, \vec{M} {\: \bf in \:} P : {\bf K} C]\!]$
-\end{prop}
-
-\begin{proof}
-  $ $
-
-  Follows from the commutativity of the following diagram:
-
-\xymatrix{
-[\![\Gamma]\!] \ar[rr]^{\langle g, f \rangle} \ar[d]_{\langle f, g \rangle} && \mathcal{K}[\![B]\!] \times \mathcal{K}[\![A]\!] \ar[rr]^{\ast_{[\![B]\!], [\![A]\!]}}
-\ar[d]_{\ast_{[\![A]\!], [\![B]\!]} \circ \langle \pi_2, \pi_1 \rangle} && \mathcal{K}([\![B]\!] \times [\![A\!]) \ar[d]^{\mathcal{K}{[\![N]\!]} \circ \mathcal{K}(\langle \pi_2, \pi_1 \rangle)} \\
-\mathcal{K}[\![A\!] \times \mathcal{K}[\![B]\!] \ar[rr]_{\ast_{[\![A]\!], [\![B]\!]}} && \mathcal{K}([\![A]\!] \times [\![B]\!]) \ar[rr]_{[\![N]\!]}&& \mathcal{K}[\![C]\!]
-}
-
-\end{proof}
-
 \end{proof}
 
 \begin{theorem} Completeness
@@ -1303,52 +1281,20 @@ $\begin{array}{lll}
 &[p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, y \rangle]&
 \end{array}$
 
+\begin{lemma} Coherence for tensorial strength
 
-
-\begin{lemma} Weak commutativity.
-  $ $
-
-  $\begin{array}{lll}
-  & \text{fmap } ([p, \langle \pi_2 p, \pi_1 p \rangle]) \circ \tau_{\hat{A},\hat{B}} = & \\
-  & \ast_{\hat{B}, \hat{A}} \circ [q, \langle \pi_1 q, {\bf pure \:} (\pi_2 q) \rangle] \circ [p, \langle \pi_2 p, \pi_1 p \rangle]&
-  \end{array}$
+  \begin{itemize}
+    \item $\text{fmap } \alpha_{\hat{A},\hat{B},\hat{C}} \circ \tau_{\hat{A} \times \hat{B}, \hat{C}} = \tau_{\hat{A}, \hat{B} \times \hat{C}} \circ (id_{\hat{A}} \times \tau_{\hat{B}, \hat{C}}) \circ \alpha_{\hat{A}, \hat{B}, {\bf K}\hat{C}}$;
+    \item ${\bf K}(\rho_{\hat{A}}) \circ \tau_{\mathds{1}, \hat{A}} = \rho_{{\bf K}\hat{A}}$.
+  \end{itemize}
+  where $\alpha_{\hat{A},\hat{B},\hat{C}} = [p, \langle \pi_1 (\pi_1 p), \langle \pi_1 (\pi_2 p), \pi_2 p \rangle \rangle]$ and
+  $\rho = \pi_2$.
 \end{lemma}
 
 \begin{proof}
   $ $
 
-  $\begin{array}{lll}
-  & \text{fmap } ([r, \langle \pi_2 r, \pi_1 r \rangle]) \circ \tau_{\hat{A},\hat{B}} = & \\
-  &\text{By the definition of $\tau$}& \\
-  & \text{fmap } ([r, \langle \pi_2 r, \pi_1 r \rangle]) \circ [p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, y \rangle] = & \\
-  &\text{By the definition of fmap}& \\
-  & [q, {\bf let \: pure \:} r = q {\: \bf in \:} \langle \pi_2 r, \pi_1 r \rangle] \circ [p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, y \rangle] = & \\
-  &\text{Composition}& \\
-  & [p, {\bf let \: pure \:} r = q {\: \bf in \:} \langle \pi_2 r, \pi_1 r \rangle [q := {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, y \rangle]] = &\\
-  &\text{By $\beta$-reduction rules}& \\
-  & [p, {\bf let \: pure \:} r = ({\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, y \rangle) {\: \bf in \:} \langle \pi_2 r, \pi_1 r \rangle] = & \\
-  &\text{By $\beta$-reduction rules}& \\
-  & [p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle \pi_2 r, \pi_1 r \rangle [r := \langle x, y \rangle]] = & \\
-  &\text{By substitution}& \\
-  & [p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle \pi_2 \langle x, y \rangle, \pi_1 \langle x, y \rangle \rangle]= & \\
-  &\text{By $\beta$-reduction rules}& \\
-  & [p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle y, x \rangle ] = & \\
-  & & \\
-  &\text{On the other hand}&\\
-  &\ast_{\hat{B}, \hat{A}} \circ [q, \langle \pi_1 q, {\bf pure \:} (\pi_2 q) \rangle] \circ [p, \langle \pi_2 p, \pi_1 p \rangle] = & \\
-  &\text{By the definition of $\ast$}& \\
-  &[r, {\bf let \: pure \:} y,x = \pi_1 r, \pi_2 r {\: \bf in \:} \langle y, x \rangle] \circ [q, \langle \pi_1 q, {\bf pure \:} (\pi_2 q) \rangle] \circ [p, \langle \pi_2 p, \pi_1 p \rangle] = & \\
-  &\text{Composition}& \\
-  &[r, {\bf let \: pure \:} y,x = \pi_1 r, \pi_2 r {\: \bf in \:} \langle y, x \rangle] \circ [p, \langle \pi_1 q, {\bf pure \:} (\pi_2 q) \rangle [q := \langle \pi_2 p, \pi_1 p  \rangle]] = & \\
-  &\text{By subsitution and by  $\beta$-reduction rules}& \\
-  &[r, {\bf let \: pure \:} y,x = \pi_1 r, \pi_2 r {\: \bf in \:} \langle y, x \rangle] \circ [p, \langle \pi_2 p, {\bf pure \:} (\pi_1 p) \rangle ]] = & \\
-  &\text{Composition}& \\
-  &[p, {\bf let \: pure \:} y,x = \pi_1 r, \pi_2 r {\: \bf in \:} \langle y, x \rangle [r := \langle \pi_2 p, {\bf pure \:} (\pi_1 p) \rangle]] = & \\
-  &\text{By subsitution and by  $\beta$-reduction rules}& \\
-  &[p, {\bf let \: pure \:} y,x = \pi_2 p, {\bf pure \:} (\pi_1 p) {\: \bf in \:} \langle y, x \rangle] = & \\
-  &\text{By symmetricity of assingment}&\\
-  &[p, {\bf let \: pure \:} x,y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle y, x \rangle]&
-  \end{array}$
+Routine checking.
 \end{proof}
 
 \begin{lemma}
