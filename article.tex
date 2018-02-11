@@ -1333,7 +1333,38 @@ $\begin{array}{lll}
 &\quad\quad\quad\quad {\: \bf in \:} \langle x, \langle y, z \rangle\rangle]& \\
 \end{array}$
 
+\vspace{\baselineskip}
+
 We may simplify the current instance of tensorial strength:
+
+$\begin{array}{lll}
+&[p, {\bf let \: pure \:} x, y, z = ({\bf pure \:} \pi_1 p, {\bf let \: pure \:} p^{'} = \pi_2 p {\: \bf in \:} \pi_1 p^{'}, {\bf let \: pure \:} p^{'} = \pi_2 p {\: \bf in \:} \pi_2 p^{'}) & \\
+&\quad\quad\quad\quad {\: \bf in \:} \langle x, \langle y, z \rangle\rangle] = & \\
+&[p, {\bf let \: pure \:} x, p^{'}, z = ({\bf pure \:} \pi_1 p, \pi_2 p, {\bf let \: pure \:} p^{'} = \pi_2 p {\: \bf in \:} \pi_2 p^{'}) {\: \bf in \:} \langle x, \langle \pi_1 p^{'}, z \rangle\rangle] = & \\
+&[p, {\bf let \: pure \:} x, p^{'} = {\bf pure \:} \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, \langle \pi_1 p^{'}, \pi_2 p^{'} \rangle\rangle]&
+\end{array}$
+
+\vspace{\baselineskip}
+
+Then:
+
+\vspace{\baselineskip}
+
+$\begin{array}{lll}
+&\tau_{\hat{A}, \hat{B} \times \hat{C}} \circ (id_{\hat{A}} \times \tau_{\hat{B}, \hat{C}}) \circ \alpha_{\hat{A}, \hat{B}, {\bf K}\hat{C}} = & \\
+&\tau_{\hat{A}, \hat{B} \times \hat{C}} \circ [q, \langle \pi_1 q, {\bf let \: pure \:} y, z = {\bf pure \:} (\pi_1 (\pi_2 q)), \pi_2 (\pi_2 q) {\: \bf in \:} \langle y, z \rangle \rangle] \: \circ & \\
+&\quad\quad\quad\quad \circ \: [p, \langle \pi_1 (\pi_1 p), \langle \pi_2 (\pi_1 p), \pi_2 p \rangle \rangle] = & \\
+&\tau_{\hat{A}, \hat{B} \times \hat{C}} \circ [p, \langle \pi_1 q, {\bf let \: pure \:} y, z = {\bf pure \:} (\pi_1 (\pi_2 q)), \pi_2 (\pi_2 q) {\: \bf in \:} \langle y, z \rangle \rangle & \\
+&\quad\quad\quad\quad [q := \langle \pi_1 (\pi_1 p), \langle \pi_2 (\pi_1 p), \pi_2 p \rangle \rangle]] = & \\
+&\tau_{\hat{A}, \hat{B} \times \hat{C}} \circ [p, \langle \pi_1 (\pi_1 p), {\bf let \: pure \:} y, z = {\bf pure \:} \pi_2 (\pi_1 p), \pi_2 p {\: \bf in \:} \langle y, z \rangle \rangle] = & \\
+&[r, {\bf let \: pure \:} x, p^{'} = {\bf pure \:} \pi_1 r, \pi_2 r {\: \bf in \:} \langle x, \langle \pi_1 p^{'}, \pi_2 p^{'} \rangle\rangle] \: \circ & \\
+&\quad\quad\quad\quad \circ \: [p, \langle \pi_1 (\pi_1 p), {\bf let \: pure \:} y, z = {\bf pure \:} \pi_2 (\pi_1 p), \pi_2 p {\: \bf in \:} \langle y, z \rangle \rangle] = & \\
+&[p, {\bf let \: pure \:} x, p^{'} = ({\bf pure \:} (\pi_1 (\pi_1 p)), {\bf let \: pure \:} y, z = ({\bf pure \:} \pi_2 (\pi_1 p), \pi_2 p {\: \bf in \:} \langle y, z \rangle \rangle) & \\
+&\quad\quad\quad\quad {\: \bf in \:} \langle x, \langle \pi_1 p^{'}, \pi_2 p^{'} \rangle\rangle ] = & \\
+&[p, {\bf let \: pure \:} x,y,z = {\bf pure \:} (\pi_1 (\pi_1 p)), {\bf pure \:} \pi_2 (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, \langle \pi_1 p^{'}, \pi_2 p^{'} \rangle\rangle [p^{'} := \langle y, z \rangle]] = & \\
+&[p, {\bf let \: pure \:} x,y,z = {\bf pure \:} (\pi_1 (\pi_1 p)), {\bf pure \:} \pi_2 (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, \langle y, z \rangle\rangle]&
+\end{array}$
+
 
 \end{proof}
 
