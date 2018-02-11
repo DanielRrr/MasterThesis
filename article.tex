@@ -1179,7 +1179,7 @@ Implementation for $\ast$ in our term model is a modification of ${\text{let}_{\
 \begin{lemma}
   $ $
 
-  {\bf K} is a monoidal endofunctor
+  {\bf K} is a lax monoidal endofunctor
 \end{lemma}
 
 \begin{proof}
@@ -1297,16 +1297,44 @@ $\begin{array}{lll}
 \begin{proof}
   $ $
 
-1)
+1) Let us define $\tau_{\hat{A} \times \hat{B}, \hat{C}}$ as follows:
+
+$\tau_{\hat{A} \times \hat{B}, \hat{C}} = [p, {\bf \: let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:} \langle \langle x,y \rangle, z \rangle]$
+
+\vspace{\baselineskip}
+
+Then:
+
+\vspace{\baselineskip}
 
 $\begin{array}{lll}
-& \text{fmap } \alpha_{\hat{A},\hat{B},\hat{C}} \circ \tau_{\hat{A} \times \hat{B}, \hat{C}} = & \\
-& [q, {\bf let \: pure \:} z = q {\: \bf in \:} \langle \pi_1 (\pi_1 z), \langle \pi_2 (\pi_1 z), \pi_2 z \rangle \rangle] \circ [p, {\bf let \: pure \:} x, y = {\bf pure \:}(\pi_1 p), \pi_2 {\: \bf in \:} \langle x, y \rangle ] = & \\
-& [p, {\bf let \: pure \:} z = q {\: \bf in \:} \langle \pi_1 (\pi_1 z), \langle \pi_2 (\pi_1 z), \pi_2 z \rangle \rangle [q := {\bf let \: pure \:} x, y = {\bf pure \:}(\pi_1 p), \pi_2 {\: \bf in \:} \langle x, y \rangle]] = & \\
-& [p, {\bf let \: pure \:} z = ({\bf let \: pure \:} x, y = {\bf pure \:}(\pi_1 p), \pi_2 {\: \bf in \:} \langle x, y \rangle) {\: \bf in \:} \langle \pi_1 (\pi_1 z), \langle \pi_2 (\pi_1 z), \pi_2 z \rangle \rangle] = & \\
-& [p, {\bf let \: pure \:} x, y = {\bf pure \:}(\pi_1 p), \pi_2 {\: \bf in \:} \langle \pi_1 (\pi_1 z), \langle \pi_2 (\pi_1 z), \pi_2 z \rangle \rangle [z := x, y]] = & \\
-& [p, {\bf let \: pure \:} x, y = {\bf pure \:}(\pi_1 p), \pi_2 {\: \bf in \:} \langle \pi_1 x, \langle \pi_2 x, y \rangle \rangle]&
+&\text{fmap } \alpha_{\hat{A},\hat{B},\hat{C}} \circ \tau_{\hat{A} \times \hat{B}, \hat{C}} = & \\
+&[q, {\bf let \: pure \:} r = q {\: \bf in \:}  \langle \pi_1 (\pi_1 r), \langle \pi_2 (\pi_1 r), \pi_2 r \rangle \rangle] \: \circ & \\
+&\quad\quad\quad\quad \circ \: [p, {\bf \: let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:} \langle \langle x,y \rangle, z \rangle] = & \\
+&[p, {\bf let \: pure \:} r = q {\: \bf in \:}  \langle \pi_1 (\pi_1 r), \langle \pi_2 (\pi_1 r), \pi_2 r \rangle \rangle & \\
+&\quad\quad\quad\quad [q := {\bf \: let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:} \langle \langle x,y \rangle, z \rangle]] = & \\
+&[p, {\bf let \: pure \:} r = ({\bf let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:} \langle \langle x,y \rangle, z \rangle) & \\
+&\quad\quad\quad\quad {\: \bf in \:} \langle \pi_1 (\pi_1 r), \langle \pi_2 (\pi_1 r), \pi_2 r \rangle \rangle] = & \\
+&[p, {\bf let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:}  \langle \pi_1 (\pi_1 r), \langle \pi_2 (\pi_1 r), \pi_2 r \rangle \rangle & \\
+&\quad\quad\quad\quad [r := \langle \langle x,y \rangle, z \rangle]] = & \\
+&[p, {\bf let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:} \langle x, \langle y, z \rangle \rangle]&
 \end{array}$
+
+\vspace{\baselineskip}
+
+On the other hand:
+
+\vspace{\baselineskip}
+
+Let us define as follows $\tau_{\hat{A}, \hat{B} \times \hat{C}}$:
+
+$\begin{array}{lll}
+&\tau_{\hat{A}, \hat{B} \times \hat{C}} = [r, {\bf let \: pure \:} x, y, z = ({\bf pure \:} \pi_1 r, {\bf let \: pure \:} q^{'} = \pi_2 r {\: \bf in \:} \pi_1 q^{'}, {\bf let \: pure \:} q^{'} = \pi_2 r {\: \bf in \:} \pi_2 q^{'}) & \\
+&\quad\quad\quad\quad {\: \bf in \:} \langle x, \langle y, z \rangle\rangle]& \\
+\end{array}$
+
+We may simplify the current instance of tensorial strength:
+
 \end{proof}
 
 \begin{lemma}
