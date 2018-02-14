@@ -838,22 +838,83 @@ $N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
 
 \section{Categorical semantics}
 
+\begin{defin} Monoidal category
+
+  Monoidal category is a category $\mathcal{C}$ with additional monoidal structure:
+  \begin{itemize}
+    \item A bifunctor $\otimes : \mathcal{C} \times \mathcal{C} \to C$ called tensor product;
+    \item Identity object $\mathds{1}$;
+    \item A natural isomorphism called associator: $\alpha_{A,B,C}: (A \otimes B) \otimes C \cong A \otimes (B \otimes C)$;
+    \item A natural isomorphism called left unitor: $L_A : \mathds{1} \otimes A \cong A$;
+    \item A natural isomorphism called right unitor $R_A : A \otimes \mathds{1} \cong A$;
+    \item A coherence condition called MacLane pentagon, i.e. the following diagram commutes:
+
+    \xymatrix{
+      & (A \otimes (B \otimes C)) \otimes D \ar[dr]^{\alpha_{A,B \otimes C,D}}\\
+      ((A \otimes B) \otimes C) \otimes D \ar[d]_{\alpha_{A \otimes B, C, D}} \ar[ur]^{\alpha_{A,B,C} \otimes id_D \quad} && A \otimes ((B \otimes C) \otimes D) \ar[d]^{id_A \otimes \alpha_{B,C,D}}\\
+      (A \otimes B) \otimes (C \otimes D) \ar[rr]_{\alpha_{A,B,C \otimes D}}&& A \otimes (B \otimes (C \otimes D))
+    }
+    \item A coherence condition called triangle identity:
+
+    \xymatrix{
+    && (A \otimes \mathds{1}) \otimes B \ar[rr]^{\alpha_{A, \mathds{1}, B}} \ar[dr]_{R_A \otimes id_B} && A \otimes (\mathds{1} \otimes B) \ar[dl]^{id_A \otimes L_B} \\
+    &&& A \otimes B
+    }
+
+    \item A monoidal category $\mathcal{C}$ is called symmetric if forall $A,B \in Ob_{\mathcal{C}}$, there is an isomorphism $\sigma_{A,B} : A \otimes B \cong B \otimes A$.
+  \end{itemize}
+\end{defin}
+
+\begin{defin} Cartesian closed category
+
+  Cartesian closed category is a category with a terminal object, finite products and exponentiation.
+\end{defin}
+
+Note that, any cartesian closed category is the special case of a (symmetric) monoidal category, where tensor is a product and identity object is a terminal object.
+
 \begin{defin} Lax monoidal functor
 
-  Let $\langle \mathcal{C}, \otimes_1, \mathds{1} \rangle$ and $\langle \mathcal{D}, \otimes_2, \mathds{1}' \rangle$ are monoidal categories.
+  Let $\langle \mathcal{C}, \otimes_1, \mathds{1}_{\mathcal{C}} \rangle$ and $\langle \mathcal{D}, \otimes_2, \mathds{1}_{\mathcal{D}} \rangle$ are monoidal categories.
 
   A lax monoidal functor $\mathcal{F} : \langle \mathcal{C}, \otimes_1, \mathds{1} \rangle \to \langle \mathcal{D}, \otimes_2, \mathds{1}' \rangle$ is a functor
-  $\mathcal{F} : \mathcal{C} \to \mathcal{D}$ with additional natural transformations, which satisfy the well-known conditions described in \cite{ElKelly}:
+  $\mathcal{F} : \mathcal{C} \to \mathcal{D}$ with additional natural transformations:
 
-  1) $u : \mathds{1}' \to \mathcal{F}\mathds{1}$;
+  \begin{itemize}
+  \item $u : \mathds{1}_{\mathcal{D}} \to \mathcal{F}\mathds{1}_{\mathcal{C}}$;
+  \item $\ast_{A, B} : \mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}B \to \mathcal{F}(A \otimes_{\mathcal{C}} B)$.
+  \end{itemize}
 
-  2) $\ast_{A, B} : \mathcal{F}A \otimes_2 \mathcal{F}B \to \mathcal{F}(A \otimes_1 B)$.
+  and coherence maps:
 
+  \begin{itemize}
+    \item Associativity:
+
+  \xymatrix{
+    && (\mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}B) \otimes_{\mathcal{D}} \mathcal{F}C \ar[d]_{\ast_{A,B} \otimes_{\mathcal{D}} id_{\mathcal{F}B}}
+    \ar[rr]^{\alpha^{\mathcal{D}}_{{\mathcal{F}A, \mathcal{F}B, \mathcal{F}C}}} && \mathcal{F}A \otimes_{\mathcal{D}} (\mathcal{F}B \otimes_{\mathcal{D}} \mathcal{F}C) \ar[d]^{id_{\mathcal{F}A} \otimes_{\mathcal{D}} \ast_{B,C}}\\
+    && \mathcal{F}(A \otimes_{\mathcal{C}} B) \otimes_{\mathcal{D}} \mathcal{C} \ar[d]_{\ast_{A \otimes_{\mathcal{C}} B, C}} && \mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}(B \otimes_{\mathcal{C}} C) \ar[d]^{\ast_{A, B \otimes_{\mathcal{C}} C}}\\
+    && \mathcal{F}((A \otimes_{\mathcal{C}} B) \otimes_{\mathcal{C}} C) \ar[rr]_{\mathcal{F}(\alpha^{\mathcal{C}}_{A,B,C})}&& \mathcal{F}(A \otimes_{\mathcal{C}} (B \otimes_{\mathcal{C}} C))
+  }
+
+    \item Left unitality:
+
+    \xymatrix{
+    &&  \mathds{1}_{\mathcal{D}} \otimes_{\mathcal{D}} \mathcal{F}A \ar[d]_{L^{\mathcal{D}}_{\mathcal{F}A}}\ar[rr]^{u \otimes_{\mathcal{D}} id_{\mathcal{F}A}} && \mathcal{F}\mathds{1}_{\mathcal{C}} \otimes_{\mathcal{D}} \mathcal{F}A \ar[d]^{\ast_{\mathds{1}_{\mathcal{C}}, A}} \\
+    &&  \mathcal{F}A && \mathcal{F}(\mathds{1}_{\mathcal{C}} \otimes_{\mathcal{C}} A) \ar[ll]_{\mathcal{F}(L^{\mathcal{C}}_A)}
+    }
+
+    \item Right unitality:
+
+    \xymatrix{
+    &&  \mathcal{F}A \otimes_{\mathcal{D}} \mathds{1}_{\mathcal{D}} \ar[d]_{R^{\mathcal{D}}_{\mathcal{F}A}}\ar[rr]^{id_{\mathcal{F}A} \otimes_{\mathcal{D}} u} && \mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}\mathds{1}_{\mathcal{C}} \ar[d]^{\ast_{A, \mathds{1}_{\mathcal{C}}}} \\
+    &&  \mathcal{F}A && \mathcal{F}(A \otimes_{\mathcal{C}} \mathds{1}_{\mathcal{C}} ) \ar[ll]^{\mathcal{F}(R^{\mathcal{C}}_A)}
+    }
+  \end{itemize}
 \end{defin}
 
 \begin{defin}
 
-Strong endofunctor on a monoidal category is a with a natural transformation so called tensorial strength
+Strong endofunctor on a monoidal category is with a natural transformation so called tensorial strength
 
 \begin{equation}
   \tau_{A, B} : A \otimes \mathcal{K}B \rightarrow \mathcal{K}(A \otimes B)
@@ -877,17 +938,17 @@ A \otimes (B \otimes \mathcal{K}C) \ar[rr]_{id_A \otimes \tau_{B,C}} && A \otime
   An applicative functor is a triple $\langle \mathcal{C}, \mathcal{K}, \eta \rangle$,
 where $\mathcal{C}$ is a monoidal category, $\mathcal{K}$ is a strong lax monoidal endofunctor and $\eta : Id_{\mathcal{C}} \Rightarrow \mathcal{K}$ is a natural transformation (similar to unit in monad), such that:
 
-1) $u = \eta_{\mathds{1}}$;
-
-2) $\ast_{A,B} \circ (\eta_A \otimes \eta_B) = \eta_{A \otimes B}$, i.e. the following diagram commutes:
+\begin{itemize}
+\item $u = \eta_{\mathds{1}}$;
+\item $\ast_{A,B} \circ (\eta_A \otimes \eta_B) = \eta_{A \otimes B}$, i.e. the following diagram commutes:
 
 \xymatrix
 {
 &&& A \otimes B \ar[rr]^{\eta_A \otimes \eta_B} \ar[drr]_{\eta_{A \otimes B}} && \mathcal{K}A \otimes \mathcal{K}B \ar[d]^{\ast_{A,B}} \\
 &&&&& \mathcal{K}(A \otimes B)
 }
-
-3) $\tau_{A, B} = \ast_{A, B} \circ \eta_{A} \otimes id_{\mathcal{K}B}$.
+\item $\tau_{A, B} = \ast_{A, B} \circ \eta_{A} \otimes id_{\mathcal{K}B}$.
+\end{itemize}
 \end{defin}
 
 By default we will consider some strong lax monoidal functor on cartesian closed category.
@@ -904,26 +965,29 @@ we will define $\eta$ explicitly for simplicity.
 
 \begin{proof}
 
-\begin{defin} Semantical translation from $\lambda_{{\bf K}}$ to some cartesian closed category $\mathcal{C}$ with applicative functor $\mathcal{K}$:
+\begin{defin} Semantical translation from $\lambda_{{\bf K}}$ to some cartesian closed category $\mathcal{C}$ with an applicative functor $\mathcal{K}$:
 
-1) Interpretation for types:
-
-$[\![A]\!] := \hat{A}, A \in \mathbb{T}$, where $\hat{A}$ is an object of $\mathcal{C}$ obtained by some given assignment;
-
-$[\![A \to B]\!] := [\![B]\!]^{[\![A]\!]}$;
-
-$[\![A \times B]\!] := [\![A]\!] \times [\![B]\!]$.
-
-2) Interpretation for modal types: $[\![{\bf K}A]\!] = \mathcal{K}[\![A]\!]$;
-
-3) Interpretaion for contexts:
-
-$[\![\Gamma = \{ x_1 : A_1, ..., x_n : A_n\}]\!] := [\![\Gamma]\!] = [\![A_1]\!] \times ... \times [\![A_n]\!]$;
-
-4) Interpretation for typing assignment: $[\![\Gamma \vdash M : A]\!] := [\![M]\!] : [\![\Gamma]\!] \to
-[\![A]\!]$.
-
-5) Interpretation for typing rules:
+\begin{itemize}
+\item Interpretation for types:
+  \begin{itemize}
+    \item $[\![A]\!] := \hat{A}, A \in \mathbb{T}$, where $\hat{A}$ is an object of $\mathcal{C}$ obtained by some given assignment;
+    \item $[\![A \to B]\!] := [\![B]\!]^{[\![A]\!]}$;
+    \item $[\![A \times B]\!] := [\![A]\!] \times [\![B]\!]$.
+  \end{itemize}
+\item Interpretation for modal types:
+  \begin{itemize}
+    \item $[\![{\bf K}A]\!] = \mathcal{K}[\![A]\!]$;
+  \end{itemize}
+\item Interpretaion for contexts:
+  \begin{itemize}
+    \item $[\![ \quad ]\!] = \mathds{1}$, where $\mathds{1}$ is a terminal object of a given ccc;
+    \item $[\![\Gamma, x : A]\!] = [\![\Gamma]\!] \times [\![A]\!]$
+  \end{itemize}
+\item Interpretation for typing assignment:
+  \begin{itemize}
+    \item $[\![\Gamma \vdash M : A]\!] := [\![M]\!] : [\![\Gamma]\!] \to [\![A]\!]$.
+  \end{itemize}
+\item Interpretation for typing rules:
 
 \begin{prooftree}
 \AxiomC{$ $}
@@ -965,12 +1029,14 @@ $[\![\Gamma = \{ x_1 : A_1, ..., x_n : A_n\}]\!] := [\![\Gamma]\!] = [\![A_1]\!]
 [\![A]\!] \xrightarrow{\eta_{[\![A]\!]}} \mathcal{K}[\![A]\!]$}
 \end{prooftree}
 
+\begin{small}
   \begin{prooftree}
     \AxiomC{$[\![\Gamma \vdash \vec{M} : {\bf K} \vec{A}]\!] = \langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle : [\![\Gamma]\!] \rightarrow \prod \limits_{i=1}^n \mathcal{K}[\![A_i]\!]$}
     \AxiomC{$[\![\vec{x} : \vec{A} \vdash N : B]\!] = [\![N]\!] : \prod \limits_{i=1}^n [\![A_i]\!] \rightarrow [\![B]\!]$}
     \BinaryInfC{$[\![\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } M : {\bf K} B]\!] = \mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ \langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle : [\![\Gamma]\!] \rightarrow \mathcal{K}[\![B]\!]$}
   \end{prooftree}
-
+\end{small}
+\end{itemize}
 \end{defin}
 
 \begin{defin} Simultaneous substitution
@@ -980,21 +1046,16 @@ $\Gamma \vdash M_i : A_i$.
 
 We define simultaneous substitution $M [ \vec{x} := \vec{M}]$ recursively by:
 
-1) $x_i [ \vec{x} := \vec{M}] = M_i $;
-
-2) $(\lambda x. M) [ \vec{x} := \vec{M}] = \lambda x. (M [ \vec{x} := \vec{M}])$;
-
-3) $(M N) [ \vec{x} := \vec{M}] = (M [ \vec{x} = \vec{M}]) (N [ \vec{x} := \vec{M}])$;
-
-4) $\langle M, N \rangle = \langle (M [ \vec{x} = \vec{M}]), (N [ \vec{x} := \vec{M}])\rangle$;
-
-5) $(\pi_i P) [ \vec{x} := \vec{M}] = \pi_i (P [ \vec{x} = \vec{M}])$;
-
-6) $({\bf pure \:} M) [ \vec{x} := \vec{M}] = {\bf pure \:} (M [ \vec{x} = \vec{M}])$;
-
-7) $({\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N) [\vec{y} := \vec{P}] =
+\begin{itemize}
+\item $x_i [ \vec{x} := \vec{M}] = M_i $;
+\item $(\lambda x. M) [ \vec{x} := \vec{M}] = \lambda x. (M [ \vec{x} := \vec{M}])$;
+\item $(M N) [ \vec{x} := \vec{M}] = (M [ \vec{x} = \vec{M}]) (N [ \vec{x} := \vec{M}])$;
+\item $\langle M, N \rangle = \langle (M [ \vec{x} = \vec{M}]), (N [ \vec{x} := \vec{M}])\rangle$;
+\item $(\pi_i P) [ \vec{x} := \vec{M}] = \pi_i (P [ \vec{x} = \vec{M}])$;
+\item $({\bf pure \:} M) [ \vec{x} := \vec{M}] = {\bf pure \:} (M [ \vec{x} = \vec{M}])$;
+\item $({\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N) [\vec{y} := \vec{P}] =
 {\bf let \: pure} \: \vec{x} = (\vec{M} [\vec{y} := \vec{P}]) {\: \bf in \:} N$
-
+\end{itemize}
 \end{defin}
 
 \begin{lemma}
@@ -1008,10 +1069,7 @@ $[\![M [x_1 := M_1,\dots, x_n := M_n]]\!] = [\![M]\!] \circ \langle [\![M_1]\!],
 
 $ $
 
-1) $[\![\Gamma \vdash ({\bf pure \:} M) [ \vec{x} := \vec{M}] : {\bf K}A ]\!] = [\![ \Gamma \vdash {\bf pure \:} M : {\bf K}A]\!] \circ \langle [\![M_1]\!], \dots,
-[\![M_n]\!] \rangle$.
-
-\vspace{\baselineskip}
+1)
 
 $\begin{array}{lll}
 & [\![\Gamma \vdash ({\bf pure \:} M) [ \vec{x} := \vec{M}] : {\bf K}A]\!] = [\![ \Gamma \vdash {\bf pure \:} (M [ \vec{x} := \vec{M}]) : {\bf K}A]\!] &
@@ -1028,8 +1086,7 @@ $\begin{array}{lll}
 
 \vspace{\baselineskip}
 
-2) $\begin{array}{lll}&[\![\Gamma \vdash ({\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N) [\vec{y} := \vec{P}] : {\bf K} B]\!]
-=[\![\Gamma \vdash {\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K}B]\!] \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle& \end{array}$
+2)
 
 \vspace{\baselineskip}
 
@@ -1158,9 +1215,10 @@ Easy checking using reduction rules.
 
   Let us define natural transformations:
 
-  1) $\eta:Id \Rightarrow \mathcal{K}$, s. t. $\forall \hat{A} \in Ob_{\mathcal{C}(\lambda)}$, $\eta_{\hat{A}} = [x, {\bf pure \:} x] \in Hom_{\mathcal{C}(\lambda)}(\hat{A}, {\bf K}\hat{A})$;
-
-  2) $\ast_{A,B}:{\bf K}\hat{A} \times {\bf K}\hat{B} \to {\bf K}(\hat{A} \times \hat{B})$, s. t. $\forall \hat{A}, \hat{B} \in Ob_{\mathcal{C}(\lambda)}, \ast_{\hat{A},\hat{B}} = [p, {\bf let \: pure \:} x,y = \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, y \rangle] \in Hom_{\mathcal{C}(\lambda)}({\bf K}A \times {\bf K}B, {\bf K}(A \times B))$.
+\begin{itemize}
+  \item $\eta:Id \Rightarrow \mathcal{K}$, s. t. $\forall \hat{A} \in Ob_{\mathcal{C}(\lambda)}$, $\eta_{\hat{A}} = [x, {\bf pure \:} x] \in Hom_{\mathcal{C}(\lambda)}(\hat{A}, {\bf K}\hat{A})$;
+  \item $\ast_{A,B}:{\bf K}\hat{A} \times {\bf K}\hat{B} \to {\bf K}(\hat{A} \times \hat{B})$, s. t. $\forall \hat{A}, \hat{B} \in Ob_{\mathcal{C}(\lambda)}, \ast_{\hat{A},\hat{B}} = [p, {\bf let \: pure \:} x,y = \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, y \rangle] \in Hom_{\mathcal{C}(\lambda)}({\bf K}A \times {\bf K}B, {\bf K}(A \times B))$.
+\end{itemize}
 \end{defin}
 
 Implementation for $\ast$ in our term model is a modification of ${\text{let}_{\bf K}}$-rule:
