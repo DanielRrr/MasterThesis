@@ -415,8 +415,7 @@ example see \cite{Neder} \cite{Morten}. We will consider only modal cases}:
   \item If $\Gamma \vdash M : A$ and $\Gamma \subseteq \Delta$, then $\Delta \vdash M : A$;
   \item If $\Gamma \vdash M : A$, then $\Delta \vdash M : A$, where $\Delta = \{ x_i : A_i \: | \: (x_i : A_i) \in \Gamma \: \& \: x_i \in FV(M) \}$
   \item If $\Gamma, x : A \vdash M : B$ and $\Gamma \vdash N : A$, then $\Gamma \vdash M [x := N] : B$.
-  \item If $\Gamma \vdash M : A$, then $\Gamma [B := C] \vdash M : (A [B := C])$;
-  \item If $\Gamma \vdash M : A$ and $\Delta$ is a permutation of $\Gamma$, then $\Delta \vdash M : A$.
+  \item If $\Gamma \vdash M : A$, then $\Gamma [B := C] \vdash M : (A [B := C])$.
 \end{itemize}
 \end{lemma}
 
@@ -718,12 +717,6 @@ $\twoheadrightarrow_{\underline{\beta}}$ is a reflexive-transitive closure of $\
   \end{itemize}
 \end{defin}
 
-\begin{ex}
-  $ $
-
-  $\phi((\lambda_i x. {\bf let \: pure \:} y = x {\: \bf in \:} x) N) = {\bf let \: pure \:} y = \phi(N) {\: \bf in \:} \phi(N)$
-\end{ex}
-
 \begin{lemma}
 
   $\forall \underline{M}, \underline{N} \in \underline{\Lambda} \: \forall M, N \in \Lambda, \text{if } |\underline{M}| = M, |\underline{N}| = N, \text{then}$
@@ -750,9 +743,12 @@ $\twoheadrightarrow_{\underline{\beta}}$ is a reflexive-transitive closure of $\
   $ $
 
   $\begin{array}{lll}
-  & \phi({\bf pure \:} (M [x := N])) = & \text{By the definition of $\phi$}\\
-  & {\bf pure \:} (\phi(M [x := N])) = & \text{Induction hypothesis} \\
-  & {\bf pure \:} (\phi(M) [x := \phi(N)]) = & \text{Substitution definition}\\
+  & \phi({\bf pure \:} (M [x := N])) = & \\
+  &\quad\quad\quad\quad\quad\quad \text{By the definition of $\phi$} & \\
+  & {\bf pure \:} (\phi(M [x := N])) = & \\
+  &\quad\quad\quad\quad\quad\quad \text{Induction hypothesis}& \\
+  & {\bf pure \:} (\phi(M) [x := \phi(N)]) = &\\
+  &\quad\quad\quad\quad\quad\quad \text{Substitution definition}& \\
   & ({\bf pure \:} \phi (M)) [x := \phi(N)]&
   \end{array}$
 
@@ -760,10 +756,14 @@ $\twoheadrightarrow_{\underline{\beta}}$ is a reflexive-transitive closure of $\
   $ $
 
   $\begin{array}{lll}
-  &\phi(({\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N) [y := P]) = & \text{Substitution definition}\\
-  &\phi({\bf let \: pure \:} \vec{x} = (\vec{M}[y := P]) {\: \bf in \:} N) = & \text{By the definition of $\phi$}\\
-  &{\bf let \: pure \:} \vec{x} = \phi(\vec{M}[y := P]) {\: \bf in \:} \phi(N) = & \text{Induction hypothesis} \\
-  &{\bf let \: pure \:} \vec{x} = (\phi(\vec{M}) [y := \phi(P)]) {\: \bf in \:} \phi(N) =& \text{Substitution definition} \\
+  &\phi(({\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N) [y := P]) = &\\
+  &\quad\quad\quad\quad\quad\quad \text{Substitution definition}& \\
+  &\phi({\bf let \: pure \:} \vec{x} = (\vec{M}[y := P]) {\: \bf in \:} N) = &\\
+  &\quad\quad\quad\quad\quad\quad \text{By the definition of $\phi$}& \\
+  &{\bf let \: pure \:} \vec{x} = \phi(\vec{M}[y := P]) {\: \bf in \:} \phi(N) = &\\
+  &\quad\quad\quad\quad\quad\quad \text{Induction hypothesis}& \\
+  &{\bf let \: pure \:} \vec{x} = (\phi(\vec{M}) [y := \phi(P)]) {\: \bf in \:} \phi(N) =&\\
+  &\quad\quad\quad\quad\quad\quad \text{Substitution definition} & \\
   &({\bf let \: pure \:} \vec{x} = \phi(\vec{M}) {\: \bf in \:} \phi(N))[y := \phi(P)]
   \end{array}$
 
@@ -914,11 +914,13 @@ Note that, any cartesian closed category is the special case of a (symmetric) mo
 
 \begin{defin}
 
-Strong endofunctor on a monoidal category is with a natural transformation so called tensorial strength
+Strong functor on a monoidal category is an endofunctor equipped with a natural transformation so called tensorial strength:
 
-\begin{equation}
+\begin{center}
+$\begin{array}{lll}
   \tau_{A, B} : A \otimes \mathcal{K}B \rightarrow \mathcal{K}(A \otimes B)
-\end{equation}
+\end{array}$
+\end{center}
 
 making two diagrams commute:
 
@@ -996,8 +998,8 @@ we will define $\eta$ explicitly for simplicity.
 \end{prooftree}
 
 \begin{prooftree}
-\AxiomC{$[\![\Gamma, x : A \vdash M : B]\!] = f : [\![\Gamma]\!] \times [\![A]\!] \rightarrow [\![B]\!]$}
-\UnaryInfC{$[\![\Gamma \vdash (\lambda x. M) : A \to B]\!] = \Lambda(f) : [\![\Gamma]\!]
+\AxiomC{$[\![\Gamma, x : A \vdash M : B]\!] = [\![M]\!] : [\![\Gamma]\!] \times [\![A]\!] \rightarrow [\![B]\!]$}
+\UnaryInfC{$[\![\Gamma \vdash (\lambda x. M) : A \to B]\!] = \Lambda([\![M]\!]) : [\![\Gamma]\!]
 \rightarrow[\![B]\!]^{[\![A]\!]}$}
 \end{prooftree}
 
@@ -1009,17 +1011,17 @@ we will define $\eta$ explicitly for simplicity.
 \end{prooftree}
 
 \begin{prooftree}
-\AxiomC{$[\![\Gamma \vdash M : A ]\!] = f : [\![\Gamma]\!] \rightarrow [\![A]\!]$}
-\AxiomC{$[\![\Gamma \vdash N : B ]\!] = g : [\![\Gamma]\!] \rightarrow [\![B]\!]$}
-\BinaryInfC{$[\![\Gamma \vdash (M, N) : A \times B]\!] = \langle f, g \rangle : [\![\Gamma]\!] \rightarrow
+\AxiomC{$[\![\Gamma \vdash M : A ]\!] = [\![M]\!] : [\![\Gamma]\!] \rightarrow [\![A]\!]$}
+\AxiomC{$[\![\Gamma \vdash N : B ]\!] = [\![N]\!] : [\![\Gamma]\!] \rightarrow [\![B]\!]$}
+\BinaryInfC{$[\![\Gamma \vdash \langle M, N \rangle : A \times B]\!] = \langle [\![M]\!], [\![N]\!] \rangle : [\![\Gamma]\!] \rightarrow
 [\![A]\!] \times [\![B]\!]$}
 \end{prooftree}
 
 \begin{prooftree}
-\AxiomC{$[\![\Gamma \vdash p : A_1 \times A_2]\!] = f : [\![\Gamma]\!] \rightarrow [\![A_1]\!] \times
+\AxiomC{$[\![\Gamma \vdash M : A_1 \times A_2]\!] = [\![M]\!] : [\![\Gamma]\!] \rightarrow [\![A_1]\!] \times
 [\![A_2]\!]$}
 \RightLabel{$i \in \{1,2\}$}
-\UnaryInfC{$[\![\Gamma \vdash \pi_i p : A_i]\!] = [\![\Gamma]\!] \xrightarrow{f} [\![A_1]\!] \times
+\UnaryInfC{$[\![\Gamma \vdash \pi_i M : A_i]\!] = [\![\Gamma]\!] \xrightarrow{[\![M]\!]} [\![A_1]\!] \times
 [\![A_2]\!] \xrightarrow{\pi_i} [\![A_i]\!]$}
 \end{prooftree}
 
@@ -1143,10 +1145,14 @@ $\begin{array}{lll}
 2) $[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M : {\bf K} A]\!] = [\![\vdash {\bf pure \:} M : {\bf K} A]\!]$
 
 $\begin{array}{lll}
-&[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M : {\bf K} A]\!] = & \text{By interpretation} \\
-&\mathcal{K}([\![M]\!]) \circ u_{\mathds{1}} = & \text{By the definition of an applicative functor} \\
-&\mathcal{K}([\![M]\!]) \circ \eta_{\mathds{1}} = & \text{By naturality of $\eta$} \\
-&\eta_{[\![A]\!]} \circ [\![M]\!] = & \text{By interpretation} \\
+&[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M : {\bf K} A]\!] = & \\
+&\quad\quad\quad\quad\quad\quad \text{By interpretation}& \\
+&\mathcal{K}([\![M]\!]) \circ u_{\mathds{1}} = & \\
+&\quad\quad\quad\quad\quad\quad \text{By the definition of an applicative functor}& \\
+&\mathcal{K}([\![M]\!]) \circ \eta_{\mathds{1}} = & \\
+&\quad\quad\quad\quad\quad\quad \text{By naturality of $\eta$} & \\
+&\eta_{[\![A]\!]} \circ [\![M]\!] = &\\
+&\quad\quad\quad\quad\quad\quad \text{By interpretation} & \\
 &[\![\vdash {\bf pure \:} M : {\bf K} A]\!]&
 \end{array}$
 \end{proof}
@@ -1262,17 +1268,25 @@ See \cite{ModalK}
 \vspace{\baselineskip}
 
 $\begin{array}{lll}
-&\eta_{\hat{B}} \circ f = & \text{By the definition} \\
-&[y, {\bf pure \:} y] \circ [x, M] = & \text{By the definition of composition}\\
-&[x, {\bf pure \:} y [y := M]] = & \text{By substitution}\\
+&\eta_{\hat{B}} \circ f = & \\
+&\quad\quad\quad\quad\quad\quad \text{By the definition}&\\
+&[y, {\bf pure \:} y] \circ [x, M] = &\\
+&\quad\quad\quad\quad\quad\quad \text{By the definition of composition} & \\
+&[x, {\bf pure \:} y [y := M]] = &\\
+&\quad\quad\quad\quad\quad\quad \text{By substitution}& \\
 &[x, {\bf pure \:} M]& \\
 & &\\
 &\text{On the other hand:}& \\
-&\text{fmap } f \circ \eta_{\hat{A}} = & \text{By the definiton} \\
-&[z, {\bf let \: pure \:} x = z {\: \bf in \:} M] \circ [x, {\bf pure \: x}] = & \text{By the definition of composition}\\
-&[x, {\bf let \: pure \:} x = z {\: \bf in \:} M [z := {\bf pure \:} x]] = & \text{By substitution} \\
-&[x, {\bf let \: pure \:} x = {\bf pure \:} x {\: \bf in \:} M] = & \text{$\beta$-reduction rule}\\
-&[x, {\bf pure \:} M [x := x]] = & \text{By substitution}\\
+&\text{fmap } f \circ \eta_{\hat{A}} = & \\
+&\quad\quad\quad\quad\quad\quad \text{By the definiton}& \\
+&[z, {\bf let \: pure \:} x = z {\: \bf in \:} M] \circ [x, {\bf pure \: x}] = &\\
+&\quad\quad\quad\quad\quad\quad \text{By the definition of composition}& \\
+&[x, {\bf let \: pure \:} x = z {\: \bf in \:} M [z := {\bf pure \:} x]] = & \\
+&\quad\quad\quad\quad\quad\quad \text{By substitution}& \\
+&[x, {\bf let \: pure \:} x = {\bf pure \:} x {\: \bf in \:} M] = & \\
+&\quad\quad\quad\quad\quad\quad \text{$\beta$-reduction rule}& \\
+&[x, {\bf pure \:} M [x := x]] = &\\
+&\quad\quad\quad\quad\quad\quad \text{By substitution} & \\
 &[x, {\bf pure \:} M]&
 \end{array}$
 
@@ -1335,10 +1349,14 @@ $\begin{array}{lll}
 It is clearly that tensorial strength defined above can be simplified as follows:
 
 $\begin{array}{lll}
-&\ast_{\hat{A}, \hat{B}} \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] = & \text{By definition} \\
-&[p^{'}, {\bf let \: pure \:} x, y = \pi_1 p^{'}, \pi_2 p^{'} {\: \bf in \:} \langle x, y \rangle] \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] = & \text{By composition} \\
-&[p, {\bf let \: pure \:} x, y = \pi_1 p^{'}, \pi_2 p^{'} {\: \bf in \:} \langle x, y \rangle [p^{'} := \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle]] = & \text{By substitution} \\
-&[p, {\bf let \: pure \:} x, y = \pi_1 (\langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle), \pi_2 (\langle \pi_1 p, {\bf pure \:} (\pi_2 p) \rangle) {\: \bf in \:} \langle x, y \rangle] = & \text{By $\beta$-reduction rules} \\
+&\ast_{\hat{A}, \hat{B}} \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] = & \\
+&\quad\quad\quad\quad\quad\quad \text{By definition}&\\
+&[p^{'}, {\bf let \: pure \:} x, y = \pi_1 p^{'}, \pi_2 p^{'} {\: \bf in \:} \langle x, y \rangle] \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] = & \\
+&\quad\quad\quad\quad\quad\quad \text{By composition} & \\
+&[p, {\bf let \: pure \:} x, y = \pi_1 p^{'}, \pi_2 p^{'} {\: \bf in \:} \langle x, y \rangle [p^{'} := \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle]] = & \\
+&\quad\quad\quad\quad\quad\quad \text{By substitution} & \\
+&[p, {\bf let \: pure \:} x, y = \pi_1 (\langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle), \pi_2 (\langle \pi_1 p, {\bf pure \:} (\pi_2 p) \rangle) {\: \bf in \:} \langle x, y \rangle] = & \\
+&\quad\quad\quad\quad\quad\quad \text{By $\beta$-reduction rules} & \\
 &[p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, y \rangle]&
 \end{array}$
 
