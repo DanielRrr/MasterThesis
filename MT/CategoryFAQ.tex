@@ -1,0 +1,130 @@
+\section{Приложение А. Глоссарий по теории категорий.}
+
+\begin{defin}
+
+  Категория $\mathcal{C}$ состоит из:
+  \begin{itemize}
+    \item Класса объектов $Ob_{\mathcal{C}}$;
+    \item Для любых объекта $A, B \in Ob_{\mathcal{C}}$ определено множество стрелок (или морфизмов) из $A$ в $B$ $Hom_{\mathcal{C}}(A, B)$;
+    \item Если $f \in Hom_{\mathcal{C}}(A, B)$ и $g \in Hom_{\mathcal{C}}(B,C)$, то $g \circ f \in Hom_{\mathcal{C}}(A, C)$;
+    \item Для любого объекта $A \in Ob_{\mathcal{C}}$, определен тождественный морфизм $id_A \in Hom_{\mathcal{C}}(A, A)$;
+    \item Для любой стрелки $f \in Hom_{\mathcal{C}}(A, B)$, для любой стрелки $g \in Hom_{\mathcal{C}}(B,C)$ и для любой стрелки $h \in Hom_{\mathcal{C}}(C,D)$, $h \circ (g \circ f) = (h \circ g) \circ f$.
+    \item Для любой стрелки $f \in Hom_{\mathcal{C}}(A, B)$, $f \circ id_A = f$ и $id_B \circ f = f$.
+  \end{itemize}
+\end{defin}
+
+\begin{defin} Моноидальная категория
+
+  Моноидальная категория -- это категория $\mathcal{C}$ с дополнительной структурой:
+  \begin{itemize}
+    \item Бифунктор $\otimes : \mathcal{C} \times \mathcal{C} \to C$, который мы будем называть тензором;
+    \item Единица $\mathds{1}$;
+    \item Изоморфизм, который мы будем называть ассоциатором: $\alpha_{A,B,C}: (A \otimes B) \otimes C \cong A \otimes (B \otimes C)$;
+    \item Изоморфизм  $L_A : \mathds{1} \otimes A \cong A$;
+    \item Изоморфизм $R_A : A \otimes \mathds{1} \cong A$;
+    \item Первое условие когерентности (пятиугольник Маклейна) (данная диаграмма коммутирует):
+
+    \xymatrix{
+      & (A \otimes (B \otimes C)) \otimes D \ar[dr]^{\alpha_{A,B \otimes C,D}}\\
+      ((A \otimes B) \otimes C) \otimes D \ar[d]_{\alpha_{A \otimes B, C, D}} \ar[ur]^{\alpha_{A,B,C} \otimes id_D \quad} && A \otimes ((B \otimes C) \otimes D) \ar[d]^{id_A \otimes \alpha_{B,C,D}}\\
+      (A \otimes B) \otimes (C \otimes D) \ar[rr]_{\alpha_{A,B,C \otimes D}}&& A \otimes (B \otimes (C \otimes D))
+    }
+    \item Второе условие когерентности (тождество треугольника):
+
+    \xymatrix{
+    && (A \otimes \mathds{1}) \otimes B \ar[rr]^{\alpha_{A, \mathds{1}, B}} \ar[dr]_{R_A \otimes id_B} && A \otimes (\mathds{1} \otimes B) \ar[dl]^{id_A \otimes L_B} \\
+    &&& A \otimes B
+    }
+
+    \item Моноидальная категория $\mathcal{C}$ называется симметрической, если для любых $A,B \in Ob_{\mathcal{C}}$, имеет место изоморфизм $\sigma_{A,B} : A \otimes B \cong B \otimes A$.
+  \end{itemize}
+\end{defin}
+
+\begin{defin} Декартово замкнутная категория
+
+  Декартово замкнутная категория -- это категория с терминальным объектом, конечными произведениями и экспоненцированием.
+\end{defin}
+
+Заметим, что декартово замкнутая категория -- это частный случай (симметрической) моноидальной категории, в котором тензор -- это произведения, а единица -- это терминальный объект.
+
+\begin{defin} Нестрогий моноидальный функтор
+
+  Пусть $\langle \mathcal{C}, \otimes_1, \mathds{1}_{\mathcal{C}} \rangle$ и $\langle \mathcal{D}, \otimes_2, \mathds{1}_{\mathcal{D}} \rangle$ моноидальные категории.
+
+  Нестрогий моноидальный функтор $\mathcal{F} : \langle \mathcal{C}, \otimes_1, \mathds{1} \rangle \to \langle \mathcal{D}, \otimes_2, \mathds{1}' \rangle$ это функтор
+  $\mathcal{F} : \mathcal{C} \to \mathcal{D}$ с дополнительными естественными преобразованиями:
+
+  \begin{itemize}
+  \item $u : \mathds{1}_{\mathcal{D}} \to \mathcal{F}\mathds{1}_{\mathcal{C}}$;
+  \item $\ast_{A, B} : \mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}B \to \mathcal{F}(A \otimes_{\mathcal{C}} B)$.
+  \end{itemize}
+
+  и условиями когерентности:
+
+  \begin{itemize}
+    \item Ассоциативность:
+
+  \xymatrix{
+    && (\mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}B) \otimes_{\mathcal{D}} \mathcal{F}C \ar[d]_{\ast_{A,B} \otimes_{\mathcal{D}} id_{\mathcal{F}B}}
+    \ar[rr]^{\alpha^{\mathcal{D}}_{{\mathcal{F}A, \mathcal{F}B, \mathcal{F}C}}} && \mathcal{F}A \otimes_{\mathcal{D}} (\mathcal{F}B \otimes_{\mathcal{D}} \mathcal{F}C) \ar[d]^{id_{\mathcal{F}A} \otimes_{\mathcal{D}} \ast_{B,C}}\\
+    && \mathcal{F}(A \otimes_{\mathcal{C}} B) \otimes_{\mathcal{D}} \mathcal{C} \ar[d]_{\ast_{A \otimes_{\mathcal{C}} B, C}} && \mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}(B \otimes_{\mathcal{C}} C) \ar[d]^{\ast_{A, B \otimes_{\mathcal{C}} C}}\\
+    && \mathcal{F}((A \otimes_{\mathcal{C}} B) \otimes_{\mathcal{C}} C) \ar[rr]_{\mathcal{F}(\alpha^{\mathcal{C}}_{A,B,C})}&& \mathcal{F}(A \otimes_{\mathcal{C}} (B \otimes_{\mathcal{C}} C))
+  }
+
+    \item Свойство левой единицы:
+
+    \xymatrix{
+    &&  \mathds{1}_{\mathcal{D}} \otimes_{\mathcal{D}} \mathcal{F}A \ar[d]_{L^{\mathcal{D}}_{\mathcal{F}A}}\ar[rr]^{u \otimes_{\mathcal{D}} id_{\mathcal{F}A}} && \mathcal{F}\mathds{1}_{\mathcal{C}} \otimes_{\mathcal{D}} \mathcal{F}A \ar[d]^{\ast_{\mathds{1}_{\mathcal{C}}, A}} \\
+    &&  \mathcal{F}A && \mathcal{F}(\mathds{1}_{\mathcal{C}} \otimes_{\mathcal{C}} A) \ar[ll]_{\mathcal{F}(L^{\mathcal{C}}_A)}
+    }
+
+    \item Свойство правой единицы:
+
+    \xymatrix{
+    &&  \mathcal{F}A \otimes_{\mathcal{D}} \mathds{1}_{\mathcal{D}} \ar[d]_{R^{\mathcal{D}}_{\mathcal{F}A}}\ar[rr]^{id_{\mathcal{F}A} \otimes_{\mathcal{D}} u} && \mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}\mathds{1}_{\mathcal{C}} \ar[d]^{\ast_{A, \mathds{1}_{\mathcal{C}}}} \\
+    &&  \mathcal{F}A && \mathcal{F}(A \otimes_{\mathcal{C}} \mathds{1}_{\mathcal{C}} ) \ar[ll]^{\mathcal{F}(R^{\mathcal{C}}_A)}
+    }
+  \end{itemize}
+\end{defin}
+
+\begin{defin}
+
+Тензорно-сильный функтор -- это эндофунктор над моноидальной категорией с дополнительным естественным преобразованием и условиями когерентности для него (ниже соответствующие коммутирующие диаграмы):
+
+\begin{center}
+$\begin{array}{lll}
+  \tau_{A, B} : A \otimes \mathcal{K}B \rightarrow \mathcal{K}(A \otimes B)
+\end{array}$
+\end{center}
+
+\xymatrix{
+(A \otimes B) \otimes \mathcal{K}C \ar[d]_{\alpha_{A, B, \mathcal{K}C}}\ar[rrrr]^{\tau_{A \otimes B, C}} &&&& \mathcal{K}((A \otimes B) \otimes C) \ar[d]^{\mathcal{K}(\alpha_{A,B,C})}\\
+A \otimes (B \otimes \mathcal{K}C) \ar[rr]_{id_A \otimes \tau_{B,C}} && A \otimes \mathcal{K}(B \otimes C) \ar[rr]_{\quad \tau_{A, (B \otimes C)}} && \mathcal{K}(A \otimes (B \otimes C)) \\
+}
+
+\xymatrix{
+&&& \mathds{1} \otimes \mathcal{K}A \ar[drr]_{R_{\mathcal{K}A}} \ar[rr]^{\mu_{\mathds{1}, A}} && \mathcal{K}(\mathds{1} \otimes A) \ar[d]^{\mathcal{K}(R_A)}\\
+&&&&& \mathcal{K}A
+}
+\end{defin}
+
+\begin{defin} Аппликативный функтор
+
+  Аппликативный функтор -- это тройка $\langle \mathcal{C}, \mathcal{K}, \eta \rangle$,
+где $\mathcal{C}$ -- это моноидальная категория, $\mathcal{K}$ - это тензорно-сильный нестрогий моноидальный эндофунктор и
+$\eta : Id_{\mathcal{C}} \Rightarrow \mathcal{K}$ -- это естественное преобразование, такое, что:
+
+\begin{itemize}
+\item $u = \eta_{\mathds{1}}$;
+\item $\ast_{A,B} \circ (\eta_A \otimes \eta_B) = \eta_{A \otimes B}$, то есть диаграмма коммутирует:
+
+\xymatrix
+{
+&&& A \otimes B \ar[rr]^{\eta_A \otimes \eta_B} \ar[drr]_{\eta_{A \otimes B}} && \mathcal{K}A \otimes \mathcal{K}B \ar[d]^{\ast_{A,B}} \\
+&&&&& \mathcal{K}(A \otimes B)
+}
+\item $\tau_{A, B} = \ast_{A, B} \circ \eta_{A} \otimes id_{\mathcal{K}B}$.
+\end{itemize}
+\end{defin}
+
+По умолчанию мы будем рассматривать ниже аппликативный функтор над декартово замкнутой категорией.
