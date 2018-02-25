@@ -1,0 +1,521 @@
+\section{Теоретико-категорная семантика}
+
+\begin{theorem} Корректность
+
+  Пусть $\Gamma \vdash M : A$ и $M =_{\beta\eta} N$, тогда $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$
+\end{theorem}
+
+\begin{proof}
+
+\begin{defin} Семантическая трансляция из $\lambda_{{\bf K}}$ в аппликативный функтор $\langle \mathcal{C}, \mathcal{K}, \eta \rangle$ над декартово замкнутой категорией $\mathcal{C}$:
+
+\begin{itemize}
+\item Интерпретация типлв:
+  \begin{itemize}
+    \item $[\![A]\!] := \hat{A}, A \in \mathbb{T}$, где $\hat{A}$ -- это объект категории $\mathcal{C}$, полученный в результате некоторого присваивания;
+    \item $[\![A \to B]\!] := [\![B]\!]^{[\![A]\!]}$;
+    \item $[\![A \times B]\!] := [\![A]\!] \times [\![B]\!]$.
+  \end{itemize}
+\item Интерпретация для модальных типов:
+  \begin{itemize}
+    \item $[\![{\bf K}A]\!] = \mathcal{K}[\![A]\!]$;
+  \end{itemize}
+\item Интерпретация для контекстов:
+  \begin{itemize}
+    \item $[\![ \quad ]\!] = \mathds{1}$, где $\mathds{1}$ -- это терминальный объект в заданной декартово замкнутой категории;
+    \item $[\![\Gamma, x : A]\!] = [\![\Gamma]\!] \times [\![A]\!]$
+  \end{itemize}
+\item Интерпретация для типовых объявлений:
+  \begin{itemize}
+    \item $[\![\Gamma \vdash M : A]\!] := [\![M]\!] : [\![\Gamma]\!] \to [\![A]\!]$.
+  \end{itemize}
+\item Интерпретация для правил типизации:
+
+\begin{prooftree}
+\AxiomC{$ $}
+\UnaryInfC{$[\![\Gamma, x : A \vdash x : A]\!] = \pi_2 : [\![\Gamma]\!] \times [\![A]\!] \rightarrow
+[\![A]\!]$}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$[\![\Gamma, x : A \vdash M : B]\!] = [\![M]\!] : [\![\Gamma]\!] \times [\![A]\!] \rightarrow [\![B]\!]$}
+\UnaryInfC{$[\![\Gamma \vdash (\lambda x. M) : A \to B]\!] = \Lambda([\![M]\!]) : [\![\Gamma]\!]
+\rightarrow[\![B]\!]^{[\![A]\!]}$}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$[\![\Gamma \vdash M : A \to B]\!] = [\![M]\!] : [\![\Gamma]\!] \rightarrow [\![B]\!]^{[\![A]\!]}$}
+\AxiomC{$[\![\Gamma \vdash N : A]\!] = [\![N]\!] : [\![\Gamma]\!] \rightarrow [\![A]\!]$}
+\BinaryInfC{$[\![\Gamma \vdash (M N) : B]\!] = [\![\Gamma]\!] \xrightarrow{\langle [\![M]\!], [\![N]\!]
+\rangle} [\![B]\!]^{[\![A]\!]} \times [\![A]\!] \xrightarrow{\epsilon} [\![B]\!] $}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$[\![\Gamma \vdash M : A ]\!] = [\![M]\!] : [\![\Gamma]\!] \rightarrow [\![A]\!]$}
+\AxiomC{$[\![\Gamma \vdash N : B ]\!] = [\![N]\!] : [\![\Gamma]\!] \rightarrow [\![B]\!]$}
+\BinaryInfC{$[\![\Gamma \vdash \langle M, N \rangle : A \times B]\!] = \langle [\![M]\!], [\![N]\!] \rangle : [\![\Gamma]\!] \rightarrow
+[\![A]\!] \times [\![B]\!]$}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$[\![\Gamma \vdash M : A_1 \times A_2]\!] = [\![M]\!] : [\![\Gamma]\!] \rightarrow [\![A_1]\!] \times
+[\![A_2]\!]$}
+\RightLabel{$i \in \{1,2\}$}
+\UnaryInfC{$[\![\Gamma \vdash \pi_i M : A_i]\!] = [\![\Gamma]\!] \xrightarrow{[\![M]\!]} [\![A_1]\!] \times
+[\![A_2]\!] \xrightarrow{\pi_i} [\![A_i]\!]$}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$[\![\Gamma \vdash M : A]\!] = [\![M]\!] : [\![\Gamma]\!] \rightarrow [\![A]\!]$}
+\UnaryInfC{$[\![\Gamma \vdash {\bf pure \:} M : {\bf K}A]\!] := [\![\Gamma]\!] \xrightarrow{[\![M]\!]}
+[\![A]\!] \xrightarrow{\eta_{[\![A]\!]}} \mathcal{K}[\![A]\!]$}
+\end{prooftree}
+
+\begin{small}
+  \begin{prooftree}
+    \AxiomC{$[\![\Gamma \vdash \vec{M} : {\bf K} \vec{A}]\!] = \langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle : [\![\Gamma]\!] \rightarrow \prod \limits_{i=1}^n \mathcal{K}[\![A_i]\!]$}
+    \AxiomC{$[\![\vec{x} : \vec{A} \vdash N : B]\!] = [\![N]\!] : \prod \limits_{i=1}^n [\![A_i]\!] \rightarrow [\![B]\!]$}
+    \BinaryInfC{$[\![\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } M : {\bf K} B]\!] = \mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ \langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle : [\![\Gamma]\!] \rightarrow \mathcal{K}[\![B]\!]$}
+  \end{prooftree}
+\end{small}
+\end{itemize}
+\end{defin}
+
+\begin{defin} Одновременная подстановка
+
+Пусть $\Gamma = \{ x_1 : A_1, ..., x_n : A_n \}$, $\Gamma \vdash M : A$ и для любых $i \in \{ 1,..., n \}$,
+$\Gamma \vdash M_i : A_i$.
+
+ Одновременная подстановка $M [ \vec{x} := \vec{M}]$ определяется рекурсивно:
+
+\begin{itemize}
+\item $x_i [ \vec{x} := \vec{M}] = M_i $;
+\item $(\lambda x. M) [ \vec{x} := \vec{M}] = \lambda x. (M [ \vec{x} := \vec{M}])$;
+\item $(M N) [ \vec{x} := \vec{M}] = (M [ \vec{x} = \vec{M}]) (N [ \vec{x} := \vec{M}])$;
+\item $\langle M, N \rangle = \langle (M [ \vec{x} = \vec{M}]), (N [ \vec{x} := \vec{M}])\rangle$;
+\item $(\pi_i P) [ \vec{x} := \vec{M}] = \pi_i (P [ \vec{x} = \vec{M}])$;
+\item $({\bf pure \:} M) [ \vec{x} := \vec{M}] = {\bf pure \:} (M [ \vec{x} = \vec{M}])$;
+\item $({\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N) [\vec{y} := \vec{P}] =
+{\bf let \: pure} \: \vec{x} = (\vec{M} [\vec{y} := \vec{P}]) {\: \bf in \:} N$
+\end{itemize}
+\end{defin}
+
+\begin{lemma}
+$ $
+
+$[\![M [x_1 := M_1,\dots, x_n := M_n]]\!] = [\![M]\!] \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle$.
+
+\end{lemma}
+
+\begin{proof}
+
+$ $
+
+1)
+
+$\begin{array}{lll}
+& [\![\Gamma \vdash ({\bf pure \:} M) [ \vec{x} := \vec{M}] : {\bf K}A]\!] = [\![ \Gamma \vdash {\bf pure \:} (M [ \vec{x} := \vec{M}]) : {\bf K}A]\!] & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Определение подстановки}& \\
+&\eta_{[\![A]\!]} \circ [\![(M [ \vec{x} := \vec{M}])]\!]& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{интерпретация для {\bf pure}}\\
+&\eta_{[\![A]\!]} \circ ([\![M]\!] \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle) = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{предположение индукции} *\\
+&(\eta_{[\![A]\!]} \circ [\![M]\!]) \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{ассоциативность композиции}&\\
+&[\![ \Gamma \vdash {\bf pure \:} M : {\bf K}A]\!] \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle = & \\
+&\quad\quad\quad\quad\quad\quad\quad  \text{интерпретация для {\bf pure}}&
+\end{array}$
+
+\vspace{\baselineskip}
+
+2)
+
+\vspace{\baselineskip}
+
+$\begin{array}{lll}
+&[\![\Gamma \vdash ({\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N) [\vec{y} := \vec{P}] : {\bf K} B]\!] =& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{определение одновременной подстановки} &\\
+&[\![\Gamma \vdash {\bf let \: pure} \: \vec{x} = (\vec{M} [\vec{y} := \vec{P}]) {\: \bf in \:} N : {\bf K}B]\!] =& \\
+&\quad\quad\quad\quad\quad\quad\quad  \text{интерпретация $let_{\bf K}$} \\
+&\mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ [\![\Gamma \vdash (\vec{M} [\vec{y} := \vec{P}]) : {\bf K}\vec{A}]\!] =& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{предположение индукция}& \\
+&\mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ ([\![\vec{M}]\!] \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle) = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{ассоциативность композиции}& \\
+&(\mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ [\![\vec{M}]\!]) \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{по интерпретации}& \\
+&[\![\Gamma \vdash {\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K}B]\!] \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle&
+\end{array}$
+
+\end{proof}
+
+\begin{lemma}
+  $ $
+
+  Пусть $\Gamma \vdash M : A$ и $M \twoheadrightarrow_{\beta \eta} N$, тогда $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$;
+\end{lemma}
+
+\begin{proof}
+  $ $
+
+Случаи с правилом $\beta$-редукции для $let_{\bf K}$ рассмотрены здесь \cite{ModalK1}. Рассмотрим случаи с ${\bf pure}$.
+
+\vspace{\baselineskip}
+
+1) $[\![\Gamma \vdash {\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N : {\bf K}B]\!] = [\![\Gamma \vdash {\bf pure \:} N [\vec{x} := \vec{M}] : {\bf K}B]\!]$
+
+\vspace{\baselineskip}
+
+$\begin{array}{lll}
+&[\![\Gamma \vdash {\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N : {\bf K}B]\!] = & \\
+&\text{\quad\quad\quad\quad\quad\quad интепретация}& \\
+&\mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ \langle \eta_{[\![A_1]\!]} \circ [\![M_1]\!],\dots,\eta_{[\![A_n]\!]} \circ [\![M_n]\!] \rangle = \\
+&\text{\quad\quad\quad\quad\quad\quad свойство пары морфизмов}& \\
+&\mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ (\eta_{[\![A_1]\!]} \times \dots \times \eta_{[\![A_n]\!]}) \circ \langle [\![M_1]\!], \dots, [\![M_n]\!]\rangle =& \\
+&\text{\quad\quad\quad\quad\quad\quad ассоциативность композиции}& \\
+&\mathcal{K}([\![N]\!]) \circ (\ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ (\eta_{[\![A_1]\!]} \times \dots \eta_{[\![A_n]\!]})) \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle =& \\
+&\text{\quad\quad\quad\quad\quad\quad по определению аппликативного функтора}& \\
+&\mathcal{K}([\![N]\!]) \circ \eta_{[\![A_1]\!] \times \dots \times [\![A_n]\!]} \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle =& \\
+&\text{\quad\quad\quad\quad\quad\quad естественность $\eta$}& \\
+&\eta_{[\![B]\!]} \circ [\![N]\!] \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle =& \\
+&\text{\quad\quad\quad\quad\quad\quad ассоциативность композиции}& \\
+&\eta_{[\![B]\!]} \circ ([\![N]\!] \circ \langle [\![M_1]\!], \dots, [\![M_n]\!]) \rangle =& \\
+&\text{\quad\quad\quad\quad\quad\quad по лемме об одновременной подстановке}& \\
+&\eta_{[\![B]\!]} \circ [\![N [\vec{x} := \vec{M}]]\!]& \\
+&\text{\quad\quad\quad\quad\quad\quad интерпретация}& \\
+&[\![\Gamma \vdash {\bf pure \:} (N [\vec{x} := \vec{M}]) : {\bf K}B]\!]&
+\end{array}$
+
+\vspace{\baselineskip}
+
+2) $[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M : {\bf K} A]\!] = [\![\vdash {\bf pure \:} M : {\bf K} A]\!]$
+
+$\begin{array}{lll}
+&[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M : {\bf K} A]\!] = & \\
+&\quad\quad\quad\quad\quad\quad \text{интерпретация}& \\
+&\mathcal{K}([\![M]\!]) \circ u_{\mathds{1}} = & \\
+&\quad\quad\quad\quad\quad\quad \text{определение аппликативного функтора}& \\
+&\mathcal{K}([\![M]\!]) \circ \eta_{\mathds{1}} = & \\
+&\quad\quad\quad\quad\quad\quad \text{естественность $\eta$} & \\
+&\eta_{[\![A]\!]} \circ [\![M]\!] = &\\
+&\quad\quad\quad\quad\quad\quad \text{интерпретация} & \\
+&[\![\vdash {\bf pure \:} M : {\bf K} A]\!]&
+\end{array}$
+\end{proof}
+
+\end{proof}
+
+\begin{theorem} Полнота
+
+Пусть $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$, тогда $M =_{\beta \eta} N$.
+\end{theorem}
+
+\begin{proof}
+
+$ $
+
+Мы будем работать с термовой моделью для простого типизированного $\lambda$-исчисления с $\times$ и $\to$, стандартно описанной здесь \cite{LambekScott}:
+
+\begin{defin} Эквивалетность на парах вида переменная-терм:
+  $ $
+
+  Определим такое бинарное отношение  $\sim_{A, B} \subseteq \mathbb{V} \times \Lambda_{{\bf K}}$, что:
+
+  $(x, M) \sim_{A, B} (y, N) \Leftrightarrow x : A \vdash M : B \:\: \& \:\: y : A \vdash N : A \:\: \& \:\: M =_{\beta \eta} N [y := x]$.
+\end{defin}
+
+Нетрудно заметить, что данное отношение является отношением эквивалентности.
+
+Обозначим класс эквивалентности как $[x, M]_{A, B} = \{ (y, N) \: | \: (x, M) \sim_{A, B} (y, N) \}$ (ниже мы будем опускать индексы).
+
+
+\begin{defin} Категория $\mathcal{C}(\lambda)$:
+\begin{itemize}
+  \item $Ob_{\mathcal{C}} = \{ \hat{A} \: | \: A \in \mathbb{T} \} \cup \{ \mathds{1} \}$;
+  \item $Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B}) = (\mathbb{V} \times \Lambda_{{\bf K}})/_{\sim_{A, B}}$;
+  \item Пусть $[x, M] \in Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B})$ и $[y,N] \in Hom_{\mathcal{C}(\lambda)}(\hat{B},\hat{C})$, тогда $[y,M] \circ [x, M] = [x, N [y := M]]$;
+  \item Тождественный морфизм $id_{\hat{A}} = [x,x] \in Hom_{\mathcal{C}(\lambda)(\hat{A})}$;
+  \item Терминальный объект $\mathds{1}$;
+  \item $\widehat{A \times B} = \hat{A} \times \hat{B}$;
+  \item Каноническая проекция: $[x, \pi_i x] \in Hom_{\mathcal{C}(\lambda)}(\hat{A_1} \times \hat{A_2},\hat{A_i})$ for $i \in \{ 1, 2 \}$;
+  \item $\widehat{A \to B} = \hat{B}^{\hat{A}}$;
+  \item Вычисляющая стрелка $\epsilon = [x, (\pi_2 x) (\pi_1 x)] \in Hom_{\mathcal{C}(\lambda)(\hat{B}^{\hat{A}} \times \hat{A}, \hat{B})}$.
+\end{itemize}
+\end{defin}
+
+Достаточно показать, что ${\bf K}$ -- это аппликативный функтор над $\mathcal{C}(\lambda)$.
+
+\begin{defin}
+  Определим эндофунктор $\mathcal{K} : \mathcal{C}(\lambda) \to \mathcal{C}(\lambda)$ таким образом, что
+для любых $[x,M] \in Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B}), {\bf K}([x,M]) = [y, {\bf let \: pure \:} x = y {\: \bf in \:} M] \in Hom_{\mathcal{C}(\lambda)}({\bf K} \hat{A}, {\bf K} \hat{B})$
+(обозначения: $\text{fmap } f$ для произвольной стрелки $f$).
+
+\end{defin}
+
+\begin{lemma} Функториальность
+
+\begin{itemize}
+  \item $\text{fmap }(g \circ f) = \text{fmap }(g) \circ \text{fmap }(f)$;
+  \item $\text{fmap }(id_{\hat{A}}) = id_{{\bf K}\hat{A}}$.
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+
+Простая проверка с использованием правил редукции.
+
+\end{proof}
+
+\begin{defin}
+
+  Определим естественные преобразования:
+
+\begin{itemize}
+  \item $\eta:Id \Rightarrow \mathcal{K}$, такое, что $\forall \hat{A} \in Ob_{\mathcal{C}(\lambda)}$, $\eta_{\hat{A}} = [x, {\bf pure \:} x] \in Hom_{\mathcal{C}(\lambda)}(\hat{A}, {\bf K}\hat{A})$;
+  \item $\ast_{A,B}:{\bf K}\hat{A} \times {\bf K}\hat{B} \to {\bf K}(\hat{A} \times \hat{B})$, такое, что $\forall \hat{A}, \hat{B} \in Ob_{\mathcal{C}(\lambda)}, \ast_{\hat{A},\hat{B}} = [p, {\bf let \: pure \:} x,y = \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, y \rangle] \in Hom_{\mathcal{C}(\lambda)}({\bf K}A \times {\bf K}B, {\bf K}(A \times B))$.
+\end{itemize}
+\end{defin}
+
+Реализация $\ast$ в нашей термовой модели -- это частный случай правила ${\text{let}_{\bf K}}$:
+
+\begin{prooftree}
+\AxiomC{$p : {\bf K}A \times {\bf K}B \vdash p : {\bf K}A \times {\bf K}B$}
+\UnaryInfC{$p : {\bf K}A \times {\bf K}B \vdash \pi_1 p : {\bf K} A$}
+\AxiomC{$p : {\bf K}A \times {\bf K}B \vdash p : {\bf K}A \times {\bf K}B$}
+\UnaryInfC{$p : {\bf K}A \times {\bf K}B \vdash \pi_2 p : {\bf K} B$}
+\AxiomC{$x : A \vdash x : A$}
+\AxiomC{$y : B \vdash y : B$}
+\BinaryInfC{$x : A, y : B \vdash \langle x, y \rangle : A \times B$}
+\TrinaryInfC{$p : {\bf K}A \times {\bf K}B \vdash {\bf let \: pure \:} x,y = \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, y \rangle : {\bf K}(A \times B)$}
+\end{prooftree}
+
+\begin{lemma}
+  $ $
+
+  {\bf K} нестрогий моноидальный функтор.
+\end{lemma}
+
+\begin{proof}
+$ $
+
+See \cite{ModalK}
+\end{proof}
+
+\begin{lemma} Естественность и когерентность $\eta$:
+
+\begin{itemize}
+  \item $\text{fmap } f \circ \eta_A = \eta_B \circ f$;
+  \item $\ast_{\hat{A},\hat{B}} \circ (\eta_{A} \times \eta_{B}) = \eta_{\hat{A} \times \hat{B}}$;
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+  $ $
+
+  i) $\text{fmap } f \circ \eta_{\hat{A}} = \eta_{\hat{B}} \circ f$
+
+\vspace{\baselineskip}
+
+$\begin{array}{lll}
+&\eta_{\hat{B}} \circ f = & \\
+&\quad\quad\quad\quad\quad\quad \text{по определению}&\\
+&[y, {\bf pure \:} y] \circ [x, M] = &\\
+&\quad\quad\quad\quad\quad\quad \text{композиция} & \\
+&[x, {\bf pure \:} y [y := M]] = &\\
+&\quad\quad\quad\quad\quad\quad \text{подстановка}& \\
+&[x, {\bf pure \:} M]& \\
+& &\\
+&\text{С другой стороны:}& \\
+&\text{fmap } f \circ \eta_{\hat{A}} = & \\
+&\quad\quad\quad\quad\quad\quad \text{по определению}& \\
+&[z, {\bf let \: pure \:} x = z {\: \bf in \:} M] \circ [x, {\bf pure \: x}] = &\\
+&\quad\quad\quad\quad\quad\quad \text{композиция}& \\
+&[x, {\bf let \: pure \:} x = z {\: \bf in \:} M [z := {\bf pure \:} x]] = & \\
+&\quad\quad\quad\quad\quad\quad \text{подстановка}& \\
+&[x, {\bf let \: pure \:} x = {\bf pure \:} x {\: \bf in \:} M] = & \\
+&\quad\quad\quad\quad\quad\quad \text{правило $\beta$-редукции}& \\
+&[x, {\bf pure \:} M [x := x]] = &\\
+&\quad\quad\quad\quad\quad\quad \text{постановка} & \\
+&[x, {\bf pure \:} M]&
+\end{array}$
+
+\vspace{\baselineskip}
+
+ii) $\ast_{\hat{A},\hat{B}} \circ (\eta_{\hat{A}} \times \eta_{\hat{B}}) = \eta_{\hat{A} \times \hat{B}}$
+
+\vspace{\baselineskip}
+
+$\begin{array}{lll}
+& \ast_{\hat{A},\hat{B}} \circ (\eta_{\hat{A}} \times \eta_{\hat{B}}) = & \\
+& \quad\quad\quad\quad\quad\quad \text{раскрытие} & \\
+& [q, {\bf let \: pure \:} x, y = \pi_1 q, \pi_2 q {\: \bf in \:} \langle x, y \rangle] \circ [p, \langle {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) \rangle] = & \\
+& \quad\quad\quad\quad\quad\quad \text{композиция}& \\
+& [p, {\bf let \: pure \:} x, y = \pi_1 q, \pi_2 q {\: \bf in \:} \langle x, y \rangle [q := \langle {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) \rangle]] = & \\
+& \quad\quad\quad\quad\quad\quad \text{подстановка}& \\
+& [p, {\bf let \: pure \:} x, y = \pi_1 (\langle {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) \rangle), \pi_2 (\langle {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) \rangle) {\: \bf in \:} \langle x, y \rangle] = & \\
+& \quad\quad\quad\quad\quad\quad \text{правило $\beta$-редукции}& \\
+& [p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) {\: \bf in \:} \langle x, y \rangle] = & \\
+& \quad\quad\quad\quad\quad\quad \text{правило $\beta$-редукции}& \\
+& [p, {\bf pure \:} (\langle x,y \rangle [x := \pi_1 p, y := \pi_2 p])] = & \\
+& \quad\quad\quad\quad\quad\quad \text{подстановка}& \\
+& [p, {\bf pure \:} \langle \pi_1 p, \pi_2 p \rangle] = & \\
+& \quad\quad\quad\quad\quad\quad \text{правило $\eta$-редукции}& \\
+& [p, {\bf pure \:} p] =& \\
+& \quad\quad\quad\quad\quad\quad \text{определение}& \\
+& \eta_{\hat{A} \times \hat{B}}&
+\end{array}$
+
+\end{proof}
+
+\begin{defin}
+  $ $
+
+  $u_{\mathds{1}} = [\sqbullet, {\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} \sqbullet] \in Hom_{\mathcal{C}(\lambda)}(\mathds{1}, {\bf K}\mathds{1})$.
+\end{defin}
+
+\begin{lemma}
+  $ $
+
+  $u_{\mathds{1}} = \eta_{\mathds{1}}$
+
+\end{lemma}
+
+\begin{proof}
+
+  Очевидно.
+\end{proof}
+
+\begin{defin} Естественное преобразование для тензорно-сильного функтора
+  $ $
+
+  Пусть $[p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] \in Hom_{\mathcal{C}(\lambda)}(\hat{A} \times {\bf K}\hat{B}, {\bf K}\hat{A} \times {\bf K}\hat{B})$.
+
+  Тогда естественное преобразование для тензорно-сильного функтора $\tau_{\hat{A}, \hat{B}} = \ast_{\hat{A}, \hat{B}} \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle]$.
+\end{defin}
+
+Ясно, что полученное определение легко упрощается:
+
+$\begin{array}{lll}
+&\ast_{\hat{A}, \hat{B}} \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] = & \\
+&\quad\quad\quad\quad\quad\quad \text{определение}&\\
+&[p^{'}, {\bf let \: pure \:} x, y = \pi_1 p^{'}, \pi_2 p^{'} {\: \bf in \:} \langle x, y \rangle] \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] = & \\
+&\quad\quad\quad\quad\quad\quad \text{композиция} & \\
+&[p, {\bf let \: pure \:} x, y = \pi_1 p^{'}, \pi_2 p^{'} {\: \bf in \:} \langle x, y \rangle [p^{'} := \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle]] = & \\
+&\quad\quad\quad\quad\quad\quad \text{подстановка} & \\
+&[p, {\bf let \: pure \:} x, y = \pi_1 (\langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle), \pi_2 (\langle \pi_1 p, {\bf pure \:} (\pi_2 p) \rangle) {\: \bf in \:} \langle x, y \rangle] = & \\
+&\quad\quad\quad\quad\quad\quad \text{правило $\beta$-редукции} & \\
+&[p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, y \rangle]&
+\end{array}$
+
+\begin{lemma} Когерентность для $\tau$:
+
+  \begin{itemize}
+    \item $\text{fmap } \alpha_{\hat{A},\hat{B},\hat{C}} \circ \tau_{\hat{A} \times \hat{B}, \hat{C}} = \tau_{\hat{A}, \hat{B} \times \hat{C}} \circ (id_{\hat{A}} \times \tau_{\hat{B}, \hat{C}}) \circ \alpha_{\hat{A}, \hat{B}, {\bf K}\hat{C}}$;
+    \item ${\bf K}(R_{\hat{A}}) \circ \tau_{\mathds{1}, \hat{A}} = R_{{\bf K}\hat{A}}$.
+  \end{itemize}
+  где $\alpha_{\hat{A},\hat{B},\hat{C}} = [p, \langle \pi_1 (\pi_1 p), \langle \pi_2 (\pi_1 p), \pi_2 p \rangle \rangle]$ и
+  $R = \pi_2$.
+\end{lemma}
+
+\begin{proof}
+  $ $
+
+1) Определим $\tau_{\hat{A} \times \hat{B}, \hat{C}}$ как:
+
+$\tau_{\hat{A} \times \hat{B}, \hat{C}} = [p, {\bf \: let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:} \langle \langle x,y \rangle, z \rangle]$
+
+\vspace{\baselineskip}
+
+Тогда:
+
+\vspace{\baselineskip}
+
+$\begin{array}{lll}
+&\text{fmap } \alpha_{\hat{A},\hat{B},\hat{C}} \circ \tau_{\hat{A} \times \hat{B}, \hat{C}} = & \\
+&[q, {\bf let \: pure \:} r = q {\: \bf in \:}  \langle \pi_1 (\pi_1 r), \langle \pi_2 (\pi_1 r), \pi_2 r \rangle \rangle] \: \circ & \\
+&\quad\quad\quad\quad \circ \: [p, {\bf \: let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:} \langle \langle x,y \rangle, z \rangle] = & \\
+&\quad\quad\quad\quad\quad\quad \text{композиция}& \\
+&[p, {\bf let \: pure \:} r = q {\: \bf in \:}  \langle \pi_1 (\pi_1 r), \langle \pi_2 (\pi_1 r), \pi_2 r \rangle \rangle & \\
+&\quad\quad\quad\quad [q := {\bf \: let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:} \langle \langle x,y \rangle, z \rangle]] = & \\
+&\quad\quad\quad\quad\quad\quad \text{подстановка и правило $\beta$-редукции}& \\
+&[p, {\bf let \: pure \:} r = ({\bf let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:} \langle \langle x,y \rangle, z \rangle) & \\
+&\quad\quad\quad\quad {\: \bf in \:} \langle \pi_1 (\pi_1 r), \langle \pi_2 (\pi_1 r), \pi_2 r \rangle \rangle] = & \\
+&\quad\quad\quad\quad\quad\quad \text{правило $\beta$-редукции}& \\
+&[p, {\bf let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:}  \langle \pi_1 (\pi_1 r), \langle \pi_2 (\pi_1 r), \pi_2 r \rangle \rangle & \\
+&\quad\quad\quad\quad [r := \langle \langle x,y \rangle, z \rangle]] = & \\
+&\quad\quad\quad\quad\quad\quad \text{правило $\beta$-редукции}& \\
+&[p, {\bf let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:} \langle x, \langle y, z \rangle \rangle]&
+\end{array}$
+
+\vspace{\baselineskip}
+
+С другой стороны,
+
+\vspace{\baselineskip}
+
+Определим $\tau_{\hat{A}, \hat{B} \times \hat{C}}$:
+
+$\begin{array}{lll}
+&\tau_{\hat{A}, \hat{B} \times \hat{C}} = [r, {\bf let \: pure \:} x, y, z = ({\bf pure \:} \pi_1 r, {\bf let \: pure \:} q^{'} = \pi_2 r {\: \bf in \:} \pi_1 q^{'}, {\bf let \: pure \:} q^{'} = \pi_2 r {\: \bf in \:} \pi_2 q^{'}) & \\
+&\quad\quad\quad\quad {\: \bf in \:} \langle x, \langle y, z \rangle\rangle]& \\
+\end{array}$
+
+\vspace{\baselineskip}
+
+Упростим данный частный случай естественного преобразования для тензорно-сильного функтора:
+
+$\begin{array}{lll}
+&[p, {\bf let \: pure \:} x, y, z = ({\bf pure \:} \pi_1 p, {\bf let \: pure \:} p^{'} = \pi_2 p {\: \bf in \:} \pi_1 p^{'}, {\bf let \: pure \:} p^{'} = \pi_2 p {\: \bf in \:} \pi_2 p^{'}) & \\
+&\quad\quad\quad\quad {\: \bf in \:} \langle x, \langle y, z \rangle\rangle] = & \\
+&\quad\quad\quad\quad\quad\quad \text{подстановка и правила редукции}& \\
+&[p, {\bf let \: pure \:} x, p^{'}, z = ({\bf pure \:} \pi_1 p, \pi_2 p, {\bf let \: pure \:} p^{'} = \pi_2 p {\: \bf in \:} \pi_2 p^{'}) {\: \bf in \:} \langle x, \langle \pi_1 p^{'}, z \rangle\rangle] = & \\
+&\quad\quad\quad\quad\quad\quad \text{подстановка и правила редукции}& \\
+&[p, {\bf let \: pure \:} x, p^{'} = {\bf pure \:} \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, \langle \pi_1 p^{'}, \pi_2 p^{'} \rangle\rangle]&
+\end{array}$
+
+\vspace{\baselineskip}
+
+Тогда:
+
+\vspace{\baselineskip}
+
+$\begin{array}{lll}
+&\tau_{\hat{A}, \hat{B} \times \hat{C}} \circ (id_{\hat{A}} \times \tau_{\hat{B}, \hat{C}}) \circ \alpha_{\hat{A}, \hat{B}, {\bf K}\hat{C}} = & \\
+&\quad\quad\quad\quad\quad\quad \text{раскрытие}& \\
+&\tau_{\hat{A}, \hat{B} \times \hat{C}} \circ [q, \langle \pi_1 q, {\bf let \: pure \:} y, z = {\bf pure \:} (\pi_1 (\pi_2 q)), \pi_2 (\pi_2 q) {\: \bf in \:} \langle y, z \rangle \rangle] \: \circ & \\
+&\quad\quad\quad\quad \circ \: [p, \langle \pi_1 (\pi_1 p), \langle \pi_2 (\pi_1 p), \pi_2 p \rangle \rangle] = & \\
+&\quad\quad\quad\quad\quad\quad \text{композиция}& \\
+&\tau_{\hat{A}, \hat{B} \times \hat{C}} \circ [p, \langle \pi_1 q, {\bf let \: pure \:} y, z = {\bf pure \:} (\pi_1 (\pi_2 q)), \pi_2 (\pi_2 q) {\: \bf in \:} \langle y, z \rangle \rangle & \\
+&\quad\quad\quad\quad [q := \langle \pi_1 (\pi_1 p), \langle \pi_2 (\pi_1 p), \pi_2 p \rangle \rangle]] = & \\
+&\quad\quad\quad\quad\quad\quad \text{подстановка и редукция}& \\
+&\tau_{\hat{A}, \hat{B} \times \hat{C}} \circ [p, \langle \pi_1 (\pi_1 p), {\bf let \: pure \:} y, z = {\bf pure \:} \pi_2 (\pi_1 p), \pi_2 p {\: \bf in \:} \langle y, z \rangle \rangle] = & \\
+&\quad\quad\quad\quad\quad\quad \text{подстановка}& \\
+&[r, {\bf let \: pure \:} x, p^{'} = {\bf pure \:} \pi_1 r, \pi_2 r {\: \bf in \:} \langle x, \langle \pi_1 p^{'}, \pi_2 p^{'} \rangle\rangle] \: \circ & \\
+&\quad\quad\quad\quad \circ \: [p, \langle \pi_1 (\pi_1 p), {\bf let \: pure \:} y, z = {\bf pure \:} \pi_2 (\pi_1 p), \pi_2 p {\: \bf in \:} \langle y, z \rangle \rangle] = & \\
+&\quad\quad\quad\quad\quad\quad \text{подстановка и редукция}& \\
+&[p, {\bf let \: pure \:} x, p^{'} = ({\bf pure \:} (\pi_1 (\pi_1 p)), {\bf let \: pure \:} y, z = ({\bf pure \:} \pi_2 (\pi_1 p), \pi_2 p {\: \bf in \:} \langle y, z \rangle \rangle) & \\
+&\quad\quad\quad\quad {\: \bf in \:} \langle x, \langle \pi_1 p^{'}, \pi_2 p^{'} \rangle\rangle ] = & \\
+&\quad\quad\quad\quad\quad\quad \text{редукция}& \\
+&[p, {\bf let \: pure \:} x,y,z = {\bf pure \:} (\pi_1 (\pi_1 p)), {\bf pure \:} \pi_2 (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, \langle \pi_1 p^{'}, \pi_2 p^{'} \rangle\rangle [p^{'} := \langle y, z \rangle]] = & \\
+&\quad\quad\quad\quad\quad\quad \text{подстановка и редукция}& \\
+&[p, {\bf let \: pure \:} x,y,z = {\bf pure \:} (\pi_1 (\pi_1 p)), {\bf pure \:} \pi_2 (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, \langle y, z \rangle\rangle]&
+\end{array}$
+
+\vspace{\baselineskip}
+
+2) Очевидно.
+
+\end{proof}
+
+\begin{lemma}
+
+  {\bf K} -- это аппликативный функтор.
+\end{lemma}
+
+\begin{proof}
+  Непосредственно следует из предыдущих лемм.
+\end{proof}
+
+Аналогично \cite{Abramsky}, мы применяем трансляцию из $\lambda_{{\bf K}}$ к произвольной декартово замкнутой категории с аппликативным функтором $\mathcal{K}$, тогда
+мы имеем $[\![\Gamma \vdash M : A]\!] = [x, M [x_i := \pi_i x]]$, so $M =_{\beta \eta} N \Leftrightarrow [\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$.
+
+\end{proof}
