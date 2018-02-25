@@ -1,0 +1,700 @@
+\section{Модальное $\lambda$-исчисление, основанное на исчислении IEL$^{-}$}
+
+Определим натуральное исчисление для IEL$^{-}$ :
+
+\begin{defin} Hатуральное исчисление NIEL$^{-}$ для интуиционистской эпистемической логики IEL$^{-}$ -- это
+расширение натурального исчисления для интуиционистской логики высказываний с добавлением следующих правил вывода для модальности:
+
+\begin{minipage}{0.5\textwidth}
+  \begin{flushleft}
+  \begin{prooftree}
+    \AxiomC{$\Gamma \vdash A$}
+    \RightLabel{${\bf K}_I$}
+    \UnaryInfC{$\Gamma \vdash {\bf K}A$}
+\end{prooftree}
+  \end{flushleft}
+\end{minipage}
+\begin{minipage}{0.5\textwidth}
+  \begin{flushright}
+  \begin{prooftree}
+  \AxiomC{$\Gamma \vdash {\bf K} A_1, \dots, \Gamma \vdash {\bf K} A_n $}
+  \AxiomC{$A_1,\dots,A_n \vdash B$}
+  \BinaryInfC{$\Gamma \vdash {\bf K} B$}
+  \end{prooftree}
+  \end{flushright}
+\end{minipage}
+\end{defin}
+
+Первое правило позволяет выводить ко-рефлексию. Второе модальное правило -- это аналог для правила $\Box_I$
+в натуральном исчислении для конструктивной K (see \cite{ModalLa}) без $\Diamond$.
+
+Мы будем обозначать $\Gamma \vdash {\bf K} A_1, \dots, \Gamma \vdash {\bf K} A_n$ и $A_1,\dots,A_n \vdash B$ соответственно как $\Gamma \vdash {\bf K} \vec{A}$ и $\vec{A} \vdash B$ для краткости.
+
+\vspace{\baselineskip}
+
+\begin{lemma}
+  $\Gamma \vdash_{\text{NIEL}^{-}} A \Rightarrow$ IEL$^{-} \vdash \bigwedge \Gamma \rightarrow A$.
+\end{lemma}
+
+\begin{proof}
+Индукция по построению вывода. Рассмотрим модальные случаи.
+
+\vspace{\baselineskip}
+
+1) Если $\Gamma \vdash_{\text{NIEL}^{-}} A$, тогда $\text{IEL}^{-} \vdash \bigwedge \Gamma \rightarrow {\bf K}A$.
+
+$\begin{array}{lll}
+(1) & \bigwedge \Gamma \rightarrow A & \text{предположение индукции}\\
+(2) & A \rightarrow {\bf K}A &\text{ко-рефлексия}\\
+(3) & (\bigwedge \Gamma \rightarrow A) \rightarrow ((A \rightarrow {\bf K}A) \rightarrow (\bigwedge \Gamma \rightarrow {\bf K}A))&\text{теорема IPC}\\
+(4) & (A \rightarrow {\bf K}A) \rightarrow (\bigwedge \Gamma \rightarrow {\bf K}A) &\text{из (1), (3) и MP}\\
+(5) & \bigwedge \Gamma \rightarrow {\bf K}A &\text{из (2), (4) и MP}\\
+\end{array}$
+
+\vspace{\baselineskip}
+
+2) Если $\Gamma \vdash_{\text{NIEL}^{-}} {\bf K} \vec{A}$ и $\vec{A} \vdash B$, то $\text{IEL}^{-} \vdash \bigwedge \Gamma \rightarrow {\bf K}B$.
+
+$\begin{array}{lll}
+(1) &\bigwedge \Gamma \rightarrow \bigwedge \limits_{i = 1}^{n} {\bf K} A_i & \text{предположение индукции} \\
+(2) &\bigwedge \limits_{i = 1}^{n} {\bf K} A_i \rightarrow {\bf K} \bigwedge \limits_{i = 1}^{n} A_i& \text{теорема IEL$^{-}$} \\
+(3) &\bigwedge \Gamma \rightarrow {\bf K} \bigwedge \limits_{i = 1}^{n} A_i & \text{по (1), (2) и правилу силлогизма} \\
+(4) &\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B& \text{предположение индукции} \\
+(5) &(\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B) \rightarrow {\bf K} (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{ко-рефлексия}\\
+(6) &{\bf K} (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{из (4), (5) и MP} \\
+(7) &{\bf K} \bigwedge \limits_{i = 1}^{n} A_i \rightarrow {\bf K} B & \text{по (6) и по нормальности} \\
+(8) &\bigwedge \Gamma \rightarrow {\bf K} B & \text{по (3), (7) и правилу силлогизма}
+\end{array}$
+
+\end{proof}
+
+\begin{lemma}
+$ $
+Если $\text{IEL}^{-} \vdash A$, то $\text{NIEL}^{-} \vdash A$.
+\end{lemma}
+
+\begin{proof}
+Построение выводов для модальных аксиом в $\text{NIEL}^{-}$. Мы рассмотрим эти выводы ниже с использованием термов.
+\end{proof}
+
+\vspace{\baselineskip}
+
+Далее мы построим типизированное $\lambda$-исчисление по фрагменту NIEL$^{-}$ с правилами для импликации, конъюнкции и модальности.
+Данный фрагмент экивалентен IEL$^{-}$ без аксиом для отрицания и дизъюнкции, что элементарно проверяется аналогично.
+
+Определим термы и типы:
+
+\vspace{\baselineskip}
+
+\begin{defin} Множество термов:
+
+Пусть $\mathbb{V}$ счетное множество переменных. Термы $\Lambda_{{\bf K}}$ порождается следующей грамматикой:
+
+$\begin{array}{lll}
+& \Lambda_{{\bf K}} ::= \mathbb{V} \: | \:  (\lambda \mathbb{V}.\Lambda_{{\bf K}}) \: | \: (\Lambda_{{\bf K}}\Lambda_{{\bf K}}) \: | \: (\Lambda_{{\bf K}} , \Lambda_{{\bf K}}) \: | \: (\pi_1 \Lambda_{{\bf K}}) \: | \: (\pi_2 \Lambda_{{\bf K}}) \: | & \\
+& \quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad ({\bf pure \: } \: \Lambda_{{\bf K}}) \: | \: ({\bf let \: pure \:} \mathbb{V}^{*} = \Lambda_{{\bf K}}^{*} {\: \bf in \:} \Lambda_{{\bf K}})
+\end{array}$
+
+\end{defin}
+
+Где $\mathbb{V}^{*}$ и $\Lambda_{{\bf K}}^{*}$ обозначают множество всех конечных последовательностей переменных $\bigcup \limits_{i=0}^{\infty} \mathbb{V}^i$
+и множество всех конечных последовательностей термов $\bigcup \limits_{i = 0}^{\infty} {\Lambda_{{\bf K}}}^i $. Последовательность переменных $\vec{x}$ и последовательность термов $\vec{M}$ в терме вида ${\bf let \: pure \:}$ должны иметь одинаковую длину.
+Иначе терм не будет правильно построенным.
+
+\begin{defin} Множество типов:
+
+Пусть $\mathbb{T}$ -- это счетное множество атормарных типов. Типы $\mathbb{T}_{{\bf K}}$ с аппликативным функтором ${\bf K}$ порождаются следующей грамматикой:
+\begin{equation}
+  \mathbb{T}_{{\bf K}} ::= \mathbb{T} \: | \: (\mathbb{T}_{{\bf K}} \to \mathbb{T}_{{\bf K}}) \: |
+  \: (\mathbb{T}_{{\bf K}} \times \mathbb{T}_{{\bf K}}) \: | \: ({\bf K}\mathbb{T}_{{\bf K}})
+\end{equation}
+\end{defin}
+
+Контекст, его домен и кодомен определены стандартно \cite{Neder}\cite{Morten}.
+
+Наша система состоит из следующих правил типизации в стиле Карри:
+
+\begin{defin} Модальное $\lambda$-исчисление, основанное на исчислении IEL$^{-}$:
+
+  \begin{center}
+  \begin{prooftree}
+  \AxiomC{$ $}
+  \RightLabel{\scriptsize{ax}}
+  \UnaryInfC{$\Gamma , x : A \vdash x : A$}
+  \end{prooftree}
+  \end{center}
+
+  \begin{minipage}{0.45\textwidth}
+    \begin{prooftree}
+    \AxiomC{$\Gamma, x : A \vdash M : B$}
+    \RightLabel{$\rightarrow_i$}
+    \UnaryInfC{$\Gamma \vdash \lambda x. M : A \to B$}
+    \end{prooftree}
+
+    \begin{prooftree}
+    \AxiomC{ $\Gamma \vdash M : A$ }
+    \AxiomC{ $\Gamma \vdash N : B$ }
+    \RightLabel{$\times_i$}
+    \BinaryInfC{$\Gamma \vdash \langle M, N \rangle : A \times B$}
+    \end{prooftree}
+
+    \begin{prooftree}
+      \AxiomC{$\Gamma \vdash M : A$}
+      \RightLabel{${\bf K}_I$}
+      \UnaryInfC{$\Gamma \vdash {\bf pure \: } \: M : {\bf K}A $}
+    \end{prooftree}
+\end{minipage}%
+\hfill
+\begin{minipage}{0.45\textwidth}
+\begin{tabular}{p{\textwidth}}
+  \begin{prooftree}
+  \AxiomC{$\Gamma \vdash M : A \to B$}
+  \AxiomC{$\Gamma \vdash N : A$}
+  \RightLabel{$\rightarrow_e$}
+  \BinaryInfC{$\Gamma \vdash MN : B$}
+  \end{prooftree}
+
+  \begin{prooftree}
+  \AxiomC{ $\Gamma \vdash M : A_1 \times A_2$ }
+  \RightLabel{$\times_e$, $i \in \{ 1, 2 \}$}
+  \UnaryInfC{$\Gamma \vdash \pi_i M : A_i$}
+  \end{prooftree}
+
+  \begin{prooftree}
+    \AxiomC{$\Gamma \vdash \vec{M} : {\bf K} \vec{A}$}
+    \AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
+    \RightLabel{$\text{let}_{{\bf K}}$}
+    \BinaryInfC{$\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N : {\bf K} B$}
+  \end{prooftree}
+\end{tabular}
+\end{minipage}%
+
+\end{defin}
+
+Правило типизации ${\bf K}_I$ аналогично правилу $\bigcirc_I$ в монадическом метаязыке \cite{Lax}.
+
+${\bf K}_I$ позволяет вкладывать объект типа $A$ в текущиц вычислительный контекст. ${\bf K}_I$ соответствует методу {\bf pure} в классе $Applicative$.
+Играет ту же роль, что и метод {\bf return} в монадах.
+
+Правило типизации $\text{let}_{{\bf K}}$ аналогично правилу $\Box$-rule в модальном $\lambda$-исчислении для интуционистской минимальной нормальной модальной логики {\bf IK}, описанная здесь \cite{ModalK}.
+
+$\Gamma \vdash \vec{M} : {\bf K} \vec{A}$ -- это синтаксический сахар для $\Gamma \vdash M_1 : {\bf K}A_1,\dots,\Gamma \vdash M_n : {\bf K}A_n$ и $\vec{x} : \vec{A} \vdash N : B$ -- это краткая форма для $x_1 : A_1, \dots, x_n : A_n \vdash N : B$.
+${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N$ -- это мгновенное локальное связывание в терме $N$.
+Мы будем использовать такую краткую форму вместо ${\bf let \: pure\:} x_1,\dots,x_n = M_1,\dots,M_n {\: \bf in \:} N$.
+
+\vspace{\baselineskip}
+
+Примеры замкнутых термов:
+
+\begin{prooftree}
+\AxiomC{$x : A \vdash x : A$}
+\UnaryInfC{$x : A \vdash {\bf pure \:} x : {\bf K} A$}
+\UnaryInfC{$\vdash (\lambda x. {\bf pure \: } x) : A \to {\bf K}A$}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$f : {\bf K} (A \to B) \vdash f : {\bf K} (A \to B)$}
+\AxiomC{$x : {\bf K} A \vdash x : {\bf K} A $}
+\AxiomC{$g : A \to B \vdash g : A \to B$}
+\AxiomC{$y : A \vdash y : A$}
+\RightLabel{$\to_e$}
+\BinaryInfC{$g : A \to B, y : A \vdash g y : B$}
+\RightLabel{$\text{let}_{{\bf K}}$}
+\TrinaryInfC{$f : {\bf K} (A \to B), x : {\bf K} A \vdash {\bf let \: pure \:} g, y  = f, x {\: \bf in \:} g y : {\bf K} B$}
+\UnaryInfC{$f : {\bf K} (A \to B) \vdash \lambda x. {\bf let \: pure\:} g, y = f, x {\: \bf in \:} g y : {\bf K} A \to {\bf K} B$}
+\UnaryInfC{$\vdash \lambda f. \lambda x. {\bf let \:pure \:} g, y = f, x {\: \bf in \:} g y : {\bf K}(A \to B) \to {\bf K} A \to {\bf K} B$}
+\end{prooftree}
+
+\vspace{\baselineskip}
+
+Определим свободные переменные, подставновку, $\beta$-редукцию и $\eta$-редукцию. Многошаговая $\beta$-редукция и $\beta \eta$-эквивалентность определены стандартно:
+
+\begin{defin} Множество свободных переменных $FV(M)$ для произвольного терма $M$:
+
+1) $FV(x) = \{ x \}$;
+
+2) $FV(\lambda x. M) = FV(M) \setminus \{ x\}$;
+
+3) $FV(M N) = FV(M) \cup FV(N);$
+
+4) $FV(\langle M,N \rangle) = FV(M) \cup FV(N)$;
+
+5) $FV(\pi_i M) \subseteq FV(M)$, $i \in \{ 1, 2\}$;
+
+6) $FV(\text{pure } M) = FV(M)$;
+
+7) $FV({\bf let \: pure} \: \vec{x} = \vec{M} \:\: {\bf in} \:\: N) = \bigcup \limits_{i = 1}^n FV(M), \text{where $n = |\vec{M}|$}$.
+\end{defin}
+
+\begin{defin} Подстановка:
+
+1) $x [x := N] = N$, $x [y := N] = x$;
+
+2) $(M N) [x := N] = M[x := N] N [x := N]$;
+
+3) $(\lambda x. M) [x := N] = \lambda x. M [y := N]$, $y \in FV(M)$;
+
+4) $(M, N)[x := P] = (M[x := P], N [x := P])$;
+
+5) $(\pi_i M) [x := P] = \pi_i (M[x := P])$, $i \in \{ 1, 2\}$;
+
+6) $({\bf pure \: } M) [x := P] = {\bf pure \: } (M [x := P])$;
+
+7) $({\bf let \: pure \:}\vec{x} = \vec{M} {\: \bf in \:} N) [y := P] = {\bf let \: pure \:} \vec{x} = (\vec{M} [y := P]) {\: \bf in \:} N$.
+\end{defin}
+
+\begin{defin} Подстановка типа
+
+  Подстанока типа $C$ для типовой переменной $B$ в типе $A$ определена индуктивно:
+
+  1) $B [B := C] = B$ и $D [B := C] = D$, if $B \neq D$;
+
+  2) $(A_1 \alpha A_2)[B := C] = (A_1[B := C]) \alpha (A_2[B := C])$, где $\alpha \in \{ \to, \times \}$;
+
+  3) $({\bf K}A)[B := C] = {\bf K}(A [B := C])$;
+
+  4) Пусть $\Gamma$ -- контекст, тогда $\Gamma [B := C] = \{ x : (A[B := C]) \: | \: x : A \in \Gamma \}$.
+\end{defin}
+
+\begin{defin} Правила $\beta$-редукции и $\eta$-редукции:
+
+1) $(\lambda x. M) N \rightarrow_{\beta} M [x := N]$;
+
+2) $\pi_1 \langle M, N \rangle \rightarrow_{\beta} M$;
+
+3) $\pi_2 \langle M, N \rangle \rightarrow_{\beta} N$;
+
+4) $\begin{array}{llll}
+& {\bf let \: pure \:} \vec{x}, y, \vec{z} = \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\: \bf in \: } Q, \vec{P} {\: in \:} R \rightarrow_{\beta} & \\
+& {\bf let \: pure \:} \vec{x}, \vec{w}, \vec{z} = \vec{M}, \vec{N}, \vec{P} {\: \bf in \: } R [y := Q]
+\end{array}$
+
+5) ${\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N \rightarrow_{\beta} {\bf pure \:} N [\vec{x} := \vec{M}]$
+
+6) ${\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} M \rightarrow_{\beta} {\bf pure \:} M$, where \underline{\quad} is an empty sequence of terms.
+
+7) $\lambda x. f x \rightarrow_{\eta} f$;
+
+8) $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
+
+9) ${\bf let \: pure \:} x = M {\: \bf in \: } x \rightarrow_{\eta} M$;
+
+\end{defin}
+
+По умолчанию мы используем стратегию вычисления с вызовом по имени.
+
+Докажем стандартные леммы о контекстах \footnote{Мы не будем рассматривать случаи для стандартных связок, так как они уже доказаны для просто типизированного $\lambda$-исчисления \cite{Neder} \cite{Morten}. Мы будем рассматривать только модальные случаи}:
+
+\begin{lemma} Инверсия отношения типизации ${\bf K}_I$.
+
+Пусть $\Gamma \vdash {\bf pure \:} M : {\bf K}A$, тогда $\Gamma \vdash M : A$;
+\end{lemma}
+
+\begin{proof}
+Очевидно
+\end{proof}
+
+\begin{lemma} Базовые леммы.
+
+\begin{itemize}
+\item Если $\Gamma \vdash M : A$ и $\Gamma \subseteq \Delta$, тогда $\Delta \vdash M : A$;
+\item Если $\Gamma \vdash M : A$, тогда $\Delta \vdash M : A$, где $\Delta = \{ x_i : A_i \: | \: (x_i : A_i) \in \Gamma \: \& \: x_i \in FV(M) \}$
+\item Если $\Gamma, x : A \vdash M : B$ и $\Gamma \vdash N : A$, где $\Gamma \vdash M [x := N] : B$.
+\item Если $\Gamma \vdash M : A$, тогда $\Gamma [B := C] \vdash M : (A [B := C])$.
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+$ $
+
+1) Пусть вывод заканчивается следующим правилом:
+
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash \vec{M} : {\bf K} \vec{A}$}
+\AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
+\RightLabel{$\text{let}_{{\bf K}}$}
+\BinaryInfC{$\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N : {\bf K}B$}
+\end{prooftree}
+
+По предположению индукции $\Delta \vdash \vec{M} : {\bf K} \vec{A}$, тогда $\Delta \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N : {\bf K}B$.
+
+\vspace{\baselineskip}
+
+Случаи 2)--4) рассматриваются аналогично.
+\end{proof}
+
+\begin{theorem} Редукция субъекта
+
+Если $\Gamma \vdash M : A$ и $M \twoheadrightarrow_{\beta \eta} N$, тогда $\Gamma \vdash N : A$
+
+\end{theorem}
+
+\begin{proof}
+
+Индукция по выводу $\Gamma \vdash M : A$ и по порождению $\rightarrow_{\beta \eta}$.
+
+Случаи с функцией и парами рассмотрены здесь \cite{Morten} \cite{Pierce}.
+
+1) Если $\Gamma \vdash {\bf let \: pure \:} \vec{x}, y, \vec{z} = \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P}  {\: \bf in \:} R : {\bf K}B$,
+тогда $\Gamma \vdash {\bf let \: pure \:} \vec{x}, \vec{w}, \vec{z} = \vec{M}, \vec{N}, \vec{P} \: { \bf in } \: R [y := Q] : {\bf K}B$ по правилу 4).
+
+2) Если $\Gamma \vdash {\bf let \: pure \:} x = M {\: \bf in \: } x : {\bf K}A$, тогда $\Gamma \vdash M : {\bf K}A$ по правилу 9).
+
+Рассмотрено здесь \cite{ModalK}.
+
+3) Пусть вывод заканчивается применением следующего правила
+
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash {\bf pure \:} \vec{M} : {\bf K}\vec{A}$}
+\AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
+\BinaryInfC{$\Gamma \vdash {\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N : {\bf K}B$}
+\end{prooftree}
+
+Тогда $\Gamma \vdash \vec{M} : \vec{A}$ по инверсии отношения типизации для ${\bf K}_I$ и $\Gamma \vdash N [\vec{x} := \vec{M}] : B$ по лемме 4, часть 3.
+
+Тогда мы можем преобразовать данный вывод в следующий:
+
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash N [\vec{x} := \vec{M}] : B$}
+\RightLabel{${\bf K}_I$}
+\UnaryInfC{$\Gamma \vdash {\bf pure \:} N [\vec{x} := \vec{M}] : {\bf K}B$}
+\end{prooftree}
+
+4) Пусть вывод заканчивается применением правила ${\text let}_{\bf K}$ для типового объявления, выводимого из пустого контекста:
+
+\begin{prooftree}
+\AxiomC{$\vdash M : A$}
+\UnaryInfC{$\vdash {\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M : {\bf K} A$}
+\end{prooftree}
+
+Тогда, если $\vdash M : A$, тогда $\vdash {\bf pure \:} M : {\bf K}A$.
+
+Данное рассуждение действует также и в обратную сторону.
+\end{proof}
+
+\begin{theorem}
+$ $
+
+$\twoheadrightarrow_{\beta}$ сильно нормализуемо;
+\end{theorem}
+
+\begin{proof}
+$ $
+
+Мы модифицируем технику Тэйта с логическими отношениями для модальностей \cite{Pierce} \cite{Troelstra}.
+
+
+\begin{defin} Множества строго вычислимых термов:
+\begin{itemize}
+  \item $SC_A = \{ M : A \: | \: M \text{ сильно нормализуем } \}$ for $A \in \mathbb{T}$;
+  \item $SC_{A \to B} = \{ M : A \to B \: | \: \forall N \in SC_A, M N \in SC_B \}$, длф $A,B \in \mathbb{T}_{\bf K}$ и $A, B \in \mathbb{T}_{{\bf K}}$;
+  \item $SC_{{\bf K}A} = \{ M : {\bf K}A \: | \: M \text{ сильно нормализуем } \}$ для $A \in \mathbb{T}$;
+  \item $\forall i \in \{ 1,\dots,n\}, \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i} = \{ \vec{M} = (M_1,\dots,M_n) \:\: | \:\: \forall N \in SC_{B}, FV(N) = \{ x_1,\dots,x_n\} \: \& \: \forall i, x_i \in SC_{A_i} \Rightarrow {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N \in SC_{{\bf K} B}\}$
+\end{itemize}
+\end{defin}
+
+\begin{defin}
+Терм $M$ называется нейтральным, если он имеет одну из следующих норм:
+\begin{itemize}
+  \item $M N$;
+  \item Если $M$ нейтральный, то ${\bf pure \:} M$ нейтральный;
+  \item Если $\vec{M}$ -- последовательность нейтральных термов и $N$ нейтрален, то ${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: N}$ нейтрален.
+  $\vec{x}$ -- это последовательность свободных переменных терма $N$.
+\end{itemize}
+\end{defin}
+
+\begin{lemma}
+$ $
+
+\begin{itemize}
+\item Если $M \in SC_A$ и $A \in \mathbb{T}_{{\bf K}}$, то $M$ сильно нормализуем;
+\item Если $M \in SC_A$, $A \in \mathbb{T}_{{\bf K}}$ и $M \rightarrow_{\beta} N$, тогда $N \in SC_A$;
+\item Пусть $N$ нейтрален и $N \in SC_A$. Тогда, если $M \rightarrow_{\beta} N$, то $M \in SC_A$.
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+$ $
+
+Индукция по структуре типа $A$.
+
+1) $A \equiv {\bf K}A$, где $A \in \mathbb{T}$.
+
+i-ii-iii) Очевидно.
+
+  \vspace{\baselineskip}
+
+2)
+
+i) Предположим $\vec{M} = (M_1,\dots,M_n) \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$.
+
+Пусть $N \in SC_{B}$, такой что $FV(N) = \{ x_1,\dots, x_n \}$ и $\forall i, x_i \in SC_{A_i}$.
+
+Тогда ${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N \in SC_{{\bf K}B}$ по предположению индукции.
+
+Тогда $\vec{M}$ сильно нормализуем, откуда ${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N$ сильно нормализуем.
+
+\vspace{\baselineskip}
+
+ii) Пусть $\vec{M_1} \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$ и $\vec{M_1} \rightarrow_{\beta} \vec{M_2}$.
+
+Пусть $N \in SC_{B}$, такой что, $FV(N) = \{ x_1,\dots,x_n \}$ и $\forall i, x_i \in SC_{A_i}$.
+
+Тогда ${\bf let \: pure \:} \vec{x} = \vec{M_1} {\: \bf in \:} N \rightarrow_{\beta} {\bf let \: pure \:} \vec{x} = \vec{M_2} {\: \bf in \:} N$
+
+и ${\bf let \: pure \:} \vec{x} = \vec{M_2} {\: \bf in \:} N \in SC_{{\bf K}B}$ по предположению индукции.
+
+Тогда $\vec{M_2} \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$.
+
+iii) Пусть $M_2$ нейтрален, $M_2 \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$ и $M_1 \rightarrow_{\beta} M_2$.
+
+Пусть $N \in SC_{B}$, такой, что $FV(N) = \{ x_1,\dots,x_n \}$ и $\forall i, x_i \in SC_{A_i}$.
+
+Тога ${\bf let \: pure \:} \vec{x} = \vec{M_2} {\: \bf in \:} N \in SC_{{\bf K}B}$.
+
+Откуда ${\bf let \: pure \:} \vec{x} = \vec{M_1} {\: \bf in \:} N \rightarrow_{\beta} {\bf let \: pure \:} \vec{x} = \vec{M_2} {\: \bf in \:} \in N$.
+
+Следовательно, ${\bf let \: pure \:} \vec{x} = \vec{M_1} {\: \bf in \:} N\in SC_{{\bf K}B}$ по предположению индукции, тогда $\vec{M_1} \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$.
+\end{proof}
+
+\begin{lemma}
+$ $
+
+Если $M \in SC_A$, и ${\bf pure \:} M \in SC_{{\bf K}A}$
+\end{lemma}
+
+\begin{proof}
+
+Индукция по структуре $M$.
+\end{proof}
+
+\begin{lemma}
+$ $
+
+Пусть $x_1 : A_1,\dots, x_n : A_n \vdash M : A$ и для любых $i, M_i \in SC_{A_i}$, тогда $M [x_1 := M_1,\dots,x_n := M_n] \in SC_A$.
+\end{lemma}
+
+\begin{proof}
+$ $
+
+Индукция по построению $x_1 : A_1,\dots, x_n : A_n \vdash M : A$.
+
+1) Пусть вывод заканчивается применением правила ${\bf K}_I$:
+
+\begin{prooftree}
+\AxiomC{$x_1 : A_1,\dots, x_n : A_n \vdash M : A$}
+\UnaryInfC{$x_1 : A_1,\dots, x_n : A_n \vdash {\bf pure \:} M : {\bf K}A$}
+\end{prooftree}
+
+По предположению индукции $M [x_1 := M_1,\dots,x_n := M_n] \in SC_A$, тогда ${\bf pure \:} M [x_1 := M_1,\dots,x_n := M_n] \in SC_{{\bf K}A}$.
+
+\vspace{\baselineskip}
+
+2) Пусть вывод заканчивается применением правила $\text{let}_{\bf K}$.
+\begin{prooftree}
+\AxiomC{$x_1 : A_1,\dots, x_n : A_n \vdash \vec{M^{'}} : {\bf K}\vec{A}$}
+\AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
+\BinaryInfC{$x_1 : A_1,\dots, x_n : A_n \vdash {\bf let \: pure \:} \vec{x} = \vec{M^{'}} {\: \bf in \:} N : {\bf K}B$}
+\end{prooftree}
+
+По предположению индукции $i \in \{ 1,\dots,\text{length}(\vec{M^{'}}) \}$, $M_i^{'} [x_1 := M_1,\dots,x_n := M_n] \in SC_{{\bf K}A_i}$.
+
+Тогда ${\bf let \: pure \:} \vec{x} = \vec{M^{'}} [x_1 := M_1,\dots,x_n := M_n] {\: \bf in \:} N \in SC_{{\bf K} B}$,
+иначе мы имели бесконечный путь редукций в терме $\vec{M^{'}} [x_1 := M_1,\dots,x_n := M_n]$.
+\end{proof}
+
+\begin{col}
+
+Все термы строго вычислимы, следовательно, сильно нормализуемы.
+\end{col}
+
+\end{proof}
+
+\begin{theorem} Свойство Черча-Россера
+$ $
+
+$\twoheadrightarrow_{\beta}$ конфлюентно.
+\end{theorem}
+
+\begin{proof}
+
+Мы модифицируем и применим технику Барендрегта с подчеркиванием термов. Для простоты мы будем работать с грамматикой подчеркнутых термов без конструктов и элиминаторов для пар.
+
+\begin{defin} Множество подчеркнутых термов.
+
+\begin{itemize}
+  \item $x \in \mathbb{V} \Rightarrow x \in \underline{\Lambda}$;
+  \item $M \in \underline{\Lambda} \Rightarrow (\lambda x. M) \in \underline{\Lambda}$;
+  \item $M, N \in \underline{\Lambda} \Rightarrow (M N) \in \underline{\Lambda}$;
+  \item $M \in \underline{\Lambda} \Rightarrow ({\bf pure \:} M) \in \underline{\Lambda}$;
+  \item $\vec{x} \in \mathbb{V}, \vec{M}, N \in \underline{\Lambda} \Rightarrow {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N \in \underline{\Lambda}$;
+  \item $M, N \in \underline{\Lambda} \Rightarrow (\lambda_i x. M) N \in \underline{\Lambda}$, для любых $i \in \mathbb{N}$.
+\end{itemize}
+\end{defin}
+
+\begin{defin} Подставновка для термов с индексированной $\lambda$:
+
+$((\lambda_i x. M) N) [y := Z] = (\lambda_i x. M [y := Z]) (N [y := Z])$
+\end{defin}
+
+\begin{defin} Стирание индексов
+
+Определим стирающие отображение $|.| : \underline{\Lambda} \to \Lambda$ рекурсивно:
+
+\begin{itemize}
+  \item $|x| = x$;
+  \item $|\lambda x. M| = \lambda x. |M|$;
+  \item $|M N| = |M| |N|$;
+  \item $|{\bf pure \:} M| = {\bf pure \:} |M|$;
+  \item $|{\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N| = {\bf let \: pure \:} \vec{x} = \vec{|M|} {\: \bf in \:} |N|$;
+  \item $|(\lambda_i x. M) N| = (\lambda x. |M|) |N|$
+\end{itemize}
+\end{defin}
+
+\begin{defin} Правила редукции:
+
+\begin{itemize}
+\item $(\lambda x. M) N \rightarrow_{\underline{\beta}} M [x := N]$;
+\item $\begin{array}{llll}
+& {\bf let \: pure \:} \vec{x}, y, \vec{z} = \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P} {\: in \:} R \rightarrow_{\underline{\beta}} & \\
+& {\bf let \: pure \:} \vec{x}, \vec{w}, \vec{z} = \vec{M}, \vec{N}, \vec{P} \: { \bf in } \: R [y := Q]
+\end{array}$;
+\item ${\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N \rightarrow_{\underline{\beta}} {\bf pure \:} N [\vec{x} := \vec{M}]$;
+\item ${\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M \rightarrow_{\underline{\beta}} {\bf pure \:} M$
+\item $(\lambda x_i. M) N \rightarrow_{\underline{\beta}} M [x := N]$
+\end{itemize}
+\end{defin}
+
+$\twoheadrightarrow_{\underline{\beta}}$ -- это рефлексивно-транзитивное замыкание $\rightarrow_{\underline{\beta}}$.
+
+\begin{defin} Стирание индексированных редексов:
+
+Определим данное отображение $\phi : \underline{\Lambda} \to \Lambda$ рекурсивно:
+
+\begin{itemize}
+  \item $\phi(x) = x$;
+  \item $\phi(\lambda x. M) = \lambda x. \phi(M)$;
+  \item $\phi(M N) = \phi(M) \phi(N)$;
+  \item $\phi({\bf pure \:} M) = {\bf pure \:} \phi(M)$;
+  \item $\phi({\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N) = {\bf let \: pure \:} \vec{x} = \vec{\phi(M)} {\: \bf in \:} \phi(N)$;
+  \item $\phi((\lambda_i x. M) N) = \phi(M) [x := \phi(N)]$
+\end{itemize}
+\end{defin}
+
+\begin{lemma}
+
+$\forall \underline{M}, \underline{N} \in \underline{\Lambda} \: \forall M, N \in \Lambda, \text{if } |\underline{M}| = M, |\underline{N}| = N, \text{then}$
+\begin{itemize}
+  \item Если $M \twoheadrightarrow_{\beta} N$, то $\underline{M} \twoheadrightarrow_{\underline{\beta}} \underline{N}$;
+  \item Наоборот.
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+
+Индукция по порождению $\rightarrow_{\beta}$ и $\rightarrow_{\underline{\beta}}$ соответственно. Общее утверждение следует из транзитивности редукций обоих видов.
+\end{proof}
+
+\begin{lemma}
+$\phi(M [x := N]) = \phi(M) [x := \phi(N)]$.
+\end{lemma}
+
+\begin{proof}
+Рассмотрим случаи с {\bf pure} и {\bf let}. Остальные случаи рассмотрены \cite{Baren}.
+
+1)
+$ $
+
+$\begin{array}{lll}
+& \phi({\bf pure \:} (M [x := N])) = & \\
+&\quad\quad\quad\quad\quad\quad \text{по определению $\phi$} & \\
+& {\bf pure \:} (\phi(M [x := N])) = & \\
+&\quad\quad\quad\quad\quad\quad \text{по предположению индукции}& \\
+& {\bf pure \:} (\phi(M) [x := \phi(N)]) = &\\
+&\quad\quad\quad\quad\quad\quad \text{по определению подстановки}& \\
+& ({\bf pure \:} \phi (M)) [x := \phi(N)]&
+\end{array}$
+
+2)
+$ $
+
+$\begin{array}{lll}
+&\phi(({\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N) [y := P]) = &\\
+&\quad\quad\quad\quad\quad\quad \text{по определению подстановки}& \\
+&\phi({\bf let \: pure \:} \vec{x} = (\vec{M}[y := P]) {\: \bf in \:} N) = &\\
+&\quad\quad\quad\quad\quad\quad \text{по определению $\phi$}& \\
+&{\bf let \: pure \:} \vec{x} = \phi(\vec{M}[y := P]) {\: \bf in \:} \phi(N) = &\\
+&\quad\quad\quad\quad\quad\quad \text{по предположению индукции}& \\
+&{\bf let \: pure \:} \vec{x} = (\phi(\vec{M}) [y := \phi(P)]) {\: \bf in \:} \phi(N) =&\\
+&\quad\quad\quad\quad\quad\quad \text{по определению подстановки} & \\
+&({\bf let \: pure \:} \vec{x} = \phi(\vec{M}) {\: \bf in \:} \phi(N))[y := \phi(P)]
+\end{array}$
+
+\end{proof}
+
+\begin{lemma}
+$ $
+
+\begin{itemize}
+\item Если $M \twoheadrightarrow_{\underline{\beta}} N$, тогда $\phi(M) \twoheadrightarrow_{\beta} \phi(N)$
+\item Если $|M| = N$ и $\phi(M) = P$, тогда $N \twoheadrightarrow_{\beta} P$.
+\end{itemize}
+\end{lemma}
+
+\begin{proof}
+$ $
+
+i) Индукция по порождению $\twoheadrightarrow_{\underline{\beta}}$ с использованием предыдущей леммы.
+
+ii) Индукция по структуре $M$.
+\end{proof}
+
+\begin{lemma} Лемма о полосе.
+
+$ $
+
+Пусть $M \rightarrow_{\beta} N$ и $M \twoheadrightarrow_{\beta} P$. Тогда существует такой терм $Q$, что
+$N \twoheadrightarrow_{\beta} Q$ и $P \twoheadrightarrow_{\beta} Q$.
+\end{lemma}
+
+\begin{proof}
+
+Доказательство аналогично доказательству леммы о полосе для бестипового $\lambda$-исчисления \cite{Baren} \cite{Baren2}. Мы построим следующую диаграмму, которая коммутирует по леммам 8 и 10, что и доказывает данную лемму.
+
+\vspace{\baselineskip}
+
+\xymatrix{
+&&& M \ar[dd]_{\beta} \ar@{->>}[rrr] &&& P \ar@{-->>}[dd]^{\beta} \\
+&&&& N' \ar[ul]^{|.|} \ar[dl]_{\phi} \ar@{-->>}[rrr]^{\underline{\beta}} &&& P' \ar[ul]^{|.|} \ar[dl]_{\phi} \\
+&&& N \ar@{-->>}[rrr]_{\beta} &&& Q
+}
+\end{proof}
+
+\begin{col}
+$ $
+Если $M \twoheadrightarrow_{\beta} N$ и $M \twoheadrightarrow_{\beta} P$. Тогда найдется такой терм $Q$, что
+$N \twoheadrightarrow_{\beta} Q$ и $P \twoheadrightarrow_{\beta} Q$.
+\end{col}
+
+\begin{proof}
+
+Раскрыть $M \twoheadrightarrow_{\beta} N$ как последовательность одношаговых редукций и применить на каждом шаге лемму о полосе
+\end{proof}
+
+\end{proof}
+
+\begin{theorem}
+$ $
+
+Нормальная форма $\lambda_{{\bf K}}$ со стратегией вычисления с вызовом по имени обладает свойством подформульности: если $M$ в нормальной форме, то всего его подтермы также в нормальной форме.
+
+\end{theorem}
+
+\begin{proof}
+Индукция по структуре $M$.
+Случай ${\bf let \: pure\:} \vec{x} = \vec{M} {\: \bf in \:} N$ рассмотрен Какутани \cite{ModalK} \cite{ModalK1}.
+
+Пусть ${\bf pure \:} M$ в нормальной форме, тогда $M$ в нормальной форме и все его подтермы также в нормальной форме по предположению индукции.
+
+Тогда, если ${\bf pure \:} M$ в нормальной форме, то и все его подтермы также в нормальной форме.
+\end{proof}
