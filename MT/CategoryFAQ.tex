@@ -13,6 +13,28 @@
   \end{itemize}
 \end{defin}
 
+\begin{defin} Функтор
+
+  Пусть $\mathcal{C}, \mathcal{D}$ -- категории. Функтором называется отображение $F : \mathcal{C} \to \mathcal{D}$, такое, что:
+  \begin{itemize}
+    \item $F : A \mapsto F A$, где $A \in Ob_{\mathcal{C}}$;
+    \item $F (g \circ f) = F(g) \circ F(f)$;
+    \item $F (id_A) = id_{F A}$.
+  \end{itemize}
+\end{defin}
+
+\begin{defin} Естественное преобразование
+  Пусть $\mathcal{F}, \mathcal{G} : \mathcal{C} \to \mathcal{D}$ -- функторы.
+  Естественным преобразованием $\alpha : \mathcal{F} \Rightarrow \mathcal{G}$ называется такое индексированное семейство стрелок $(\alpha_{X})_{X \in Ob_{\mathcal{C}}}$,
+что для любых $A, B \in Ob_{\mathcal{C}}$, для любой стрелки $f \in Hom_{\mathcal{C}}(A, B)$, диаграмма коммутирует:
+
+\xymatrix{
+&&&& \mathcal{F} A \ar[dd]_{\alpha_A} \ar[rr]^{\mathcal{F}(f)} && \mathcal{F} B \ar[dd]^{\alpha_B}\\
+\\
+&&&& \mathcal{G}A \ar[rr]_{\mathcal{G}(f)} && \mathcal{G} B
+}
+\end{defin}
+
 \begin{defin} Моноидальная категория
 
   Моноидальная категория -- это категория $\mathcal{C}$ с дополнительной структурой:
