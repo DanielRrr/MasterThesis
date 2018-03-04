@@ -1,0 +1,398 @@
+\documentclass[10pt,pdf,utf8,russian,aspectratio=169]{beamer}
+\usepackage[T2A]{fontenc}
+\usetheme{Montpellier}
+\usepackage{setspace}
+\usepackage{amsmath}
+\usepackage{pgfplots}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz-cd}
+\usepackage[all, 2cell]{xy}
+\usepackage{amssymb}
+\usepackage{verbatim}
+\usepackage[all]{xy}
+\usepackage{tikz}
+\usepackage{bussproofs}
+\usepackage{dsfont}
+\usetikzlibrary{graphs}
+\usetikzlibrary{arrows}
+\usepackage{hyperref}
+\usepackage[english,russian]{babel}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{tikz}
+\usepackage{listings}
+\newtheorem{defin}{Определение}
+\newtheorem{theor}{Теорема}
+\newtheorem{lem}{Лемма}
+\title{Категорная модель модального лямбда-исчисления, основанного на интуиционистской логике.}
+\institute{МГУ}
+\author{Даня Рогозин}
+\date{Март, 2018}
+\begin{document}
+
+\maketitle
+
+\begin{frame}
+  \frametitle{Мотивация. Функциональное программирование на языке Haskell.}
+  \begin{itemize}
+    \item Обратимся в рамках мотивации к функциональному программированию на таких языках, как
+      Haskell, Purescript, Elm или Idris;
+    \item Без ограничения общности разделим типы в языке Haskell (или в любом другом из языков выше) на две части:
+    простые типы и параметризованные;
+    \item Простые типы (\verb"Int", \verb"String", \verb"Char", etc) -- это привычные типы данных;
+    \item Параметризованные типы (\verb"List Int", \verb"Maybe Char", \verb"IO String") используются для
+    вычислений в рамках оговоренного вычислительного контекста;
+    \item Аналогично можно и разделить функции.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Мотивация. Функтор.}
+Класс типов \verb"Functor" -- это общий интерфейс для ``выполнения действия над параметризованным типом, обобщение функции \verb"map" на списках'':
+
+\vspace{\baselineskip}
+
+\verb"class  Functor f  where"
+
+\quad\quad \verb"fmap :: (a -> b) -> f a -> f b".
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Motivation. Monad.}
+Согласно Hackage: ``С точки зрения хаскеллиста лучше всего определять монаду как тип данных для произвольных действий''.
+В частности, вычисления в мире ввода-вывода -- частный случай монадических вычислений.
+
+\vspace{\baselineskip}
+
+(Старое) определение монады:
+
+\verb"class  Functor m => Monad m  where"
+
+\quad\quad \verb"return : a -> m a"
+
+\quad\quad \verb"(>>=) :: m a -> (a -> m b) -> m b".
+
+\vspace{\baselineskip}
+
+Монадическая композиция (композиция действий):
+
+\verb"(>=>) :: Monad m => (a -> m b) -> (b -> m c) -> a -> m c"
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Конечная цель: аппликативные функторы.}
+
+
+Аппликативные функторы сильнее функторов и слабее монад:
+
+\vspace{\baselineskip}
+
+\verb"class Functor f => Applicative f where"
+
+\quad\quad \verb"pure :: a -> f a"
+
+\quad\quad \verb"(<*>) :: f (a -> b) -> f a -> f b"
+
+\vspace{\baselineskip}
+
+Используя аппликативный функтор, мы можем вложить значение в вычислительный контекст \verb"f" с помощью \verb"pure" и выполнить
+аппликацию внутри \verb"f" применением \verb"<*>".
+
+\vspace{\baselineskip}
+
+Использование:
+\begin{itemize}
+\item Обобщение \verb"fmap" для функции произвольной арности:
+
+\verb"pure f <*> a1 <*> ... <*> an"
+\item Парсинг;
+\item Монада в современном Haskell является наследником аппликатива.
+\end{itemize}
+\end{frame}
+
+\begin{frame}
+\frametitle{Монадические вычисления в теории.}
+
+1) \emph{Eugenio Moggi.} ``Notions of computation and monads.'' Inf. Comput., 93(1): 55--92, 1991.
+
+\vspace{\baselineskip}
+
+2) \emph{Frank Pfenning and Rowan Davies.}  ``A judgmental reconstruction of modal logic.'' Mathematical. Structures in Comp. Sci. 11, 4 (August 2001), 511---540.
+
+\vspace{\baselineskip}
+
+3) \emph{Bierman, G., and De Paiva, V.}. On an Intuitionistic Modal Logic. Studia Logica: An International Journal for Symbolic Logic, 65(3), 2000. 383--416.
+
+etc...
+\end{frame}
+
+\begin{frame}
+\frametitle{Аппликативные функторы.}
+
+К сожалению, аппликативный функтор является далеко не самой известной концепцией за вне сообщества хаскеллистов.
+Возможная причина: аппликативные функторы рассмотрены с программистской точки зрения, без теоретического рассмотрения,
+то есть теоретико-доказательного построения синтаксиса и алгебраической (категорной) модели.
+
+\vspace{\baselineskip}
+
+Пример нескольких работ:
+
+\vspace{\baselineskip}
+
+1) \emph{Conor McBride and Ross Paterson.} ``Applicative Programming with Effects.'' Journal of Functional
+Programming 18:1 (2008), pages 1--13.
+
+2) \emph{Ross Paterson.} ``Constructing Applicative Functors.''  Mathematics of Program Construction, Madrid,
+2012, Lecture Notes in Computer Science vol. 7342, pp. 300--323, Springer, 2012.
+
+\vspace{\baselineskip}
+
+Белое пятно: стоит рассмотреть модальное лямбда-исчисление, которые могло бы
+аксиоматизировать вычисления с аппликативным функтором и имело хорошую алгебраическую модель.
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Интуиционистская эпистемическая логика IEL$^{-}$.}
+
+
+Данную проблему удобно решать, если мы располагает некоторой конструктивной модальной логикой с хорошими аксиомами,
+по которой мы можем построить интересное нам модальное лямбда-исчисление:
+
+\vspace{\baselineskip}
+
+\begin{defin} Интуиционистская эпистемическая логика IEL$^{-}$:
+
+  1) Аксиомы IPC;
+
+  2) $\textbf{K}(A \to B) \to (\textbf{K}A \to \textbf{K}B)$ (нормальность);
+
+  3) $A \to \textbf{K}A$ (ко-рефлексия);
+
+  Правило: MP.
+
+\end{defin}
+
+\vspace{\baselineskip}
+
+1) \emph{Artemov S., Protopopescu T.} (2014, June). Intuitionistic epistemic logic. ArXiv, math.LO 1406.1582v1.
+
+2) \emph{Krupski V. N., Alexey Y.} ``Sequent calculus for intuitionistic epistemic logic IEL'' // Logical
+Foundations of Computer Science -- Vol. 9537 of Lecture Notes in Computer Science. -- Springer, 2016. -- P. 187–201.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Натуральный вывод для IEL$^{-}$.}
+
+  \begin{defin} Hатуральное исчисление NIEL$^{-}$ для интуиционистской эпистемической логики IEL$^{-}$ -- это
+  расширение натурального исчисления для интуиционистской логики высказываний с добавлением следующих правил вывода для модальности:
+
+
+    \begin{prooftree}
+      \AxiomC{$\Gamma \vdash A$}
+      \RightLabel{${\bf K}_I$}
+      \UnaryInfC{$\Gamma \vdash {\bf K}A$}
+  \end{prooftree}
+
+    \begin{prooftree}
+    \AxiomC{$\Gamma \vdash {\bf K} A_1, \dots, \Gamma \vdash {\bf K} A_n $}
+    \AxiomC{$A_1,\dots,A_n \vdash B$}
+    \BinaryInfC{$\Gamma \vdash {\bf K} B$}
+    \end{prooftree}
+  \end{defin}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Натуральный вывод для IEL$^{-}$.}
+
+  \begin{lem}
+    $\Gamma \vdash_{\text{NIEL}^{-}} A \Rightarrow$ IEL$^{-} \vdash \bigwedge \Gamma \rightarrow A$.
+  \end{lem}
+
+  \begin{proof}
+  Индукция по построению вывода. Рассмотрим модальные случаи.
+
+  \vspace{\baselineskip}
+
+  1) Если $\Gamma \vdash_{\text{NIEL}^{-}} A$, тогда $\text{IEL}^{-} \vdash \bigwedge \Gamma \rightarrow {\bf K}A$.
+
+  $\begin{array}{lll}
+  (1) & \bigwedge \Gamma \rightarrow A & \text{предположение индукции}\\
+  (2) & A \rightarrow {\bf K}A &\text{ко-рефлексия}\\
+  (3) & (\bigwedge \Gamma \rightarrow A) \rightarrow ((A \rightarrow {\bf K}A) \rightarrow (\bigwedge \Gamma \rightarrow {\bf K}A))&\text{теорема IPC}\\
+  (4) & (A \rightarrow {\bf K}A) \rightarrow (\bigwedge \Gamma \rightarrow {\bf K}A) &\text{из (1), (3) и MP}\\
+  (5) & \bigwedge \Gamma \rightarrow {\bf K}A &\text{из (2), (4) и MP}\\
+  \end{array}$
+
+  \end{proof}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Натуральный вывод для IEL$^{-}$.}
+\begin{proof}
+  2) Если $\Gamma \vdash_{\text{NIEL}^{-}} {\bf K} \vec{A}$ и $\vec{A} \vdash B$, то $\text{IEL}^{-} \vdash \bigwedge \Gamma \rightarrow {\bf K}B$.
+
+\begin{small}
+  $\begin{array}{lll}
+  (1) &\bigwedge \Gamma \rightarrow \bigwedge \limits_{i = 1}^{n} {\bf K} A_i & \text{предположение индукции} \\
+  (2) &\bigwedge \limits_{i = 1}^{n} {\bf K} A_i \rightarrow {\bf K} \bigwedge \limits_{i = 1}^{n} A_i& \text{теорема IEL$^{-}$} \\
+  (3) &\bigwedge \Gamma \rightarrow {\bf K} \bigwedge \limits_{i = 1}^{n} A_i & \text{по (1), (2) и правилу силлогизма} \\
+  (4) &\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B& \text{предположение индукции} \\
+  (5) &(\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B) \rightarrow {\bf K} (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{ко-рефлексия}\\
+  (6) &{\bf K} (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{из (4), (5) и MP} \\
+  (7) &{\bf K} \bigwedge \limits_{i = 1}^{n} A_i \rightarrow {\bf K} B & \text{по (6) и по нормальности} \\
+  (8) &\bigwedge \Gamma \rightarrow {\bf K} B & \text{по (3), (7) и правилу силлогизма}
+  \end{array}$
+\end{small}
+\end{proof}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Натуральный вывод для IEL$^{-}$.}
+
+  \begin{lem}
+  $ $
+  Если $\text{IEL}^{-} \vdash A$, то $\text{NIEL}^{-} \vdash A$.
+  \end{lem}
+
+  \begin{proof}
+  Построение выводов для модальных аксиом в $\text{NIEL}^{-}$.
+  \end{proof}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Модальное лямбда-исчисление по IEL$^{-}$}
+
+  \begin{defin} Модальное $\lambda$-исчисление, основанное на исчислении IEL$^{-}$:
+      \begin{prooftree}
+        \AxiomC{$\Gamma \vdash M : A$}
+        \RightLabel{${\bf K}_I$}
+        \UnaryInfC{$\Gamma \vdash {\bf pure \: } \: M : {\bf K}A $}
+      \end{prooftree}
+
+    \begin{prooftree}
+      \AxiomC{$\Gamma \vdash \vec{M} : {\bf K} \vec{A}$}
+      \AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
+      \RightLabel{$\text{let}_{{\bf K}}$}
+      \BinaryInfC{$\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N : {\bf K} B$}
+    \end{prooftree}
+  \end{defin}
+
+  $\Gamma \vdash \vec{M} : {\bf K} \vec{A}$ -- это синтаксический сахар для $\Gamma \vdash M_1 : {\bf K}A_1,\dots,\Gamma \vdash M_n : {\bf K}A_n$ и $\vec{x} : \vec{A} \vdash N : B$ -- это краткая форма для $x_1 : A_1, \dots, x_n : A_n \vdash N : B$.
+  ${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N$ -- это мгновенное локальное связывание в терме $N$.
+  Мы будем использовать такую краткую форму вместо ${\bf let \: pure\:} x_1,\dots,x_n = M_1,\dots,M_n {\: \bf in \:} N$.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Примеры деревьев вывода}
+
+  \begin{prooftree}
+  \AxiomC{$x : A \vdash x : A$}
+  \UnaryInfC{$x : A \vdash {\bf pure \:} x : {\bf K} A$}
+  \UnaryInfC{$\vdash (\lambda x. {\bf pure \: } x) : A \to {\bf K}A$}
+  \end{prooftree}
+
+  \begin{prooftree}
+  \AxiomC{$f : {\bf K} (A \to B) \vdash f : {\bf K} (A \to B)$}
+  \AxiomC{$x : {\bf K} A \vdash x : {\bf K} A $}
+  \AxiomC{$g : A \to B \vdash g : A \to B$}
+  \AxiomC{$y : A \vdash y : A$}
+  \RightLabel{$\to_e$}
+  \BinaryInfC{$g : A \to B, y : A \vdash g y : B$}
+  \RightLabel{$\text{let}_{{\bf K}}$}
+  \TrinaryInfC{$f : {\bf K} (A \to B), x : {\bf K} A \vdash {\bf let \: pure \:} g, y  = f, x {\: \bf in \:} g y : {\bf K} B$}
+  \UnaryInfC{$f : {\bf K} (A \to B) \vdash \lambda x. {\bf let \: pure\:} g, y = f, x {\: \bf in \:} g y : {\bf K} A \to {\bf K} B$}
+  \UnaryInfC{$\vdash \lambda f. \lambda x. {\bf let \:pure \:} g, y = f, x {\: \bf in \:} g y : {\bf K}(A \to B) \to {\bf K} A \to {\bf K} B$}
+  \end{prooftree}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Подстановка}
+
+  \begin{defin} Подстановка:
+
+  1) $x [x := N] = N$, $x [y := N] = x$;
+
+  2) $(M N) [x := N] = M[x := N] N [x := N]$;
+
+  3) $(\lambda x. M) [x := N] = \lambda x. M [y := N]$, $y \in FV(M)$;
+
+  4) $(M, N)[x := P] = (M[x := P], N [x := P])$;
+
+  5) $(\pi_i M) [x := P] = \pi_i (M[x := P])$, $i \in \{ 1, 2\}$;
+
+  6) $({\bf pure \: } M) [x := P] = {\bf pure \: } (M [x := P])$;
+
+  7) $({\bf let \: pure \:}\vec{x} = \vec{M} {\: \bf in \:} N) [y := P] = {\bf let \: pure \:} \vec{x} = (\vec{M} [y := P]) {\: \bf in \:} N$.
+  \end{defin}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Редукция}
+
+  \begin{defin} Правила $\beta$-редукции и $\eta$-редукции:
+
+  1) $(\lambda x. M) N \rightarrow_{\beta} M [x := N]$;
+
+  2) $\pi_1 \langle M, N \rangle \rightarrow_{\beta} M$;
+
+  3) $\pi_2 \langle M, N \rangle \rightarrow_{\beta} N$;
+
+  4) $\begin{array}{llll}
+  & {\bf let \: pure \:} \vec{x}, y, \vec{z} = \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\: \bf in \: } Q, \vec{P} {\: in \:} R \rightarrow_{\beta} & \\
+  & {\bf let \: pure \:} \vec{x}, \vec{w}, \vec{z} = \vec{M}, \vec{N}, \vec{P} {\: \bf in \: } R [y := Q]
+  \end{array}$
+
+  5) ${\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N \rightarrow_{\beta} {\bf pure \:} N [\vec{x} := \vec{M}]$
+
+  6) ${\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} M \rightarrow_{\beta} {\bf pure \:} M$, где \underline{\quad} -- это пустая последовательность термов.
+
+  7) $\lambda x. f x \rightarrow_{\eta} f$;
+
+  8) $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
+
+  9) ${\bf let \: pure \:} x = M {\: \bf in \: } x \rightarrow_{\eta} M$;
+
+  \end{defin}
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Метатеоретические свойства системы}
+
+  \begin{theor} Редукция субъекта
+
+  Если $\Gamma \vdash M : A$ и $M \twoheadrightarrow_{\beta \eta} N$, тогда $\Gamma \vdash N : A$
+
+  \end{theor}
+
+  \begin{theor}
+  Отношение $\twoheadrightarrow_{\beta}$ сильно нормализуемо;
+  \end{theor}
+
+  \begin{theor}
+  Отношение $\twoheadrightarrow_{\beta}$ конфлюентно.
+  \end{theor}
+
+  \begin{theor}
+  Нормальная форма $\lambda_{{\bf K}}$ со стратегией вычисления с вызовом по имени обладает свойством подформульности: если $M$ в нормальной форме, то всего его подтермы также в нормальной форме.
+
+  \end{theor}
+
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Категорная модель}
+\end{frame}
+
+\end{document}
