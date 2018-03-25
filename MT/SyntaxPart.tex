@@ -228,7 +228,8 @@ ${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N$ -- это мгнов�
 \end{defin}
 
 Во избежание лишних коллизий мы будем полагать, что если терм вида ${\bf let \: pure \:} x = ({\bf let \: pure \:} \vec{y} = \vec{N} {\: \bf in \:} P) {\: \bf in \:} M$
-типизируется, то $x$ не содержится в $\vec{y}$, то есть последовательное применение локальных связываний требует на каждом шаге различныx переменныx.
+типизируется, то $x$ не содержится в $\vec{y}$ (свободные переменные термов $M$ и $\vec{N}$ не должны пересекаться),
+то есть последовательное применение локальных связываний требует на каждом шаге различныx переменныx.
 
 \begin{defin} Подстановка:
 
@@ -377,132 +378,127 @@ $\twoheadrightarrow_{r}$ сильно нормализуемо;
 \begin{proof}
 $ $
 
-Мы модифицируем технику Тэйта с логическими отношениями для модальностей \cite{Pierce} \cite{Troelstra}.
+Построим отображение из $\lambda_{\bf K}$
+в просто типизированное $\lambda$-исчисление с типами $\to$, $\times$ и выделенным типом натуральных чисел $\mathbb{N}$, для которого есть
+следующие правила типизации и редукции:
 
+\begin{prooftree}
+\AxiomC{$ $}
+\UnaryInfC{$\Gamma \vdash 0 : \mathbb{N}$}
+\end{prooftree}
 
-\begin{defin} Множества строго вычислимых термов:
-$ $
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash n : \mathbb{N}$}
+\UnaryInfC{$\Gamma \vdash {\bf succ \:} n : \mathbb{N}$}
+\end{prooftree}
+
+\begin{prooftree}
+\AxiomC{$\Gamma \vdash n : \mathbb{N}$}
+\AxiomC{$\Gamma \vdash m : \mathbb{N}$}
+\BinaryInfC{$\Gamma \vdash n + m : \mathbb{N}$}
+\end{prooftree}
+
 \begin{itemize}
-  \item $SC_A = \{ M : A \: | \: M \text{ сильно нормализуем } \}$ for $A \in \mathbb{T}$;
-  \item $SC_{A \to B} = \{ M : A \to B \: | \: \forall N \in SC_A, M N \in SC_B \}$, длф $A,B \in \mathbb{T}_{\bf K}$ и $A, B \in \mathbb{T}_{{\bf K}}$;
-  \item $SC_{\Box A} = \{ M : {\bf K}A \: | \: M \text{ сильно нормализуем } \}$ для атомарного типа $A$;
-  \item $SC_{\Box A} = \{ M : \Box A \: | \: \forall B \in \mathbb{T}_{{\bf K}}, (N \in SC_{B} \Rightarrow {\bf let \: pure\:} x = M {\: \bf in \:} N \in SC_{\Box B}) \}$ для составного типа $A$.
+  \item $n + 0 \rightarrow_{\beta} n$;
+  \item $(n + {\bf succ \:} m) \rightarrow_{\beta} {\bf succ \:} (n + m)$
 \end{itemize}
-\end{defin}
 
-Заметим, что определение $SC_{\Box A}$ для составного типа $A$ в указанном виде справедливо
-для терма $N$ с одной свободной переменной $x$.
-Если в терме $N$ больше одной свободной переменной, тогда мы рассматриваем вектор $\langle M_1,\dots,M_n\rangle$,
-каждый из элементов которого принадлежит соотвествующему множеству строго вычислимых термов,
-согласованному с определением $SC_{\Box A}$ для составного типа $A$.
+Определим перевод $|.|$ между данными исчислениями отдельно на типах, и на термах
 
-\begin{lemma}
-$ $
-
-  Для любого типа $A$, если $M \in SC_A$, тогда $M$ сильно нормализуем.
-
-\end{lemma}
-
-\begin{proof}
-$ $
-
-  Индукция по длине $A$.
-
-1) Если $A$ атомарный и $M \in SC_A$, тогда утвержение непосредственно следует из
-определения множества строго вычислимых термов. Аналогично для $M \in SC_{\Box A}$, где $A$ -- атомарный тип.
-
-2) Пусть $M \in SC_{\Box A}$ и $N \in SC_B$, тогда ${\bf let \: pure \:} x = M {\: \bf in \:} N \in SC_{\Box B}$, который сильно нормализуем по
-предположению индукции, тогда и нормализуем и $M$, в противном случае существовал бы бесконечный редукционный путь в
-${\bf let \: pure \:} x = M {\: \bf in \:} N$.
-\end{proof}
-
-\begin{lemma}
-$ $
+\begin{defin} Интерпретация типов
 
   \begin{itemize}
-    \item Если $M \in SC_A$, то ${\bf pure \:} M$ сильно нормализуем.
-    \item Если $M$ сильно нормализуем, то ${\bf pure \:} M$ сильно нормализуем.
+    \item $A \in \mathbb{T} \Rightarrow |A| = A$;
+    \item $|A \to B| = |A| \to |B|$;
+    \item $|A \times B| = |A| \times |B|$;
+    \item $|\Box A| = \mathbb{N} \times |A|$.
   \end{itemize}
+\end{defin}
+
+\begin{defin} Интерпретация термов
+  \begin{itemize}
+    \item $x \in \mathbb{V} \Rightarrow |x| = x$;
+    \item $|\lambda x. M| = \lambda x. |M|$;
+    \item $|(M N)| = |M| |N|$;
+    \item $|\langle M, N \rangle| = \langle |M|, |N| \rangle$;
+    \item $|\pi_i M| = \pi_i |M|$, $i \in \{ 1, 2\}$;
+    \item $|{\bf pure \:} M| = \langle 0, |M| \rangle$;
+    \item $|{\bf let \: pure \:} \vec{x} = \vec{N} {\: \bf in \:} M| = \langle \sum \limits_{i = 1}^n \pi_1 |N|, |M| [\vec{x} := \pi_2 \vec{N}] \rangle$
+  \end{itemize}
+\end{defin}
+
+Для удобства положим $|{\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} M| = \langle 0, M \rangle$.
+
+Рассмотрим интерпретацию последнего терма с помощью интерпретации правила типизации:
+
+
+\begin{prooftree}
+  \AxiomC{$|\Gamma \vdash \vec{N} : \Box \vec{A}| = |\Gamma| \vdash \vec{|N|} : \mathbb{A} \times \vec{|A|}$}
+  \AxiomC{$|\vec{x} : \vec{A} \vdash M : B| = \vec{x} : \vec{|A|} \vdash |M| : |B|$}
+  \RightLabel{$\text{let}_{\Box}$}
+  \BinaryInfC{$|\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{N} {\: \bf in \: } M : \Box B| = |\Gamma| \vdash \langle \sum \limits_{i = 1}^n \pi_1 |N|, |M| [\vec{x} := \pi_2 \vec{N}] \rangle : \mathbb{N} \times |B|$}
+\end{prooftree}
+
+\begin{lemma} Интерпретация сохраняет подстановку:
+
+  $|M [x := N]| = |M| [x := |N|]$ для произвольного терма $M$.
 \end{lemma}
 
 \begin{proof}
-$ $
 
-  1) Индукция по длине $A$.
-
-  2) Напрямую следует из леммы 5 и первого пункта данной леммы.
+  Несложная индукция по длине $M$.
 \end{proof}
 
 \begin{lemma}
-$ $
 
-  Если $M \in SC_A$ и $M \rightarrow_{r} N$, тогда и только тогда, когда $N \in SC_A$.
-
+  $M \twoheadrightarrow_{r} N \Rightarrow |M| \twoheadrightarrow_{\beta\eta} |N|$
 \end{lemma}
 
 \begin{proof}
-$ $
 
-  Индукция по длине $A$.
+  Рассмотрим случаи c $\beta \Box$, $\beta \Box {\bf pure}$ и $\Box id$.
 
-1) Пусть $A$ атомарный, тогда случаи для $SC_A$ и $SC_{\Box A}$ очевидны.
+1)
 
-2) Пусть $M \in SC_{\Box A}$ и $N \in SC_B$ и при этом $M \rightarrow_{r} P$.
+$\begin{array}{lll}
+&|{\bf let \: pure \:} x = ({\bf let \: pure \:} y = N {\: \bf in \:} P) {\: \bf in \:} M| = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{По интерпретации}& \\
+&\langle \pi_1 |N|, |M| [x := |P| [y := \pi_2 |N|]] \rangle& \\
+&|{\bf let \: pure \:} y = N {\: \bf in \:} M [x := P]| = & \\
+&\langle \pi_1 |N|, |M| [x := |P|] [y := \pi_2 |N|]\rangle& \equiv \\
+&\quad\quad\quad\quad\quad\quad\quad \text{По лемме Барендрегта по подстановке}& \\
+&\langle \pi_1 |N|, |M| [y := \pi_2 |N|] [x := |P| [y := \pi_2 |N|]] \rangle& \equiv \\
+&\quad\quad\quad\quad\quad\quad\quad \text{По нашему соглашению, $y \notin FV(M)$}& \\
+&\langle \pi_1 |N|, |M| [x := |P| [y := \pi_2 |N|]]&
+\end{array}$
 
-По определению $SC_{\Box A}$, ${\bf let \: pure \:} x = M {\: in \:} N \in SC_{\Box B}$.
+2)
 
-По предположению индукции, ${\bf let \: pure \:} x = M {\: \bf in \:} N \rightarrow_{r}
-{\bf let \: pure \:} x = P {\: \bf in \:} N$, тогда ${\bf let \: pure \:} x = P {\: \bf in \:} N \in SC_{\Box B}$,
-откуда $P \in SC_{\Box A}$.
+$\begin{array}{lll}
+&|{\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{N} {\: \bf in \:} M| = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{По интерпретации}& \\
+&\langle 0 + \dots + 0, |M| [\vec{x} := \vec{|N|}]\rangle \twoheadrightarrow_{\beta}& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Многошаговая редукция для натуральных чисел}& \\
+&\langle 0, |M| [\vec{x} := \vec{|N|}] \rangle = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{По интерпретации}& \\
+&|{\bf pure \:} M [\vec{x} := \vec{N}]|&
+\end{array}$
 
-3) Пусть $M \in SC_A$ и $M \rightarrow_{r} N$. Тогда ${\bf pure \:} M \in SC_{\Box A}$ и
-${\bf pure \:} M \rightarrow_{r} {\bf pure \:} N$, тогда $N \in SC_{\Box A}$.
+3)
 
-Рассуждение в обратную сторону проводится симметрично.
-
+$\begin{array}{lll}
+&|{\bf let \: pure \:} x = M {\: \bf in \:} x| = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{По интерпретации}& \\
+&\langle \pi_1 |M|, x [x := \pi_2 |M|] \rangle = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Подстановка}& \\
+&\langle \pi_1 |M|, \pi_2 |M| \rangle \rightarrow_{\eta}& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Правило $\eta$-редукции для пары}& \\
+&|M|&
+\end{array}$
 \end{proof}
 
-\begin{lemma}
-$ $
-
-Пусть $x_1 : A_1,\dots, x_n : A_n \vdash M : A$ и для любых $i, M_i \in SC_{A_i}$, тогда $M [x_1 := M_1,\dots,x_n := M_n] \in SC_A$.
-\end{lemma}
-
-\begin{proof}
-$ $
-
-Индукция по построению $x_1 : A_1,\dots, x_n : A_n \vdash M : A$.
-
-1) Пусть вывод заканчивается применением правила ${\Box}_I$:
-
-\begin{prooftree}
-\AxiomC{$x_1 : A_1,\dots, x_n : A_n \vdash M : A$}
-\RightLabel{${\Box}_I$}
-\UnaryInfC{$x_1 : A_1,\dots, x_n : A_n \vdash {\bf pure \:} M : {\Box}A$}
-\end{prooftree}
-
-По предположению индукции $M [x_1 := M_1,\dots,x_n := M_n] \in SC_A$, тогда ${\bf pure \:} M [x_1 := M_1,\dots,x_n := M_n] \in SC_{\Box A}$.
-
-\vspace{\baselineskip}
-
-2) Пусть вывод заканчивается применением правила $\text{let}_{\bf K}$.
-\begin{prooftree}
-\AxiomC{$x_1 : A_1,\dots, x_n : A_n \vdash \vec{M^{'}} : \Box \vec{A}$}
-\AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
-\RightLabel{$\text{let}_{\Box}$}
-\BinaryInfC{$x_1 : A_1,\dots, x_n : A_n \vdash {\bf let \: pure \:} \vec{x} = \vec{M^{'}} {\: \bf in \:} N : \Box B$}
-\end{prooftree}
-
-По предположению индукции $i \in \{ 1,\dots,\text{length}(\vec{M^{'}}) \}$, $M_i^{'} [x_1 := M_1,\dots,x_n := M_n] \in SC_{\Box A_i}$.
-
-Тогда ${\bf let \: pure \:} \vec{x} = \vec{M^{'}} [x_1 := M_1,\dots,x_n := M_n] {\: \bf in \:} N \in SC_{\Box B}$,
-иначе мы имели бесконечный путь редукций в терме $\vec{M^{'}} [x_1 := M_1,\dots,x_n := M_n]$.
-\end{proof}
-
-\begin{col}
-
-Все термы строго вычислимы, следовательно, сильно нормализуемы.
-\end{col}
+Таким образом, мы показали, что $\lambda_{\bf K}$ корректно относительно $\lambda_{\to, \times, \mathbb{N}}$,
+тогда $\lambda_{\bf K}$ сильно нормализуемо, поскольку $\lambda_{\to, \times, \mathbb{N}}$ сильно нормализуемо.
 
 \end{proof}
 
@@ -527,35 +523,9 @@ $\twoheadrightarrow_{r}$ конфлюентно.
 
 \begin{proof}
 
-Рассмотрим следующий набор критических пар и покажем, что оба терма из данной пары редуцируются к одному и тому же терму:
+Рассмотрим данную критическую пару и покажем, что оба терма из данной пары редуцируются к одному и тому же терму:
 
-
-1) \xymatrix{
-{\bf let \: pure \:} x = ({\bf let \: pure \:} \vec{y} = {\bf pure \:} \vec{M} {\: \bf in \:} N) {\: \bf in \:} x \ar[dr]^{\beta \Box} \ar[d]_{\Box {\bf id}}\\
-{\bf let \: pure \:} \vec{y} = {\bf pure \:} \vec{M} {\: \bf in \:} N & {\bf let \: pure \:} \vec{y} = {\bf pure \:} M {\: \bf in \:} N
-}
-
-$\begin{array}{lll}
-&{\bf let \: pure \:} \vec{y} = {\bf pure \:} \vec{M} {\: \bf in \:} N \rightarrow_{\beta \Box {\bf pure}} {\bf pure \:} N [\vec{y} := \vec{M}]&
-\end{array}$
-
-\vspace{\baselineskip}
-
-2) \xymatrix{
-{\bf let \: pure \:} x = ({\bf let \: pure \:} y = {\bf pure \:} M {\: \bf in \:} y) {\: \bf in \:} N \ar[dr]^{\beta \Box} \ar[d]_{\Box {\bf id}} \\
-{\bf let \: pure \:} x = {\bf pure \:} M {\: \bf in \:} N & {\bf let \: pure \:} y = {\bf pure \:} M {\: \bf in \:} N [x := y]
-}
-
-\vspace{\baselineskip}
-
-$\begin{array}{lll}
-&{\bf let \: pure \:} x = {\bf pure \:} M {\: \bf in \:} N& \\
-&\quad\quad\quad\quad\quad\quad\quad \rightarrow_{\beta \Box {\bf pure}} {\bf pure \:} N [x := M]&\\
-&{\bf let \: pure \:} y = {\bf pure \:} M {\: \bf in \:} N [x := y]&\\
-&\quad\quad\quad\quad\quad\quad\quad \rightarrow_{\beta \Box {\bf pure}} ({\bf pure \:} N [x := y]) [y := M] \equiv {\bf pure \:} N [x := M]&
-\end{array}$
-
-3) \xymatrix{
+\xymatrix{
 {\bf let \: pure \:} x = ({\bf let \: pure \:} \vec{y} = {\bf pure \:} \vec{N} {\: \bf in \:} P) {\: \bf in \:} M \ar[d]_{\beta \Box} \ar[dr]^{\beta \Box {\bf pure}} \\
 {\bf let \: pure \:} \vec{y} = {\bf pure \:} \vec{N} {\: \bf in \:} M [x := P] & {\bf let \: pure \:} x = {\bf pure \:} P [\vec{y} := \vec{N}] {\: \bf in \:} M
 }
@@ -571,9 +541,9 @@ $\begin{array}{lll}
 &\text{По нашему соглашению, $x \notin \vec{y}$, тогда}& \\
 &M[\vec{y} = \vec{N}] [x := P[\vec{y} := \vec{N}]] \equiv M [x := P[\vec{y} := \vec{N}]]& \\
 \end{array}$
-
-
 \end{proof}
+
+
 \end{proof}
 
 \begin{theorem}
