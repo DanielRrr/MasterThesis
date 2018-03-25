@@ -1,4 +1,4 @@
-\documentclass[a4paper]{article}
+\documentclass[a4paper, 14pt]{article}
 \usepackage{setspace}
 \usepackage{amsmath}
 \usepackage{amsthm}
@@ -15,6 +15,12 @@
 \usepackage{mathabx}
 \usepackage{bussproofs}
 \usepackage[english,russian]{babel}
+\linespread{1.4}
+\usepackage{geometry}
+\geometry{left=3cm}
+\geometry{right=1.5cm}
+\geometry{top=2.4cm}
+\geometry{bottom=2.4cm}
 \newtheorem{theorem}{Теорема}
 \newtheorem{prop}{Предложение}
 \newtheorem{lemma}{Лемма}
@@ -27,9 +33,25 @@
 \begin{document}
 \maketitle
 
-\input{SyntaxPart}
-\input{Semantics}
-\input{CategoryFAQ}
+\section{Предварительные замечания и определения}
+
 \input{HaskellFAQ}
+
+\newpage
+
+\input{CategoryFAQ}
+
+\newpage
+
+\input{Intro}
+
+\newpage
+
+\input{SyntaxPart}
+
+\newpage
+
+\input{Semantics}
+
 
 \end{document}

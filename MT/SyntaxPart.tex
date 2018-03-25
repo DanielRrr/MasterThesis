@@ -227,6 +227,9 @@ ${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N$ -- это мгнов�
 7) $FV({\bf let \: pure} \: \vec{x} = \vec{M} \:\: {\bf in} \:\: N) = \bigcup \limits_{i = 1}^n FV(M), \text{где $n = |\vec{M}|$}$.
 \end{defin}
 
+Во избежание лишних коллизий мы будем полагать, что если терм вида ${\bf let \: pure \:} x = ({\bf let \: pure \:} \vec{y} = \vec{N} {\: \bf in \:} P) {\: \bf in \:} M$
+типизируется, то $x$ не содержится в $\vec{y}$, то есть последовательное применение локальных связываний требует на каждом шаге различныx переменныx.
+
 \begin{defin} Подстановка:
 
 1) $x [x := N] = N$, $x [y := N] = x$;
@@ -524,10 +527,35 @@ $\twoheadrightarrow_{r}$ конфлюентно.
 
 \begin{proof}
 
-Рассмотрим следующую критическую пару и покажем, что оба терма из данной пары редуцируются к одному и тому же терму:
+Рассмотрим следующий набор критических пар и покажем, что оба терма из данной пары редуцируются к одному и тому же терму:
 
 
 1) \xymatrix{
+{\bf let \: pure \:} x = ({\bf let \: pure \:} \vec{y} = {\bf pure \:} \vec{M} {\: \bf in \:} N) {\: \bf in \:} x \ar[dr]^{\beta \Box} \ar[d]_{\Box {\bf id}}\\
+{\bf let \: pure \:} \vec{y} = {\bf pure \:} \vec{M} {\: \bf in \:} N & {\bf let \: pure \:} \vec{y} = {\bf pure \:} M {\: \bf in \:} N
+}
+
+$\begin{array}{lll}
+&{\bf let \: pure \:} \vec{y} = {\bf pure \:} \vec{M} {\: \bf in \:} N \rightarrow_{\beta \Box {\bf pure}} {\bf pure \:} N [\vec{y} := \vec{M}]&
+\end{array}$
+
+\vspace{\baselineskip}
+
+2) \xymatrix{
+{\bf let \: pure \:} x = ({\bf let \: pure \:} y = {\bf pure \:} M {\: \bf in \:} y) {\: \bf in \:} N \ar[dr]^{\beta \Box} \ar[d]_{\Box {\bf id}} \\
+{\bf let \: pure \:} x = {\bf pure \:} M {\: \bf in \:} N & {\bf let \: pure \:} y = {\bf pure \:} M {\: \bf in \:} N [x := y]
+}
+
+\vspace{\baselineskip}
+
+$\begin{array}{lll}
+&{\bf let \: pure \:} x = {\bf pure \:} M {\: \bf in \:} N& \\
+&\quad\quad\quad\quad\quad\quad\quad \rightarrow_{\beta \Box {\bf pure}} {\bf pure \:} N [x := M]&\\
+&{\bf let \: pure \:} y = {\bf pure \:} M {\: \bf in \:} N [x := y]&\\
+&\quad\quad\quad\quad\quad\quad\quad \rightarrow_{\beta \Box {\bf pure}} ({\bf pure \:} N [x := y]) [y := M] \equiv {\bf pure \:} N [x := M]&
+\end{array}$
+
+3) \xymatrix{
 {\bf let \: pure \:} x = ({\bf let \: pure \:} \vec{y} = {\bf pure \:} \vec{N} {\: \bf in \:} P) {\: \bf in \:} M \ar[d]_{\beta \Box} \ar[dr]^{\beta \Box {\bf pure}} \\
 {\bf let \: pure \:} \vec{y} = {\bf pure \:} \vec{N} {\: \bf in \:} M [x := P] & {\bf let \: pure \:} x = {\bf pure \:} P [\vec{y} := \vec{N}] {\: \bf in \:} M
 }
@@ -536,12 +564,15 @@ $\begin{array}{lll}
 &{\bf let \: pure \:} \vec{y} = {\bf pure \:} \vec{N} {\: \bf in \:} M [x := P] \rightarrow_{\beta \Box {\bf pure}}& \\
 &\quad\quad\quad\quad\quad\quad\quad {\bf pure \:} M [x := P] [\vec{y} = \vec{N}]& \\
 &{\bf let \: pure \:} x = {\bf pure \:} P [\vec{y} := \vec{N}] {\: \bf in \:} M \rightarrow_{\beta \Box {\bf pure}}& \\
-&\quad\quad\quad\quad\quad\quad\quad {\bf pure \:} M [x := P[\vec{y} := \vec{N}]]&.
+&\quad\quad\quad\quad\quad\quad\quad {\bf pure \:} M [x := P[\vec{y} := \vec{N}]]& \\
+&\text{ }&\\
+&\text{По лемме о подстановке}& \\
+&{\bf pure \:} M [x := P] [\vec{y} = \vec{N}] \equiv {\bf pure \:} M [\vec{y} = \vec{N}] [x := P[\vec{y} := \vec{N}]]& \\
+&\text{По нашему соглашению, $x \notin \vec{y}$, тогда}& \\
+&M[\vec{y} = \vec{N}] [x := P[\vec{y} := \vec{N}]] \equiv M [x := P[\vec{y} := \vec{N}]]& \\
 \end{array}$
 
 
-В общем случае, эквивалентность термов $M [x := P] [\vec{y} = \vec{N}] \equiv M [x := P[\vec{y} := \vec{N}]]$ не имеет места,
-но в данном случае, но переменные $\vec{y}$ входят свободно только в $P$. В таком случае, результаты обеих подстановок одинаковы.
 \end{proof}
 \end{proof}
 
@@ -554,6 +585,7 @@ $ $
 
 \begin{proof}
 Индукция по структуре $M$.
+
 Случай ${\bf let \: pure\:} \vec{x} = \vec{M} {\: \bf in \:} N$ рассмотрен Какутани \cite{ModalK} \cite{ModalK1}.
 
 Пусть ${\bf pure \:} M$ в нормальной форме, тогда $M$ в нормальной форме и все его подтермы также в нормальной форме по предположению индукции.

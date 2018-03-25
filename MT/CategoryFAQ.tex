@@ -1,4 +1,4 @@
-\section{Приложение А. Глоссарий по теории категорий.}
+\subsection{Приложение А. Глоссарий по теории категорий.}
 
 \begin{defin}
 
@@ -13,6 +13,17 @@
   \end{itemize}
 \end{defin}
 
+
+Примеры категорий:
+\begin{itemize}
+  \item $Set$ -- категория всех множеств, объекты -- класс всех множеств, морфизмы -- теоретико-множественные функции;
+  \item $Group$ -- категория всех групп, морфизмы которой -- гомоморфизмы групп;
+  \item Пусть $\langle A, \preceq \rangle$ -- частично-упорядоченное множество;
+Тогда $\langle A, \preceq \rangle$ -- это категория, объекты которой -- элементы множества $A$, а морфизмы определяются порядком: $a \rightarrow b$ тогда и только тогда, когда $a \preceq b$, для $a, b \in A$;
+  \item $Top$ -- категория топологических пространств и непрерывных отображений между ними.
+  \item Каждый моноид $\langle M, \cdot, e \rangle$ является категорией: моноид можно определять как категорию с одним объектом.
+\end{itemize}
+
 \begin{defin} Функтор
 
   Пусть $\mathcal{C}, \mathcal{D}$ -- категории. Функтором называется отображение $F : \mathcal{C} \to \mathcal{D}$, такое, что:
@@ -22,6 +33,17 @@
     \item $F (id_A) = id_{F A}$.
   \end{itemize}
 \end{defin}
+
+Примеры функторов:
+\begin{itemize}
+  \item Булеан множества является эндофунктором $\mathcal{P}() : Set \Rightarrow Set$.
+  \item Пусть $AssocRing$ -- категория ассоциативных колец, $Semi$ -- категория полугрупп.
+$F : AssocRing \Rightarrow Semi$ -- забывающий функтор, который берет кольцо $\langle A, +, \cdot \rangle$ ``стирает'' аддитивную структуру кольца, оставляя при этом мультипликативную, и возвращает
+полугруппу $\langle A, \cdot \rangle$;
+  \item Пусть $\langle G, \cdot, {}^{-1}, e \rangle$ -- группа. Коммутантом группы $G$ называется называется группа $[G,G] = \{ x \cdot y \cdot x^{-1} \cdot y^{-1} | x, y \in G \}$.
+Легко проверить, что коммутант функториален: гомоморфизм групп переводится в гомоморфизм между порожденными им коммутантами, сохраняя при этом композицию гоморфзимов и тождественный гомоморфизм;
+  \item Гомоморфизм моноидов является функтором (поскольку каждый моноид является категорией).
+\end{itemize}
 
 \begin{defin} Естественное преобразование
   Пусть $\mathcal{F}, \mathcal{G} : \mathcal{C} \to \mathcal{D}$ -- функторы.
@@ -41,7 +63,7 @@
   \begin{itemize}
     \item Бифунктор $\otimes : \mathcal{C} \times \mathcal{C} \to C$, который мы будем называть тензором;
     \item Единица $\mathds{1}$;
-    \item Изоморфизм, который мы будем называть ассоциатором: $\alpha_{A,B,C}: (A \otimes B) \otimes C \cong A \otimes (B \otimes C)$;
+    \item Изоморфизм, который мы будем называть ассоциатором: для любых $A, B, C \in Ob_{\mathcal{C}}, \alpha_{A,B,C}: (A \otimes B) \otimes C \cong A \otimes (B \otimes C)$;
     \item Изоморфизм  $L_A : \mathds{1} \otimes A \cong A$;
     \item Изоморфизм $R_A : A \otimes \mathds{1} \cong A$;
     \item Первое условие когерентности (пятиугольник Маклейна) (данная диаграмма коммутирует):
@@ -57,23 +79,47 @@
     && (A \otimes \mathds{1}) \otimes B \ar[rr]^{\alpha_{A, \mathds{1}, B}} \ar[dr]_{R_A \otimes id_B} && A \otimes (\mathds{1} \otimes B) \ar[dl]^{id_A \otimes L_B} \\
     &&& A \otimes B
     }
-
-    \item Моноидальная категория $\mathcal{C}$ называется симметрической, если для любых $A,B \in Ob_{\mathcal{C}}$, имеет место изоморфизм $\sigma_{A,B} : A \otimes B \cong B \otimes A$.
   \end{itemize}
 \end{defin}
 
 \begin{defin} Декартово замкнутная категория
 
-  Декартово замкнутная категория -- это категория с терминальным объектом, конечными произведениями и экспоненцированием.
+  Декартово замкнутная категория -- это категория с терминальным объектом, произведениями и экспоненцированием:
+
+1) Объект $\mathds{1}$ в категории $\mathcal{C}$ называется терминальных, если для любого объекта $A \in Ob_{\mathcal{C}}$ и для любых морфизмов $f, g \in Hom_{\mathcal{C}}(A, 1)$, $f = g$.
+
+2) Пусть $A, B \in Ob_{\mathcal{C}}$, тогда произведением объектов $A$ и $B$ называется объект $A \times B$, такой, для любого $C \in Ob_{\mathcal{C}}$ и для любых морфизмов $f \in Hom_{\mathcal{C}}(C, A)$ и $g \in Hom_{\mathcal{C}}(C, B)$,
+что диаграмма коммутирует:
+
+\xymatrix{
+&&&&&&& C \ar[dr]^{f} \ar[dl]_{g} \ar[d]^{\langle f,g \rangle} \\
+&&&&&& A & \ar[l]^{\pi_1} A \times B \ar[r]_{\pi_2} & B
+}
+
+Морфизм $\langle f,g \rangle$ называется парой морфизмов $f$ и $g$, а морфизмы вида $\pi_1$ и $\pi_2$ -- каноническими проекциями.
+
+3) Пусть $A, B \in Ob_{\mathcal{C}}$, тогда экспонентой объектов $A$ и $B$ называется объект $B^A$, такой, что диаграмма коммутирует для любого объекта $C \in Ob_{\mathcal{C}}$ и для любого морфизма $f \in Hom_{\mathcal{C}}(C \times A, B)$:
+
+\xymatrix{
+&&&&&& B^A \times A \ar[r]^{\epsilon_{A,B}} & B \\
+&&&&&& C \times A \ar[u]^{\Lambda(f) \times id_A} \ar[ur]_{f}
+}
+
+Морфизмы вида $\epsilon_{A,B}$ называются вычисляющими стрелками, а морфизмы вида $\Lambda(f)$ -- каррированием стрелки $f$.
 \end{defin}
 
-Легко видеть, что декартово замкнутая категория -- это частный случай (симметрической) моноидальной категории, в котором тензор -- это произведения, а единица -- это терминальный объект.
+Примеры декартово замкнутных категорий:
+\begin{itemize}
+  \item Категория всех множеств $Set$: терминальный объект -- любой синглетон, произведение -- декартово произведение, экспоненциальный объект -- множество $B^A = \{ f \: | \: f : A \to B \}$;
+  \item Пусть $A$ -- алгебра Гейтинга, тогда терминальным объектом будет верхний элемент множества $A$, произведение -- точная нижняя грань, экспоненциальный объект -- импликация;
+\end{itemize}
 
-\begin{defin} Нестрогий моноидальный функтор
+
+\begin{defin} Моноидальный функтор
 
   Пусть $\langle \mathcal{C}, \otimes_1, \mathds{1}_{\mathcal{C}} \rangle$ и $\langle \mathcal{D}, \otimes_2, \mathds{1}_{\mathcal{D}} \rangle$ моноидальные категории.
 
-  Нестрогий моноидальный функтор $\mathcal{F} : \langle \mathcal{C}, \otimes_1, \mathds{1} \rangle \to \langle \mathcal{D}, \otimes_2, \mathds{1}' \rangle$ это функтор
+  Моноидальный функтор $\mathcal{F} : \langle \mathcal{C}, \otimes_1, \mathds{1} \rangle \to \langle \mathcal{D}, \otimes_2, \mathds{1}' \rangle$ это функтор
   $\mathcal{F} : \mathcal{C} \to \mathcal{D}$ с дополнительными естественными преобразованиями:
 
   \begin{itemize}
@@ -109,31 +155,11 @@
   \end{itemize}
 \end{defin}
 
-\begin{defin}
-
-Тензорно-сильный функтор -- это эндофунктор над моноидальной категорией с дополнительным естественным преобразованием и условиями когерентности для него (ниже соответствующие коммутирующие диаграмы):
-
-\begin{center}
-$\begin{array}{lll}
-  \tau_{A, B} : A \otimes \mathcal{K}B \rightarrow \mathcal{K}(A \otimes B)
-\end{array}$
-\end{center}
-
-\xymatrix{
-(A \otimes B) \otimes \mathcal{K}C \ar[d]_{\alpha_{A, B, \mathcal{K}C}}\ar[rrrr]^{\tau_{A \otimes B, C}} &&&& \mathcal{K}((A \otimes B) \otimes C) \ar[d]^{\mathcal{K}(\alpha_{A,B,C})}\\
-A \otimes (B \otimes \mathcal{K}C) \ar[rr]_{id_A \otimes \tau_{B,C}} && A \otimes \mathcal{K}(B \otimes C) \ar[rr]_{\quad \tau_{A, (B \otimes C)}} && \mathcal{K}(A \otimes (B \otimes C)) \\
-}
-
-\xymatrix{
-&&& \mathds{1} \otimes \mathcal{K}A \ar[drr]_{R_{\mathcal{K}A}} \ar[rr]^{\mu_{\mathds{1}, A}} && \mathcal{K}(\mathds{1} \otimes A) \ar[d]^{\mathcal{K}(R_A)}\\
-&&&&& \mathcal{K}A
-}
-\end{defin}
 
 \begin{defin} Аппликативный функтор
 
   Аппликативный функтор -- это тройка $\langle \mathcal{C}, \mathcal{K}, \eta \rangle$,
-где $\mathcal{C}$ -- это моноидальная категория, $\mathcal{K}$ - это тензорно-сильный нестрогий моноидальный эндофунктор и
+где $\mathcal{C}$ -- это моноидальная категория, $\mathcal{K}$ - это моноидальный эндофунктор и
 $\eta : Id_{\mathcal{C}} \Rightarrow \mathcal{K}$ -- это естественное преобразование, такое, что:
 
 \begin{itemize}
@@ -145,7 +171,6 @@ $\eta : Id_{\mathcal{C}} \Rightarrow \mathcal{K}$ -- это естественн
 &&& A \otimes B \ar[rr]^{\eta_A \otimes \eta_B} \ar[drr]_{\eta_{A \otimes B}} && \mathcal{K}A \otimes \mathcal{K}B \ar[d]^{\ast_{A,B}} \\
 &&&&& \mathcal{K}(A \otimes B)
 }
-\item $\tau_{A, B} = \ast_{A, B} \circ \eta_{A} \otimes id_{\mathcal{K}B}$.
 \end{itemize}
 \end{defin}
 
