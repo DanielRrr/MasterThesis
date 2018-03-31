@@ -1,4 +1,6 @@
-\section{Теоретико-категорная семантика}
+\section{Теоретико-категорная семантика системы типов $\lambda_{\bf K}$}
+
+\subsection{Корректность}
 
 \begin{theorem} Корректность
 
@@ -205,6 +207,8 @@ $\begin{array}{lll}
 
 \end{proof}
 
+\subsection{Полнота}
+
 \begin{theorem} Полнота
 
 Пусть $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$, тогда $M =_{\beta \eta} N$.
@@ -305,7 +309,7 @@ $\begin{array}{lll}
   Определим естественные преобразования:
 
 \begin{itemize}
-  \item $\eta:Id \Rightarrow \boxdot $, такое, что $\forall \hat{A} \in Ob_{\mathcal{C}(\lambda)}$, $\eta_{\hat{A}} = [x, {\bf pure \:} x] \in Hom_{\mathcal{C}(\lambda)}(\hat{A}, \boxdot \hat{A})$;
+  \item $\eta:Id \Rightarrow \boxdot$, такое, что $\forall \hat{A} \in Ob_{\mathcal{C}(\lambda)}$, $\eta_{\hat{A}} = [x, {\bf pure \:} x] \in Hom_{\mathcal{C}(\lambda)}(\hat{A}, \boxdot \hat{A})$;
   \item $\ast_{A,B}:\boxdot \hat{A} \times \boxdot \hat{B} \to \boxdot (\hat{A} \times \hat{B})$, такое, что $\forall \hat{A}, \hat{B} \in Ob_{\mathcal{C}(\lambda)}, \ast_{\hat{A},\hat{B}} = [p, {\bf let \: pure \:} x,y = \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, y \rangle] \in Hom_{\mathcal{C}(\lambda)}(\boxdot A \times \boxdot B, \boxdot (A \times B))$.
 \end{itemize}
 \end{defin}
