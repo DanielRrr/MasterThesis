@@ -57,14 +57,15 @@ $\begin{array}{lll}
 2) Если $\Gamma \vdash_{\text{NIEL}^{-}} \Box \vec{A}$ и $\vec{A} \vdash B$, то $\text{IEL}^{-} \vdash \bigwedge \Gamma \rightarrow \Box B$.
 
 $\begin{array}{lll}
-(1) &\bigwedge \Gamma \rightarrow \bigwedge \limits_{i = 1}^{n} \Box A_i & \text{предположение индукции} \\
-(2) &\bigwedge \limits_{i = 1}^{n} \Box A_i \rightarrow \Box \bigwedge \limits_{i = 1}^{n} A_i& \text{теорема IEL$^{-}$} \\
-(3) &\bigwedge \Gamma \rightarrow \Box \bigwedge \limits_{i = 1}^{n} A_i & \text{по (1), (2) и правилу силлогизма} \\
-(4) &\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B& \text{предположение индукции} \\
-(5) &(\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B) \rightarrow \Box (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{ко-рефлексия}\\
-(6) &\Box (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{из (4), (5) и MP} \\
-(7) &\Box \bigwedge \limits_{i = 1}^{n} A_i \rightarrow \Box B & \text{по (6) и по нормальности} \\
-(8) &\bigwedge \Gamma \rightarrow \Box B & \text{по (3), (7) и правилу силлогизма}
+(1) &\bigwedge \Gamma \rightarrow \Box A_1, \dots, \bigwedge \Gamma \rightarrow \Box A_n& \text{Предположение индукции} \\
+(2) &\bigwedge \Gamma \rightarrow \bigwedge \limits_{i = 1}^{n} \Box A_i & \text{Теорема IEL$^{-}$} \\
+(3) &\bigwedge \limits_{i = 1}^{n} \Box A_i \rightarrow \Box \bigwedge \limits_{i = 1}^{n} A_i& \text{Теорема IEL$^{-}$} \\
+(4) &\bigwedge \Gamma \rightarrow \Box \bigwedge \limits_{i = 1}^{n} A_i & \text{По (1), (2) и правилу силлогизма} \\
+(5) &\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B& \text{Предположение индукции} \\
+(6) &(\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B) \rightarrow \Box (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{Ко-рефлексия}\\
+(7) &\Box (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{из (4), (5) и MP} \\
+(8) &\Box \bigwedge \limits_{i = 1}^{n} A_i \rightarrow \Box B & \text{По (6) и по нормальности} \\
+(9) &\bigwedge \Gamma \rightarrow \Box B & \text{По (3), (7) и правилу силлогизма}
 \end{array}$
 
 \end{proof}
@@ -83,7 +84,8 @@ $ $
 \subsection{Модальное $\lambda$-исчисление $\lambda_{\bf K}$}
 
 Далее мы построим типизированное $\lambda$-исчисление по фрагменту NIEL$^{-}$ с правилами для импликации, конъюнкции и модальности.
-Данный фрагмент экивалентен IEL$^{-}$ без аксиом для отрицания и дизъюнкции, что элементарно проверяется аналогично.
+Данный фрагмент экивалентен IEL$^{-}$ без аксиом для отрицания и дизъюнкции,
+что элементарно проверяется аналогично.
 
 Определим термы и типы:
 
@@ -262,22 +264,27 @@ ${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N$ -- это мгнов�
 
 3) $\pi_2 \langle M, N \rangle \rightarrow_{\beta} N$;
 
-4) $\begin{array}{lll}
+4) $\lambda x. f x \rightarrow_{\eta} f$;
+
+5) $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
+
+6) $\begin{array}{lll}
 & {\bf let \: pure \:} \vec{x}, y, \vec{z} = \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\: \bf in \: } Q, \vec{P} {\: in \:} R \rightarrow_{\beta \Box} & \\
 & {\bf let \: pure \:} \vec{x}, \vec{w}, \vec{z} = \vec{M}, \vec{N}, \vec{P} {\: \bf in \: } R [y := Q]
 \end{array}$
 
-5) ${\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N \rightarrow_{\beta \Box {\bf pure}} {\bf pure \:} N [\vec{x} := \vec{M}]$
+7) ${\bf let \: pure \:} x = M {\: \bf in \: } x \rightarrow_{\Box id} M$;
 
-6) ${\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} M \rightarrow_{\beta {\bf nec}} {\bf pure \:} M$, где \underline{\quad} -- это пустая последовательность термов.
+8) ${\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N \rightarrow_{\beta \Box {\bf pure}} {\bf pure \:} N [\vec{x} := \vec{M}]$
 
-7) $\lambda x. f x \rightarrow_{\eta} f$;
+9) ${\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} M \rightarrow_{\beta {\bf nec}} {\bf pure \:} M$, где \underline{\quad} -- это пустая последовательность термов.
 
-8) $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
-
-9) ${\bf let \: pure \:} x = M {\: \bf in \: } x \rightarrow_{\Box id} M$;
 
 \end{defin}
+
+Правила 1)-5) -- взятые из просто типизированного $\lambda$-исчисления стандартные правила для $\beta$ и $\eta$ редукции для функций и пар \cite{Morten}.
+Правила 6)-7) -- это правила для ${\bf let \: pure \:}$,
+аналогичные правилам для модальных термов в $\lambda$-исчислении для интуиционистской $\bf K$ \cite{ModalK}.
 
 Мы будет писать $M \rightarrow_{r} N$, если терм $M$ редуцируется к терму $N$ за один шаг по одному из перечисленных выше правил.
 
@@ -336,13 +343,13 @@ $ $
 
 \begin{theorem} Редукция субъекта
 
-Если $\Gamma \vdash M : A$ и $M \twoheadrightarrow_{\beta \eta} N$, тогда $\Gamma \vdash N : A$
+Если $\Gamma \vdash M : A$ и $M \twoheadrightarrow_{r} N$, тогда $\Gamma \vdash N : A$
 
 \end{theorem}
 
 \begin{proof}
 
-Индукция по выводу $\Gamma \vdash M : A$ и по порождению $\rightarrow_{\beta \eta}$.
+Индукция по выводу $\Gamma \vdash M : A$.
 
 Случаи с функцией и парами рассмотрены здесь \cite{Morten} \cite{Pierce}.
 
@@ -392,9 +399,8 @@ $\twoheadrightarrow_{r}$ сильно нормализуемо;
 \begin{proof}
 $ $
 
-Построим отображение из $\lambda_{\bf K}$
-в просто типизированное $\lambda$-исчисление с типами $\to$, $\times$ и выделенным типом натуральных чисел $\mathbb{N}$, для которого есть
-следующие правила типизации и редукции:
+Построим отображение из $\lambda_{\bf K}$ в просто типизированное $\lambda$-исчисление с типами
+$\to$, $\times$ и выделенным типом натуральных чисел $\mathbb{N}$, для которого есть следующие правила типизации и редукции:
 
 \begin{prooftree}
 \AxiomC{$ $}

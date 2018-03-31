@@ -63,7 +63,8 @@
   Данная реализация также довольно проста: на вход принимается функция из типа $a$ в тип $c$ и кортеж, в котором первая координата имеет тип $b$, а вторая -- тип $a$.
   На выходе мы получаем кортеж типа $(b,c)$, применяя полученную на вход функцию ко второй координате пары.
 
-  \item Тип $Maybe$ -- это однопараметрический типовой оператор, для обработки неопределенных значений:
+  \item Тип $Maybe$ -- это однопараметрический типовой оператор, для обработки неопределенных значений, иными словами тип $Maybe$ доопределяет
+  частично-определенную функцию до тотальной:
   \begin{lstlisting}[language=Haskell]
     data Maybe a = Nothing | Just a
   \end{lstlisting}
@@ -155,16 +156,23 @@
   \begin{lstlisting}[language=Haskell]
     instance Applicative Maybe where
       pure = Just
-      Just f  <*> m = fmap f m
+      Just f <*> m = fmap f m
       Nothing <*> _m = Nothing
   \end{lstlisting}
+
+  В данной реализации представителя, \verb"pure" просто оборачивает значение типа произольно типа $a$ в $Just$,
+  создавая таким образом объект типа \verb"Maybe a". Метод \verb"(<*>)" принимает функцию типа \verb"Maybe (a -> b)" и
+  аргумент типа \verb"Maybe a". Если аргументы, переданные \verb"(<*>)", имеют вид $\verb"Just f"$ и $\verb"Just m"$,
+  где $f$ и $m$ -- это объекты типов \verb"a -> b" и \verb"a" соответственно, тогда происходит применение функции $f$
+  к аргументу $m$ внутри \verb"Just" и возвращаемое значение в таком случае имеет вид \verb"Just (f m)".
+  В остальных случаях возвращается \verb"Nothing".
 
   Пример использования:
   \begin{lstlisting}[language=Haskell]
   > liftA2 (++) (Just "Definitely") Nothing
   Nothing
 
-  > liftA2 (++) (Just "Definitely ") (Just "Maybe")
+  > liftA2 (++) (Just ''Definitely '') (Just "Maybe")
   Just ''Definitely Maybe''
   \end{lstlisting}
 

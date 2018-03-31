@@ -84,6 +84,14 @@
 \end{itemize}
 \end{defin}
 
+Для большей ясности проиллюстрируем интерпретацию последнего правила коммутативной диаграммой:
+
+\xymatrix{
+&&& [\![\Gamma]\!] \ar[dd]_{\langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle} \ar[rrrrr]^{\boxdot ([\![N]\!]) \circ ([\![A_1]\!] \ast \dots \ast [\![A_n]\!]) \circ \langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle} &&&&& \boxdot [\![B]\!]\\
+\\
+&&& \prod \limits_{i=1}^n \boxdot [\![A_i]\!] \ar[rrrrr]_{[\![A_1]\!] \ast \dots \ast [\![A_n]\!]} &&&&& \boxdot \prod \limits_{i=1}^n [\![A_i]\!] \ar[uu]_{\boxdot ([\![N]\!])}
+}
+
 \begin{defin} Одновременная подстановка
 
 Пусть $\Gamma = \{ x_1 : A_1, ..., x_n : A_n \}$, $\Gamma \vdash M : A$ и для любых $i \in \{ 1,..., n \}$,
@@ -117,16 +125,17 @@ $ $
 1)
 
 $\begin{array}{lll}
-& [\![\Gamma \vdash ({\bf pure \:} M) [ \vec{x} := \vec{M}] : \Box A]\!] = [\![ \Gamma \vdash {\bf pure \:} (M [ \vec{x} := \vec{M}]) : \Box A]\!] & \\
-&\quad\quad\quad\quad\quad\quad\quad \text{Определение подстановки}& \\
+& [\![\Gamma \vdash ({\bf pure \:} M) [ \vec{x} := \vec{M}] : \Box A]\!] = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Определение мгновенной подстановки}& \\
+&[\![ \Gamma \vdash {\bf pure \:} (M [ \vec{x} := \vec{M}]) : \Box A]\!]& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Интерпретация для {\bf pure}}\\
 &\eta_{[\![A]\!]} \circ [\![(M [ \vec{x} := \vec{M}])]\!]& \\
-&\quad\quad\quad\quad\quad\quad\quad \text{интерпретация для {\bf pure}}\\
+&\quad\quad\quad\quad\quad\quad\quad \text{Предположение индукции} *\\
 &\eta_{[\![A]\!]} \circ ([\![M]\!] \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle) = & \\
-&\quad\quad\quad\quad\quad\quad\quad \text{предположение индукции} *\\
+&\quad\quad\quad\quad\quad\quad\quad \text{Ассоциативность композиции}&\\
 &(\eta_{[\![A]\!]} \circ [\![M]\!]) \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle = & \\
-&\quad\quad\quad\quad\quad\quad\quad \text{ассоциативность композиции}&\\
+&\quad\quad\quad\quad\quad\quad\quad  \text{Интерпретация для {\bf pure}}& \\
 &[\![ \Gamma \vdash {\bf pure \:} M : \Box A]\!] \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle = & \\
-&\quad\quad\quad\quad\quad\quad\quad  \text{интерпретация для {\bf pure}}&
 \end{array}$
 
 \vspace{\baselineskip}
@@ -137,15 +146,15 @@ $\begin{array}{lll}
 
 $\begin{array}{lll}
 &[\![\Gamma \vdash ({\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N) [\vec{y} := \vec{P}] : \Box B]\!] =& \\
-&\quad\quad\quad\quad\quad\quad\quad \text{определение одновременной подстановки} &\\
+&\quad\quad\quad\quad\quad\quad\quad \text{Определение одновременной подстановки} &\\
 &[\![\Gamma \vdash {\bf let \: pure} \: \vec{x} = (\vec{M} [\vec{y} := \vec{P}]) {\: \bf in \:} N : \Box B]\!] =& \\
-&\quad\quad\quad\quad\quad\quad\quad  \text{интерпретация $let_{\Box}$} \\
+&\quad\quad\quad\quad\quad\quad\quad  \text{Интерпретация $let_{\Box}$} \\
 &\boxdot ([\![N]\!]) \circ ([\![A_1]\!] \ast \dots \ast [\![A_n]\!]) \circ [\![\Gamma \vdash (\vec{M} [\vec{y} := \vec{P}]) : \Box \vec{A}]\!] =& \\
-&\quad\quad\quad\quad\quad\quad\quad \text{предположение индукции}& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Предположение индукции}& \\
 &\boxdot ([\![N]\!]) \circ ([\![A_1]\!] \ast \dots \ast [\![A_n]\!]) \circ ([\![\vec{M}]\!] \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle) = & \\
-&\quad\quad\quad\quad\quad\quad\quad \text{ассоциативность композиции}& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Ассоциативность композиции}& \\
 &(\boxdot ([\![N]\!]) \circ ([\![A_1]\!] \ast \dots \ast [\![A_n]\!]) \circ [\![\vec{M}]\!]) \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle = & \\
-&\quad\quad\quad\quad\quad\quad\quad \text{по интерпретации}& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{По интерпретации}& \\
 &[\![\Gamma \vdash {\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N : \Box B]\!] \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle&
 \end{array}$
 
@@ -170,21 +179,21 @@ $\begin{array}{lll}
 
 $\begin{array}{lll}
 &[\![\Gamma \vdash {\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N : \Box B]\!] = & \\
-&\text{\quad\quad\quad\quad\quad\quad интепретация}& \\
+&\text{\quad\quad\quad\quad\quad\quad Интепретация}& \\
 &\boxdot ([\![N]\!]) \circ ([\![A_1]\!] \ast \dots \ast [\![A_n]\!]) \circ \langle \eta_{[\![A_1]\!]} \circ [\![M_1]\!],\dots,\eta_{[\![A_n]\!]} \circ [\![M_n]\!] \rangle = \\
-&\text{\quad\quad\quad\quad\quad\quad свойство пары морфизмов}& \\
+&\text{\quad\quad\quad\quad\quad\quad Свойство произведения морфизмов}& \\
 &\boxdot ([\![N]\!]) \circ ([\![A_1]\!] \ast \dots \ast [\![A_n]\!]) \circ (\eta_{[\![A_1]\!]} \times \dots \times \eta_{[\![A_n]\!]}) \circ \langle [\![M_1]\!], \dots, [\![M_n]\!]\rangle =& \\
-&\text{\quad\quad\quad\quad\quad\quad ассоциативность композиции}& \\
+&\text{\quad\quad\quad\quad\quad\quad Ассоциативность композиции}& \\
 &\boxdot ([\![N]\!]) \circ (([\![A_1]\!] \ast \dots \ast [\![A_n]\!]) \circ (\eta_{[\![A_1]\!]} \times \dots \eta_{[\![A_n]\!]})) \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle =& \\
-&\text{\quad\quad\quad\quad\quad\quad по определению аппликативного функтора}& \\
+&\text{\quad\quad\quad\quad\quad\quad По определению аппликативного функтора}& \\
 &\boxdot ([\![N]\!]) \circ \eta_{[\![A_1]\!] \times \dots \times [\![A_n]\!]} \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle =& \\
-&\text{\quad\quad\quad\quad\quad\quad естественность $\eta$}& \\
+&\text{\quad\quad\quad\quad\quad\quad Естественность $\eta$}& \\
 &\eta_{[\![B]\!]} \circ [\![N]\!] \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle =& \\
-&\text{\quad\quad\quad\quad\quad\quad ассоциативность композиции}& \\
+&\text{\quad\quad\quad\quad\quad\quad Ассоциативность композиции}& \\
 &\eta_{[\![B]\!]} \circ ([\![N]\!] \circ \langle [\![M_1]\!], \dots, [\![M_n]\!]) \rangle =& \\
-&\text{\quad\quad\quad\quad\quad\quad по лемме об одновременной подстановке}& \\
+&\text{\quad\quad\quad\quad\quad\quad По лемме об одновременной подстановке}& \\
 &\eta_{[\![B]\!]} \circ [\![N [\vec{x} := \vec{M}]]\!]& \\
-&\text{\quad\quad\quad\quad\quad\quad интерпретация}& \\
+&\text{\quad\quad\quad\quad\quad\quad Интерпретация}& \\
 &[\![\Gamma \vdash {\bf pure \:} (N [\vec{x} := \vec{M}]) : \Box B]\!]&
 \end{array}$
 
@@ -194,13 +203,13 @@ $\begin{array}{lll}
 
 $\begin{array}{lll}
 &[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M : \Box A]\!] = & \\
-&\quad\quad\quad\quad\quad\quad \text{интерпретация}& \\
+&\quad\quad\quad\quad\quad\quad \text{Интерпретация}& \\
 &\boxdot ([\![M]\!]) \circ u_{\mathds{1}} = & \\
-&\quad\quad\quad\quad\quad\quad \text{определение аппликативного функтора}& \\
+&\quad\quad\quad\quad\quad\quad \text{Определение аппликативного функтора}& \\
 &\boxdot ([\![M]\!]) \circ \eta_{\mathds{1}} = & \\
-&\quad\quad\quad\quad\quad\quad \text{естественность $\eta$} & \\
+&\quad\quad\quad\quad\quad\quad \text{Естественность $\eta$} & \\
 &\eta_{[\![A]\!]} \circ [\![M]\!] = &\\
-&\quad\quad\quad\quad\quad\quad \text{интерпретация} & \\
+&\quad\quad\quad\quad\quad\quad \text{Интерпретация} & \\
 &[\![\vdash {\bf pure \:} M : \Box A]\!]&
 \end{array}$
 \end{proof}
@@ -230,13 +239,15 @@ $ $
 
 Нетрудно заметить, что данное отношение является отношением эквивалентности.
 
-Обозначим класс эквивалентности как $[x, M]_{A, B} = \{ (y, N) \: | \: (x, M) \sim_{A, B} (y, N) \}$ (ниже мы будем опускать индексы).
+Обозначим класс эквивалентности как $[x, M]_{A, B} = \{ (y, N) \: | \: (x, M) \sim_{A, B} (y, N) \}$
+(ниже мы будем опускать индексы).
 
 
 \begin{defin} Категория $\mathcal{C}(\lambda)$:
 \begin{itemize}
   \item $Ob_{\mathcal{C}} = \{ \hat{A} \: | \: A \in \mathbb{T} \} \cup \{ \mathds{1} \}$;
-  \item $Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B}) = (\mathbb{V} \times \Lambda_{{\bf K}})/_{\sim_{A, B}}$;
+  \item $Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B}) = (\mathbb{V} \times \Lambda_{{\bf K}})/_{\sim_{A, B}}$, где $(\mathbb{V} \times \Lambda_{{\bf K}})/_{\sim_{A, B}}$ -- это фактор-множество по отношению $A, B$ эквивалетности.
+  Иными словами, множество стрелок из $\hat{A}$ в $\hat{B}$ определены выводимостями $x : A \vdash M : B$ с точностью до $A, B$ эквивалентности;
   \item Пусть $[x, M] \in Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B})$ и $[y,N] \in Hom_{\mathcal{C}(\lambda)}(\hat{B},\hat{C})$, тогда $[y,M] \circ [x, M] = [x, N [y := M]]$;
   \item Тождественный морфизм $id_{\hat{A}} = [x,x] \in Hom_{\mathcal{C}(\lambda)(\hat{A})}$;
   \item Терминальный объект $\mathds{1}$;
@@ -357,24 +368,24 @@ $ $
 
 $\begin{array}{lll}
 &\eta_{\hat{B}} \circ f = & \\
-&\quad\quad\quad\quad\quad\quad \text{по определению}&\\
+&\quad\quad\quad\quad\quad\quad \text{По определению}&\\
 &[y, {\bf pure \:} y] \circ [x, M] = &\\
-&\quad\quad\quad\quad\quad\quad \text{композиция} & \\
+&\quad\quad\quad\quad\quad\quad \text{Композиция} & \\
 &[x, {\bf pure \:} y [y := M]] = &\\
-&\quad\quad\quad\quad\quad\quad \text{подстановка}& \\
+&\quad\quad\quad\quad\quad\quad \text{Подстановка}& \\
 &[x, {\bf pure \:} M]& \\
 & &\\
 &\text{С другой стороны:}& \\
 &\text{fmap } f \circ \eta_{\hat{A}} = & \\
-&\quad\quad\quad\quad\quad\quad \text{по определению}& \\
+&\quad\quad\quad\quad\quad\quad \text{По определению}& \\
 &[z, {\bf let \: pure \:} x = z {\: \bf in \:} M] \circ [x, {\bf pure \: x}] = &\\
-&\quad\quad\quad\quad\quad\quad \text{композиция}& \\
+&\quad\quad\quad\quad\quad\quad \text{Композиция}& \\
 &[x, {\bf let \: pure \:} x = z {\: \bf in \:} M [z := {\bf pure \:} x]] = & \\
-&\quad\quad\quad\quad\quad\quad \text{подстановка}& \\
+&\quad\quad\quad\quad\quad\quad \text{Подстановка}& \\
 &[x, {\bf let \: pure \:} x = {\bf pure \:} x {\: \bf in \:} M] = & \\
-&\quad\quad\quad\quad\quad\quad \text{правило $\beta$-редукции}& \\
+&\quad\quad\quad\quad\quad\quad \text{Правило $\beta \Box {\bf pure}$}& \\
 &[x, {\bf pure \:} M [x := x]] = &\\
-&\quad\quad\quad\quad\quad\quad \text{постановка} & \\
+&\quad\quad\quad\quad\quad\quad \text{Тождественная постановка} & \\
 &[x, {\bf pure \:} M]&
 \end{array}$
 
@@ -386,21 +397,20 @@ ii) $\ast_{\hat{A},\hat{B}} \circ (\eta_{\hat{A}} \times \eta_{\hat{B}}) = \eta_
 
 $\begin{array}{lll}
 & \ast_{\hat{A},\hat{B}} \circ (\eta_{\hat{A}} \times \eta_{\hat{B}}) = & \\
-& \quad\quad\quad\quad\quad\quad \text{раскрытие} & \\
 & [q, {\bf let \: pure \:} x, y = \pi_1 q, \pi_2 q {\: \bf in \:} \langle x, y \rangle] \circ [p, \langle {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) \rangle] = & \\
-& \quad\quad\quad\quad\quad\quad \text{композиция}& \\
+& \quad\quad\quad\quad\quad\quad \text{Композиция}& \\
 & [p, {\bf let \: pure \:} x, y = \pi_1 q, \pi_2 q {\: \bf in \:} \langle x, y \rangle [q := \langle {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) \rangle]] = & \\
-& \quad\quad\quad\quad\quad\quad \text{подстановка}& \\
+& \quad\quad\quad\quad\quad\quad \text{Подстановка}& \\
 & [p, {\bf let \: pure \:} x, y = \pi_1 (\langle {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) \rangle), \pi_2 (\langle {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) \rangle) {\: \bf in \:} \langle x, y \rangle] = & \\
-& \quad\quad\quad\quad\quad\quad \text{правило $\beta$-редукции}& \\
+& \quad\quad\quad\quad\quad\quad \text{Правило $\beta$-редукции для пары}& \\
 & [p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) {\: \bf in \:} \langle x, y \rangle] = & \\
-& \quad\quad\quad\quad\quad\quad \text{правило $\beta$-редукции}& \\
+& \quad\quad\quad\quad\quad\quad \text{Правило $\beta \Box {\bf pure}$}& \\
 & [p, {\bf pure \:} (\langle x,y \rangle [x := \pi_1 p, y := \pi_2 p])] = & \\
 & \quad\quad\quad\quad\quad\quad \text{подстановка}& \\
 & [p, {\bf pure \:} \langle \pi_1 p, \pi_2 p \rangle] = & \\
-& \quad\quad\quad\quad\quad\quad \text{правило $\eta$-редукции}& \\
+& \quad\quad\quad\quad\quad\quad \text{Правило $\eta$-редукции для пары}& \\
 & [p, {\bf pure \:} p] =& \\
-& \quad\quad\quad\quad\quad\quad \text{определение}& \\
+& \quad\quad\quad\quad\quad\quad \text{По определению}& \\
 & \eta_{\hat{A} \times \hat{B}}&
 \end{array}$
 
