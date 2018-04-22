@@ -8,6 +8,7 @@
 \usepackage{verbatim}
 \usepackage{dsfont}
 \usepackage{mathabx}
+\usepackage{stmaryrd}
 \usepackage[all, 2cell]{xy}
 \usepackage[all]{xy}
 \newtheorem{theorem}{Theorem}
@@ -32,15 +33,12 @@ functional programming languages like Haskell or Idris.
 \end{abstract}
 
 
-  % This is a comment, not shown in final output.
-  % The following shows typesetting  power of LaTeX:
-
   \section{Introduction}
 
   Modal intutionistic epistemic logic IEL was proposed by S. Artemov and T. Proropopescu \cite{Artemov}. IEL
   provides the epistimology and the theory of knowledge as based on BHK-semantics of intuitionistic logic.
   IEL$^{-}$  is a variant of IEL, that corresponds to intuitionistic belief.
-  Informally, ${\bf K}A$ denotes that $A$ is verified intuitionistically.
+  Informally, $\Box A$ denotes that $A$ is verified intuitionistically.
 
   Intuitionistic epistemic logic IEL$^{-}$ is defined by following axioms and derivation rules:
 
@@ -48,9 +46,9 @@ functional programming languages like Haskell or Idris.
 
     1) IPC axioms;
 
-    2) ${\bf K}(A \to B) \to ({\bf K}A \to {\bf K}B)$ (normality);
+    2) $\Box (A \to B) \to (\Box A \to \Box B)$ (normality);
 
-    3) $A \to {\bf K}A$ (co-reflection);
+    3) $A \to \Box A$ (co-reflection);
 
     Rule: MP.
 
@@ -59,8 +57,8 @@ functional programming languages like Haskell or Idris.
   V. Krupski and  A. Yatmanov provided the sequential calculus for IEL and proved that this calculus is
   PSPACE-complete \cite{Krupski}.
 
-  Functional programming languages such as Haskell \cite{Haskell}, Idris \cite{Idris}, Purescript \cite{Purs}
-  Elm \cite{Elm} or Scala \cite{Scala} have special type classes\footnote{Type class in Haskell is a general interface for
+  Functional programming languages such as Haskell \cite{Haskell}, Idris \cite{Idris} or Purescript \cite{Purs}
+  have special type classes\footnote{Type class in Haskell is a general interface for
   special group of datatypes.} for calculations with container types like \verb"Functor" and
   \verb"Applicative" \footnote{Reader may read more about container types in the Haskell standard library documentation\cite{Base} or in the next one textbook
   \cite{Miran}}:
@@ -90,12 +88,12 @@ Applicative functor allows to generalize the action of a functor for functions w
   this coincidence has a non-trivial computational meaning.
 
   We investigate the relationship between intuitionistic epistemic logic IEL$^{-}$ and applicative programming with side-effects
-  by constructing the type system (which is called $\lambda_{{\bf K}}$) which is Curry-Howard isomorphic to $IEL^{-}$.
-  So we will consider ${\bf K}$-modality as an arbitrary applicative functor and we prove that obtained type system
+  by constructing the type system (which is called $\lambda_{\text{IEL}^{-}}$) which is Curry-Howard isomorphic to $IEL^{-}$.
+  So we will consider IEL$^{-}$ modality as an arbitrary applicative functor and we prove that obtained type system
   is sound and complete for applicative functor on cartesian closed category (using the categorical definition proposed by Paterson \cite{Cons}).
 
-  $\lambda_{{\bf K}}$ consists of the rules for simply typed lambda-calculus and special typing rules for
-  lifting types into the applicative functor ${\bf K}$. We assume that our type system will
+  $\lambda_{\text{IEL}^{-}}$ consists of the rules for simply typed lambda-calculus and special typing rules for
+  lifting types into the applicative functor $\Box$. We assume that our type system will
   axiomatize the simplest case of computation with effects with one container. We provide a proof-theoretical
   view at this kind of computations in functional programming and prove strong normalization and confluence.
 
@@ -110,17 +108,17 @@ Applicative functor allows to generalize the action of a functor for functions w
     \begin{flushleft}
   	\begin{prooftree}
     	\AxiomC{$\Gamma \vdash A$}
-    	\RightLabel{${\bf K}_I$}
-    	\UnaryInfC{$\Gamma \vdash {\bf K}A$}
+    	\RightLabel{$\Box_I$}
+    	\UnaryInfC{$\Gamma \vdash \Box A$}
   \end{prooftree}
     \end{flushleft}
   \end{minipage}
   \begin{minipage}{0.5\textwidth}
     \begin{flushright}
   	\begin{prooftree}
-    \AxiomC{$\Gamma \vdash {\bf K} A_1, \dots, \Gamma \vdash {\bf K} A_n $}
+    \AxiomC{$\Gamma \vdash \Box A_1, \dots, \Gamma \vdash \Box A_n $}
     \AxiomC{$A_1,\dots,A_n \vdash B$}
-    \BinaryInfC{$\Gamma \vdash {\bf K} B$}
+    \BinaryInfC{$\Gamma \vdash \Box B$}
   	\end{prooftree}
     \end{flushright}
   \end{minipage}
@@ -129,7 +127,7 @@ Applicative functor allows to generalize the action of a functor for functions w
 The first rule allows to derive co-reflextion. The second modal rule is a counterpart of $\Box_I$
 rule in natural deduction calculus for constructive K (see \cite{ModalLa}).
 
-We will denote $\Gamma \vdash {\bf K} A_1, \dots, \Gamma \vdash {\bf K} A_n$ and $A_1,\dots,A_n \vdash B$ as $\Gamma \vdash {\bf K} \vec{A}$ and $\vec{A} \vdash B$ for brevity.
+We will denote $\Gamma \vdash \Box A_1, \dots, \Gamma \vdash \Box A_n$ and $A_1,\dots,A_n \vdash B$ as $\Gamma \vdash \Box \vec{A}$ and $\vec{A} \vdash B$ for brevity.
 
   \vspace{\baselineskip}
 
@@ -146,29 +144,30 @@ Let us consider cases with modality.
 
 \vspace{\baselineskip}
 
-1) If $\Gamma \vdash_{\text{NIEL}^{-}} A$, then $\text{IEL}^{-} \vdash \bigwedge \Gamma \rightarrow {\bf K}A$.
+1) If $\Gamma \vdash_{\text{NIEL}^{-}} A$, then $\text{IEL}^{-} \vdash \bigwedge \Gamma \rightarrow \Box A$.
 
 $\begin{array}{lll}
 (1) & \bigwedge \Gamma \rightarrow A & \text{assumption}\\
-(2) & A \rightarrow {\bf K}A &\text{co-reflection}\\
-(3) & (\bigwedge \Gamma \rightarrow A) \rightarrow ((A \rightarrow {\bf K}A) \rightarrow (\bigwedge \Gamma \rightarrow {\bf K}A))&\text{IPC theorem}\\
-(4) & (A \rightarrow {\bf K}A) \rightarrow (\bigwedge \Gamma \rightarrow {\bf K}A) &\text{from (1), (3) and MP}\\
-(5) & \bigwedge \Gamma \rightarrow {\bf K}A &\text{from (2), (4) and MP}\\
+(2) & A \rightarrow \Box A &\text{co-reflection}\\
+(3) & (\bigwedge \Gamma \rightarrow A) \rightarrow ((A \rightarrow \Box A) \rightarrow (\bigwedge \Gamma \rightarrow \Box A))&\text{IPC theorem}\\
+(4) & (A \rightarrow \Box A) \rightarrow (\bigwedge \Gamma \rightarrow \Box A) &\text{from (1), (3) and MP}\\
+(5) & \bigwedge \Gamma \rightarrow \Box A &\text{from (2), (4) and MP}\\
 \end{array}$
 
 \vspace{\baselineskip}
 
-2) If $\Gamma \vdash_{\text{NIEL}^{-}} {\bf K} \vec{A}$ and $\vec{A} \vdash B$, then $\text{IEL}^{-} \vdash \bigwedge \Gamma \rightarrow {\bf K}B$.
+2) If $\Gamma \vdash_{\text{NIEL}^{-}} \Box \vec{A}$ and $\vec{A} \vdash B$, then $\text{IEL}^{-} \vdash \bigwedge \Gamma \rightarrow \Box B$.
 
 $\begin{array}{lll}
-(1) &\bigwedge \Gamma \rightarrow \bigwedge \limits_{i = 1}^{n} {\bf K} A_i & \text{assumption} \\
-(2) &\bigwedge \limits_{i = 1}^{n} {\bf K} A_i \rightarrow {\bf K} \bigwedge \limits_{i = 1}^{n} A_i& \text{IEL$^{-}$ theorem} \\
-(3) &\bigwedge \Gamma \rightarrow {\bf K} \bigwedge \limits_{i = 1}^{n} A_i & \text{from (1), (2) and transitivity} \\
-(4) &\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B& \text{assumption} \\
-(5) &(\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B) \rightarrow {\bf K} (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{co-reflection}\\
-(6) &{\bf K} (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{from (4), (5) and MP} \\
-(7) &{\bf K} \bigwedge \limits_{i = 1}^{n} A_i \rightarrow {\bf K} B & \text{from (6) and normality} \\
-(8) &\bigwedge \Gamma \rightarrow {\bf K} B & \text{from (3), (7) and transitivity}
+(1) &\bigwedge \Gamma \rightarrow \Box A_1, \dots, \bigwedge \Gamma \rightarrow \Box A_1 & \text{assumption} \\
+(2) &\bigwedge \Gamma \rightarrow \bigwedge \limits_{i = 1}^{n} \Box A_i & \text{IEL$^{-}$ theorem} \\
+(3) &\bigwedge \limits_{i = 1}^{n} \Box A_i \rightarrow \Box \bigwedge \limits_{i = 1}^{n} A_i & \text{IEL$^{-}$ theorem} \\
+(4) &\bigwedge \Gamma \rightarrow \Box \bigwedge \limits_{i = 1}^{n} A_i & \text{from (1), (2) and transitivity} \\
+(5) &\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B& \text{assumption} \\
+(6) &(\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B) \rightarrow \Box (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{co-reflection}\\
+(7) &\Box (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{from (4), (5) and MP} \\
+(8) &\Box \bigwedge \limits_{i = 1}^{n} A_i \rightarrow \Box B & \text{from (6) and normality} \\
+(9) &\bigwedge \Gamma \rightarrow \Box B & \text{from (3), (7) and transitivity}
 \end{array}$
 
   \end{proof}
@@ -193,26 +192,26 @@ by proof-assingment in rules. Obtained fragment is equivalent to IEL$^{-}$ witho
 
   \begin{defin} The set of terms:
 
-  Let $\mathbb{V}$ be the set of variables. The set $\Lambda_{{\bf K}}$ of terms is defined by the grammar:
+  Let $\mathbb{V}$ be the set of variables. The set $\Lambda_{\Box}$ of terms is defined by the grammar:
 
 $\begin{array}{lll}
-& \Lambda_{{\bf K}} ::= \mathbb{V} \: | \:  (\lambda \mathbb{V}.\Lambda_{{\bf K}}) \: | \: (\Lambda_{{\bf K}}\Lambda_{{\bf K}}) \: | \: (\Lambda_{{\bf K}} , \Lambda_{{\bf K}}) \: | \: (\pi_1 \Lambda_{{\bf K}}) \: | \: (\pi_2 \Lambda_{{\bf K}}) \: | & \\
-& \quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad ({\bf pure \: } \: \Lambda_{{\bf K}}) \: | \: ({\bf let \:\: pure} \:\: \mathbb{V}^{*} = \Lambda_{{\bf K}}^{*} \:\: {\bf in} \:\: \Lambda_{{\bf K}})
+& \Lambda_{\Box} ::= \mathbb{V} \: | \:  (\lambda \mathbb{V}.\Lambda_{\Box}) \: | \: (\Lambda_{\Box} \Lambda_{\Box}) \: | \: \langle \Lambda_{\Box} , \Lambda_{\Box} \rangle \: | \: (\pi_1 \Lambda_{\Box}) \: | \: (\pi_2 \Lambda_{\Box}) \: | & \\
+& \quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad\quad ({\bf box \: } \:\Lambda_{\Box}) \: | \: ({\bf let \: box \:} \mathbb{V}^{*} = \Lambda_{\Box}^{*} \:\: {\bf in} \:\: \Lambda_{\Box})
 \end{array}$
 
   \end{defin}
 
-Where $\mathbb{V}^{*}$ and $\Lambda_{{\bf K}}^{*}$ denote the set of finite sequences of variables $\bigcup \limits_{i=0}^{\infty} \mathbb{V}^i$
-and the set of finite sequences of terms $\bigcup \limits_{i = 0}^{\infty} {\Lambda_{{\bf K}}}^i $. Note that the sequence of variables $\vec{x}$ and the sequence of terms $\vec{M}$ should have the same length.
+Where $\mathbb{V}^{*}$ and $\Lambda_{\Box}^{*}$ denote the set of finite sequences of variables $\bigcup \limits_{i=0}^{\infty} \mathbb{V}^i$
+and the set of finite sequences of terms $\bigcup \limits_{i = 0}^{\infty} \Lambda_{\Box}^i $. Note that the sequence of variables $\vec{x}$ and the sequence of terms $\vec{M}$ should have the same length.
 Otherwise, term is not well-formed.
 
   \begin{defin} The set of types:
 
-  Let $\mathbb{T}$ be the set of atomic types. The set $\mathbb{T}_{{\bf K}}$ of types with applicative
-  functor ${\bf K}$ is generated by the grammar:
+  Let $\mathbb{T}$ be the set of atomic types. The set $\mathbb{T}_{\Box}$ of types with applicative
+  functor $\Box$ is generated by the grammar:
   \begin{equation}
-    \mathbb{T}_{{\bf K}} ::= \mathbb{T} \: | \: (\mathbb{T}_{{\bf K}} \to \mathbb{T}_{{\bf K}}) \: |
-    \: (\mathbb{T}_{{\bf K}} \times \mathbb{T}_{{\bf K}}) \: | \: ({\bf K}\mathbb{T}_{{\bf K}})
+    \mathbb{T}_{\Box} ::= \mathbb{T} \: | \: (\mathbb{T}_{\Box} \to \mathbb{T}_{\Box} \: |
+    \: (\mathbb{T}_{\Box} \times \mathbb{T}_{\Box}) \: | \: (\Box \mathbb{T}_{\Box})
   \end{equation}
   \end{defin}
 
@@ -220,7 +219,7 @@ Otherwise, term is not well-formed.
 
   Our type system is based on the Curry-style typing rules:
 
-  \begin{defin} Modal typed lambda calculus $\lambda_{{\bf K}}$ based on NIEL$^{-}_{\land, \to}$:
+  \begin{defin} Modal typed lambda calculus $\lambda_{\text{IEL}^{-}}$ based on NIEL$^{-}_{\land, \to}$:
 
     \begin{center}
     \begin{prooftree}
@@ -246,8 +245,8 @@ Otherwise, term is not well-formed.
 
       \begin{prooftree}
         \AxiomC{$\Gamma \vdash M : A$}
-        \RightLabel{${\bf K}_I$}
-        \UnaryInfC{$\Gamma \vdash {\bf pure \: } \: M : {\bf K}A $}
+        \RightLabel{$\Box_I$}
+        \UnaryInfC{$\Gamma \vdash {\bf box \: } \: M : \Box A $}
       \end{prooftree}
   \end{minipage}%
   \hfill
@@ -267,129 +266,97 @@ Otherwise, term is not well-formed.
     \end{prooftree}
 
     \begin{prooftree}
-      \AxiomC{$\Gamma \vdash \vec{M} : {\bf K} \vec{A}$}
+      \AxiomC{$\Gamma \vdash \vec{M} : \Box \vec{A}$}
       \AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
-      \RightLabel{$\text{let}_{{\bf K}}$}
-      \BinaryInfC{$\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N : {\bf K} B$}
+      \RightLabel{$\text{let}_{\Box}$}
+      \BinaryInfC{$\Gamma \vdash {\bf let \: box \:} \vec{x} = \vec{M} {\: \bf in \: } N : \Box B$}
     \end{prooftree}
   \end{tabular}
   \end{minipage}%
 
   \end{defin}
 
-  ${\bf K}_I$-typing rule is the same as $\bigcirc$-introduction in lax logic (also known as monadic
-  metalanguage \cite{Lax}) and in typed lambda-calculus which is derived by proof-assignment for lax-logic
-  proofs.
-  ${\bf K}_I$ allows to inject an object of type $\alpha$ into the functor. ${\bf K}_I$  reflects the
-  Haskell method {\bf pure} for Applicative class. It plays the same role as the {\bf return} method in Monad class.
+  $\Box_I$-typing rule is the same as $\bigcirc$-introduction in monadic
+  metalanguage \cite{Lax}. $\Box_I$ allows to inject an object of type $A$ into the functor $\Box$. $\Box_I$ reflects the
+  Haskell method {\bf box} for Applicative class. It plays the same role as the {\bf return} method in Monad class.
 
-  $\text{let}_{{\bf K}}$ is similar to the $\Box$-rule in typed lambda calculus for intuitionistic normal modal logic {\bf IK}, which is described in \cite{ModalK}.
+  $\text{let}_{\Box}$ is similar to the $\Box$-rule in typed lambda calculus for intuitionistic normal modal logic {\bf IK}, which is described in \cite{ModalK}.
 
-$\Gamma \vdash \vec{M} : {\bf K} \vec{A}$ is a syntax sugar for the sequence $\Gamma \vdash M_1 : {\bf K}A_1,\dots,\Gamma \vdash M_n : {\bf K}A_n$ and $\vec{x} : \vec{A} \vdash N : B$ is a short form for $x_1 : A_1, \dots, x_n : A_n \vdash N : B$.
-${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N$ is a simultaneous local binding in $N$.
-We use this short form instead of ${\bf let \: pure\:} x_1,\dots,x_n = M_1,\dots,M_n {\: \bf in \:} N$.
+$\Gamma \vdash \vec{M} : \Box \vec{A}$ is a syntax sugar for the sequence $\Gamma \vdash M_1 : \Box A_1,\dots,\Gamma \vdash M_n : \Box A_n$ and $\vec{x} : \vec{A} \vdash N : B$ is a short form for $x_1 : A_1, \dots, x_n : A_n \vdash N : B$.
+${\bf let \: box \:} \vec{x} = \vec{M} {\: \bf in \: } N$ is a simultaneous local binding in $N$.
+We use this short form instead of ${\bf let \: box \:} x_1,\dots,x_n = M_1,\dots,M_n {\: \bf in \:} N$.
 
-In fact, our calculus is the extention of typed lambda calculus for {\bf IK} by ${\bf K}_I$-rule that is appropriate to co-reflection.
+In fact, our calculus is the extention of typed lambda calculus for {\bf IK} by $\Box_I$-rule that is appropriate to co-reflection.
 
   \vspace{\baselineskip}
 
-Here are some examples of closed terms:
+Here are some examples of derivation trees:
 
 \begin{prooftree}
 \AxiomC{$x : A \vdash x : A$}
-\UnaryInfC{$x : A \vdash {\bf pure \:} x : {\bf K} A$}
-\UnaryInfC{$\vdash (\lambda x. {\bf pure \: } x) : A \to {\bf K}A$}
+\UnaryInfC{$x : A \vdash {\bf box \:} x : \Box A$}
+\UnaryInfC{$\vdash (\lambda x. {\bf box \: } x) : A \to \Box A$}
 \end{prooftree}
 
 \begin{prooftree}
-\AxiomC{$f : {\bf K} (A \to B) \vdash f : {\bf K} (A \to B)$}
-\AxiomC{$x : {\bf K} A \vdash x : {\bf K} A $}
+\AxiomC{$f : \Box (A \to B) \vdash f : \Box (A \to B)$}
+\AxiomC{$x : \Box A \vdash x : \Box A $}
 \AxiomC{$g : A \to B \vdash g : A \to B$}
 \AxiomC{$y : A \vdash y : A$}
 \RightLabel{$\to_e$}
 \BinaryInfC{$g : A \to B, y : A \vdash g y : B$}
-\RightLabel{$\text{let}_{{\bf K}}$}
-\TrinaryInfC{$f : {\bf K} (A \to B), x : {\bf K} A \vdash {\bf let \: pure \:} g, y  = f, x {\: \bf in \:} g y : {\bf K} B$}
-\UnaryInfC{$f : {\bf K} (A \to B) \vdash \lambda x. {\bf let \: pure\:} g, y = f, x {\: \bf in \:} g y : {\bf K} A \to {\bf K} B$}
-\UnaryInfC{$\vdash \lambda f. \lambda x. {\bf let \:pure \:} g, y = f, x {\: \bf in \:} g y : {\bf K}(A \to B) \to {\bf K} A \to {\bf K} B$}
+\RightLabel{$\text{let}_{\Box}$}
+\TrinaryInfC{$f : \Box (A \to B), x : \Box A \vdash {\bf let \: box \:} g, y  = f, x {\: \bf in \:} g y : \Box B$}
+\UnaryInfC{$f : \Box (A \to B) \vdash \lambda x. {\bf let \: box \:} g, y = f, x {\: \bf in \:} g y : \Box A \to \Box B$}
+\UnaryInfC{$\vdash \lambda f. \lambda x. {\bf let \: box \:} g, y = f, x {\: \bf in \:} g y : \Box (A \to B) \to \Box A \to \Box B$}
 \end{prooftree}
 
   \vspace{\baselineskip}
 
-  Now we define free variables and substitutions. $\beta$-reduction, multi-step $\beta$-reduction and $\beta$-equality are defined standardly:
+  Now we define free variables and substitutions:
 
   \begin{defin} The set $FV(M)$ of free variables for a term $M$:
 
-  1) $FV(x) = \{ x \}$;
-
-  2) $FV(\lambda x. M) = FV(M) \setminus \{ x\}$;
-
-  3) $FV(M N) = FV(M) \cup FV(N);$
-
-  4) $FV(\langle M,N \rangle) = FV(M) \cup FV(N)$;
-
-  5) $FV(\pi_i M) \subseteq FV(M)$, $i \in \{ 1, 2\}$;
-
-  6) $FV(\text{pure } M) = FV(M)$;
-
-  7) $FV({\bf let \: pure} \: \vec{x} = \vec{M} \:\: {\bf in} \:\: N) = \bigcup \limits_{i = 1}^n FV(M), \text{where $n = |\vec{M}|$}$.
+\begin{enumerate}
+  \item $FV(x) = \{ x \}$;
+  \item $FV(\lambda x. M) = FV(M) \setminus \{ x\}$;
+  \item $FV(M N) = FV(M) \cup FV(N);$
+  \item $FV(\langle M,N \rangle) = FV(M) \cup FV(N)$;
+  \item $FV(\pi_i M) \subseteq FV(M)$, $i \in \{ 1, 2\}$;
+  \item $FV(\text{\bf box } M) = FV(M)$;
+  \item $FV({\bf let \: box} \: \vec{x} = \vec{M} {\: \bf in \:} N) = \bigcup \limits_{i = 1}^n FV(M), \text{where $n = |\vec{M}|$}$.
+\end{enumerate}
   \end{defin}
 
   \begin{defin} Substitution:
 
-  1) $x [x := N] = N$, $x [y := N] = x$;
-
-  2) $(M N) [x := N] = M[x := N] N [x := N]$;
-
-  3) $(\lambda x. M) [x := N] = \lambda x. M [y := N]$, $y \in FV(M)$;
-
-  4) $(M, N)[x := P] = (M[x := P], N [x := P])$;
-
-  5) $(\pi_i M) [x := P] = \pi_i (M[x := P])$, $i \in \{ 1, 2\}$;
-
-  6) $({\bf pure \: } M) [x := P] = {\bf pure \: } (M [x := P])$;
-
-  7) $({\bf let \: pure \:}\vec{x} = \vec{M} {\: \bf in \:} N) [y := P] = {\bf let \: pure \:} \vec{x} = (\vec{M} [y := P]) {\: \bf in \:} N$.
+\begin{enumerate}
+  \item $x [x := N] = N$, $x [y := N] = x$;
+  \item $(M N) [x := N] = M[x := N] N [x := N]$;
+  \item $(\lambda x. M) [x := N] = \lambda x. M [y := N]$, $y \in FV(M)$;
+  \item $(M, N)[x := P] = (M[x := P], N [x := P])$;
+  \item $(\pi_i M) [x := P] = \pi_i (M[x := P])$, $i \in \{ 1, 2\}$;
+  \item $({\bf box \: } M) [x := P] = {\bf box \: } (M [x := P])$;
+  \item $({\bf let \: box \:}\vec{x} = \vec{M} {\: \bf in \:} N) [y := P] = {\bf let \: box \:} \vec{x} = (\vec{M} [y := P]) {\: \bf in \:} N$.
+\end{enumerate}
   \end{defin}
 
-Substitution and free variable for terms of kind ${\bf let \: pure}$ are defined similary to \cite{ModalK}.
+Substitution and free variable for terms of kind ${\bf let \: box}$ are defined similary to \cite{ModalK}.
 
-  \begin{defin} Type substituition
+  \begin{defin} $\beta$-reduction and $\eta$-reduction rules for $\lambda_{\text{IEL}^{-}}$.
 
-    The substituition of type $C$ for type variable $B$ in type $A$ is defined inductively:
-
-    1) $B [B := C] = B$ and $D [B := C] = D$, if $B \neq D$;
-
-    2) $(A_1 \alpha A_2)[B := C] = (A_1[B := C]) \alpha (A_2[B := C])$, where $\alpha \in \{ \to, \times \}$;
-
-    3) $({\bf K}A)[B := C] = {\bf K}(A [B := C])$;
-
-    4) Let $\Gamma$ be the context, then $\Gamma [B := C] = \{ x : (A[B := C]) \: | \: x : A \in \Gamma \}$.
-  \end{defin}
-
-  \begin{defin} $\beta$-reduction and $\eta$-reduction rules for $\lambda_{{\bf K}}$.
-
-  1) $(\lambda x. M) N \rightarrow_{\beta} M [x := N]$;
-
-  2) $\pi_1 \langle M, N \rangle \rightarrow_{\beta} M$;
-
-  3) $\pi_2 \langle M, N \rangle \rightarrow_{\beta} N$;
-
-  4) $\begin{array}{llll}
-  & {\bf let \: pure \:} \vec{x}, y, \vec{z} = \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\: \bf in \: } Q, \vec{P} {\: in \:} R \rightarrow_{\beta} & \\
-  & {\bf let \: pure \:} \vec{x}, \vec{w}, \vec{z} = \vec{M}, \vec{N}, \vec{P} {\: \bf in \: } R [y := Q]
-  \end{array}$
-
-  5) ${\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N \rightarrow_{\beta} {\bf pure \:} N [\vec{x} := \vec{M}]$
-
-  6) ${\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} M \rightarrow_{\beta} {\bf pure \:} M$, where \underline{\quad} is an empty sequence of terms.
-
-  7) $\lambda x. f x \rightarrow_{\eta} f$;
-
-  8) $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
-
-  9) ${\bf let \: pure \:} x = M {\: \bf in \: } x \rightarrow_{\eta} M$;
-
+\begin{enumerate}
+  \item $(\lambda x. M) N \rightarrow_{\beta} M [x := N]$;
+  \item $\pi_1 \langle M, N \rangle \rightarrow_{\beta} M$;
+  \item $\pi_2 \langle M, N \rangle \rightarrow_{\beta} N$;
+  \item ${\bf let \: box \:} \vec{x}, y, \vec{z} = \vec{M}, {\bf let \: box \: } \vec{w} = \vec{N} {\: \bf in \: } Q, \vec{P} {\: in \:} R \rightarrow_{\beta} \\
+  {\bf let \: box \:} \vec{x}, \vec{w}, \vec{z} = \vec{M}, \vec{N}, \vec{P} {\: \bf in \: } R [y := Q]$
+  \item ${\bf let \: box \:} \vec{x} = {\bf box \:} \vec{M} {\: \bf in \:} N \rightarrow_{\beta} {\bf box \:} N [\vec{x} := \vec{M}]$
+  \item ${\bf let \: box \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} M \rightarrow_{\beta} {\bf box \:} M$, where \underline{\quad} is an empty sequence of terms.
+  \item $\lambda x. f x \rightarrow_{\eta} f$;
+  \item $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
+  \item ${\bf let \: box \:} x = M {\: \bf in \: } x \rightarrow_{\eta} M$;
+\end{enumerate}
   \end{defin}
 
 By default we use call-by-name evaluation strategy.
@@ -398,9 +365,9 @@ Now we will prove standard lemmas for contexts in type systems\footnote{We will 
 $\to$-constructor, they are proved standardly in the same lemmas for simply typed lambda calculus, for
 example see \cite{Neder} \cite{Morten}. We will consider only modal cases}:
 
-\begin{lemma} Generation for ${\bf K}_I$.
+\begin{lemma} Generation for $\Box_I$.
 
-  Let $\Gamma \vdash {\bf pure \:} M : {\bf K}A$, then $\Gamma \vdash M : A$;
+  Let $\Gamma \vdash {\bf box \:} M : \Box A$, then $\Gamma \vdash M : A$;
 \end{lemma}
 
 \begin{proof}
@@ -409,12 +376,11 @@ example see \cite{Neder} \cite{Morten}. We will consider only modal cases}:
 
 \begin{lemma} Basic lemmas.
 
-\begin{itemize}
+\begin{enumerate}
   \item If $\Gamma \vdash M : A$ and $\Gamma \subseteq \Delta$, then $\Delta \vdash M : A$;
   \item If $\Gamma \vdash M : A$, then $\Delta \vdash M : A$, where $\Delta = \{ x_i : A_i \: | \: (x_i : A_i) \in \Gamma \: \& \: x_i \in FV(M) \}$
   \item If $\Gamma, x : A \vdash M : B$ and $\Gamma \vdash N : A$, then $\Gamma \vdash M [x := N] : B$.
-  \item If $\Gamma \vdash M : A$, then $\Gamma [B := C] \vdash M : (A [B := C])$.
-\end{itemize}
+\end{enumerate}
 \end{lemma}
 
 \begin{proof}
@@ -423,64 +389,45 @@ example see \cite{Neder} \cite{Morten}. We will consider only modal cases}:
 1) The derivation ends in
 
 \begin{prooftree}
-  \AxiomC{$\Gamma \vdash \vec{M} : {\bf K} \vec{A}$}
+  \AxiomC{$\Gamma \vdash \vec{M} : \Box \vec{A}$}
   \AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
-  \RightLabel{$\text{let}_{{\bf K}}$}
-  \BinaryInfC{$\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N : {\bf K}B$}
+  \RightLabel{$\text{let}_{\Box}$}
+  \BinaryInfC{$\Gamma \vdash {\bf let \: box \:} \vec{x} = \vec{M} {\: \bf in \: } N : \Box B$}
 \end{prooftree}
 
-By IH $\Delta \vdash \vec{M} : {\bf K} \vec{A}$, so $\Delta \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N : {\bf K}B$.
+By IH $\Delta \vdash \vec{M} : \Box \vec{A}$, so $\Delta \vdash {\bf let \: box \:} \vec{x} = \vec{M} {\: \bf in \: } N : \Box B$.
 
   \vspace{\baselineskip}
 
-2) Similary.
-
-  \vspace{\baselineskip}
-
-3) The derivation ends in
-
-\begin{prooftree}
-  \AxiomC{$\Gamma, z : C \vdash \vec{M} : {\bf K} \vec{A}$}
-  \AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
-  \RightLabel{$\text{let}_{{\bf K}}$}
-  \BinaryInfC{$\Gamma, z : C \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N : {\bf K}B$}
-\end{prooftree}
-
-Let $\Gamma \vdash P : C$.
-
-By IH, $\Gamma \vdash \vec{M} [z := P] : {\bf K} \vec{A}$. So $\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} [z := P] {\: \bf in \: } N : {\bf K}B$
-
-  \vspace{\baselineskip}
-
-4-5) Similary.
+2)-3) Similary.
 
 \end{proof}
 
 \begin{theorem} Subject reduction
 
-  If $\Gamma \vdash M : A$ and $M \twoheadrightarrow_{\beta \eta} N$, then $\Gamma \vdash N : A$
+  If $\Gamma \vdash M : A$ and $M \twoheadrightarrow_r N$, then $\Gamma \vdash N : A$
 
 \end{theorem}
 
 \begin{proof}
 
-Induction on the derivation $\Gamma \vdash M : A$ and on the generation of $\rightarrow_{\beta \eta}$.
+Induction on the derivation $\Gamma \vdash M : A$ and on the generation of $\rightarrow_r$.
 
-For cases with application, abstraction and pairs see \cite{Morten} \cite{Pierce}.
+For cases with axiom, application, abstraction and pairs see \cite{Morten} \cite{Pierce}.
 
-1) If $\Gamma \vdash {\bf let \: pure \:} \vec{x}, y, \vec{z} = \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P}  {\: \bf in \:} R : {\bf K}B$,
-  then $\Gamma \vdash {\bf let \: pure \:} \vec{x}, \vec{w}, \vec{z} = \vec{M}, \vec{N}, \vec{P} \: { \bf in } \: R [y := Q] : {\bf K}B$ by rule 4).
+1) If $\Gamma \vdash {\bf let \: box \:} \vec{x}, y, \vec{z} = \vec{M}, {\bf let \: box \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P}  {\: \bf in \:} R : \Box B$,
+  then $\Gamma \vdash {\bf let \: box \:} \vec{x}, \vec{w}, \vec{z} = \vec{M}, \vec{N}, \vec{P} \: { \bf in } \: R [y := Q] : \Box B$ by rule 4).
 
-2) Let $\Gamma \vdash {\bf let \: pure \:} x = M {\: \bf in \: } x : {\bf K}A$, then $\Gamma \vdash M : {\bf K}A$ by rule 9).
+2) Let $\Gamma \vdash {\bf let \: box \:} x = M {\: \bf in \: } x : \Box A$, then $\Gamma \vdash M : \Box A$ by rule 9).
 
 See \cite{ModalK}.
 
 3) The derivation ends in
 
 \begin{prooftree}
-\AxiomC{$\Gamma \vdash {\bf pure \:} \vec{M} : {\bf K}\vec{A}$}
+\AxiomC{$\Gamma \vdash {\bf box \:} \vec{M} : \Box \vec{A}$}
 \AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
-\BinaryInfC{$\Gamma \vdash {\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N : {\bf K}B$}
+\BinaryInfC{$\Gamma \vdash {\bf let \: box \:} \vec{x} = {\bf box \:} \vec{M} {\: \bf in \:} N : \Box B$}
 \end{prooftree}
 
 So $\Gamma \vdash \vec{M} : \vec{A}$ by Lemma 4 and $\Gamma \vdash N [\vec{x} := \vec{M}] : B$ by Lemma 4, part 3.
@@ -489,349 +436,233 @@ Then we can transform this into the following derivation:
 
 \begin{prooftree}
 \AxiomC{$\Gamma \vdash N [\vec{x} := \vec{M}] : B$}
-\RightLabel{${\bf K}_I$}
-\UnaryInfC{$\Gamma \vdash {\bf pure \:} N [\vec{x} := \vec{M}] : {\bf K}B$}
+\RightLabel{$\Box_I$}
+\UnaryInfC{$\Gamma \vdash {\bf box \:} N [\vec{x} := \vec{M}] : \Box B$}
 \end{prooftree}
 
 4) The derivation ends in
 
 \begin{prooftree}
 \AxiomC{$\vdash M : A$}
-\UnaryInfC{$\vdash {\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M : {\bf K} A$}
+\UnaryInfC{$\vdash {\bf let \: box \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M : \Box A$}
 \end{prooftree}
 
-So, if $\vdash M : A$, then $\vdash {\bf pure \:} M : {\bf K}A$.
+So, if $\vdash M : A$, then $\vdash {\bf box \:} M : \Box A$.
 
-Note that this part of the lemma works conversly too.
-\end{proof}
-
-\begin{theorem}
-  $ $
-
-  $\twoheadrightarrow_{\beta}$ is strongly normalizing;
-\end{theorem}
-
-\begin{proof}
-  $ $
-
-We modify and apply Tait's technique of logical relation for modalities. See \cite{Pierce} \cite{Troelstra}.
-
-We treat only modal cases below.
-
-\begin{defin} The set of strongly computable terms:
-  \begin{itemize}
-    \item $SC_A = \{ M : A \: | \: M \text{ is strongly normalizing} \}$ for $A \in \mathbb{T}$;
-    \item $SC_{A \to B} = \{ M : A \to B \: | \: \forall N \in SC_A, M N \in SC_B \}$, for $A,B \in \mathbb{T}_{\bf K}$ for $A, B \in \mathbb{T}_{{\bf K}}$;
-    \item $SC_{{\bf K}A} = \{ M : {\bf K}A \: | \: M \text{ is strongly normalizing} \}$ for $A \in \mathbb{T}$;
-    \item $\forall i \in \{ 1,\dots,n\}, \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i} = \{ \vec{M} = (M_1,\dots,M_n) \:\: | \:\: \forall N \in SC_{B}, FV(N) = \{ x_1,\dots,x_n\} \: \& \: \forall i, x_i \in SC_{A_i} \Rightarrow {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N \in SC_{{\bf K} B}\}$
-  \end{itemize}
-\end{defin}
-
-\begin{defin}
-  A term $M$ is neutral, if it has one of the following forms:
-  \begin{itemize}
-    \item $M N$;
-    \item If $M$ is neutral, then ${\bf pure \:} M$ is neutral;
-    \item If $\vec{M}$ and $N$ are neutral, then ${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: N}$ is neutral.
-    $\vec{x}$ is a sequence of free variables of a term $N$.
-  \end{itemize}
-\end{defin}
-
-\begin{lemma}
-  $ $
-
-\begin{itemize}
-\item If $M \in SC_A$ and $A \in \mathbb{T}_{{\bf K}}$, then $M$ is strongly normalizing;
-\item If $M \in SC_A$, $A \in \mathbb{T}_{{\bf K}}$ and $M \rightarrow_{\beta} N$, then $N \in SC_A$;
-\item If $N$ is neutral, $N \in SC_A$. Then, if $M \rightarrow_{\beta} N$, then $M \in SC_A$;
-\end{itemize}
-\end{lemma}
-
-\begin{proof}
-  $ $
-
-  By induction on the structure of $A$.
-
-1) $A \equiv {\bf K}A$, where $A \in \mathbb{T}$.
-
-i-ii-iii) Immediately.
-
-    \vspace{\baselineskip}
-
-2)
-
-i) Suppose $\vec{M} = (M_1,\dots,M_n) \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$.
-
-Let $N \in SC_{B}$, such that $FV(N) = \{ x_1,\dots, x_n \}$ and $\forall i, x_i \in SC_{A_i}$.
-
-So ${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N \in SC_{{\bf K}B}$ by IH.
-
-So $\vec{M}$ are strongly normalizing, since ${\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } N$ is strongly normalizing by IH.
-
-\vspace{\baselineskip}
-
-ii) Let $\vec{M_1} \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$ and $\vec{M_1} \rightarrow_{\beta} \vec{M_2}$.
-
-Let $N \in SC_{B}$, such that $FV(N) = \{ x_1,\dots,x_n \}$ and $\forall i, x_i \in SC_{A_i}$.
-
-So ${\bf let \: pure \:} \vec{x} = \vec{M_1} {\: \bf in \:} N \rightarrow_{\beta} {\bf let \: pure \:} \vec{x} = \vec{M_2} {\: \bf in \:} N$
-
-and ${\bf let \: pure \:} \vec{x} = \vec{M_2} {\: \bf in \:} N \in SC_{{\bf K}B}$ by assumption.
-
-So $\vec{M_2} \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$.
-
-iii) Let $M_2$ be neutral, $M_2 \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$ and $M_1 \rightarrow_{\beta} M_2$.
-
-Let $N \in SC_{B}$, , such that $FV(N) = \{ x_1,\dots,x_n \}$ and $\forall i, x_i \in SC_{A_i}$.
-
-So ${\bf let \: pure \:} \vec{x} = \vec{M_2} {\: \bf in \:} N \in SC_{{\bf K}B}$.
-
-Thus ${\bf let \: pure \:} \vec{x} = \vec{M_1} {\: \bf in \:} N \rightarrow_{\beta} {\bf let \: pure \:} \vec{x} = \vec{M_2} {\: \bf in \:} \in N$.
-
-Hence ${\bf let \: pure \:} \vec{x} = \vec{M_1} {\: \bf in \:} N\in SC_{{\bf K}B}$ by IH, so $\vec{M_1} \in \prod \limits_{i = 1}^{n} SC_{{\bf K}A_i}$.
-\end{proof}
-
-\begin{lemma}
-  $ $
-
-  If $M \in SC_A$, then ${\bf pure \:} M \in SC_{{\bf K}A}$
-\end{lemma}
-
-\begin{proof}
-
-  Induction on the structure of M.
-\end{proof}
-
-\begin{lemma}
-  $ $
-
-  Let $x_1 : A_1,\dots, x_n : A_n \vdash M : A$, then forall $i, M_i \in SC_{A_i}$. Then $M [x_1 := M_1,\dots,x_n := M_n] \in SC_A$.
-\end{lemma}
-
-\begin{proof}
-  $ $
-
-Induction on the derivation of $x_1 : A_1,\dots, x_n : A_n \vdash M : A$.
-
-  1) The derivation ends in:
-
-\begin{prooftree}
-\AxiomC{$x_1 : A_1,\dots, x_n : A_n \vdash M : A$}
-\UnaryInfC{$x_1 : A_1,\dots, x_n : A_n \vdash {\bf pure \:} M : {\bf K}A$}
-\end{prooftree}
-
-  By assumption $M [x_1 := M_1,\dots,x_n := M_n] \in SC_A$, so ${\bf pure \:} M [x_1 := M_1,\dots,x_n := M_n] \in SC_{{\bf K}A}$.
-
-\vspace{\baselineskip}
-
-  2) The derivation ends in:
-\begin{prooftree}
-  \AxiomC{$x_1 : A_1,\dots, x_n : A_n \vdash \vec{M^{'}} : {\bf K}\vec{A}$}
-  \AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
-  \BinaryInfC{$x_1 : A_1,\dots, x_n : A_n \vdash {\bf let \: pure \:} \vec{x} = \vec{M^{'}} {\: \bf in \:} N : {\bf K}B$}
-\end{prooftree}
-
-By IH forall $i \in \{ 1,\dots,\text{length}(\vec{M^{'}}) \}$, $M_i^{'} [x_1 := M_1,\dots,x_n := M_n] \in SC_{{\bf K}A_i}$.
-
-So ${\bf let \: pure \:} \vec{x} = \vec{M^{'}} [x_1 := M_1,\dots,x_n := M_n] {\: \bf in \:} N \in SC_{{\bf K} B}$,
-otherwise we can build infinite reduction path in $\vec{M^{'}} [x_1 := M_1,\dots,x_n := M_n]$.
-\end{proof}
-
-\begin{col}
-
-  All terms are strongly computable, therefore are strongly normalizing.
-\end{col}
 
 \end{proof}
 
 \begin{theorem}
   $ $
 
-  $\twoheadrightarrow_{\beta}$ is confluent.
+  $\twoheadrightarrow_r$ is strongly normalizing;
+\end{theorem}
+
+\begin{proof}
+  $ $
+
+  Let us define the transformation from $\lambda_{\text{IEL}^{-}}$ into the simple type theory with
+  $\to$, $\times$ and natural number type $\mathbb{N}$ \footnote{Strong normalization for stronger system was shown here \cite{Girard}} with additional typing and reduction rules:
+
+  \begin{prooftree}
+  \AxiomC{$ $}
+  \UnaryInfC{$\Gamma \vdash 0 : \mathbb{N}$}
+  \end{prooftree}
+
+  \begin{prooftree}
+  \AxiomC{$\Gamma \vdash n : \mathbb{N}$}
+  \UnaryInfC{$\Gamma \vdash {\bf succ \:} n : \mathbb{N}$}
+  \end{prooftree}
+
+  \begin{prooftree}
+  \AxiomC{$\Gamma \vdash n : \mathbb{N}$}
+  \AxiomC{$\Gamma \vdash m : \mathbb{N}$}
+  \BinaryInfC{$\Gamma \vdash n + m : \mathbb{N}$}
+  \end{prooftree}
+
+  \begin{enumerate}
+    \item $n + 0 \rightarrow_{\beta} n$;
+    \item $(n + {\bf succ \:} m) \rightarrow_{\beta} {\bf succ \:} (n + m)$
+  \end{enumerate}
+
+  The transformation $|.|$ is defined as follows:
+
+  \begin{defin} Interpretaion of types:
+
+    \begin{enumerate}
+      \item $A \in \mathbb{T} \Rightarrow |A| = A$;
+      \item $|A \to B| = |A| \to |B|$;
+      \item $|A \times B| = |A| \times |B|$;
+      \item $|\Box A| = \mathbb{N} \times |A|$.
+    \end{enumerate}
+  \end{defin}
+
+  \begin{defin} Interpretation of terms:
+    \begin{enumerate}
+      \item $x \in \mathbb{V} \Rightarrow |x| = x$;
+      \item $|\lambda x. M| = \lambda x. |M|$;
+      \item $|(M N)| = |M| |N|$;
+      \item $|\langle M, N \rangle| = \langle |M|, |N| \rangle$;
+      \item $|\pi_i M| = \pi_i |M|$, $i \in \{ 1, 2\}$;
+      \item $|{\bf box \:} M| = \langle 0, |M| \rangle$;
+      \item $|{\bf let \: box \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} M| = \langle 0, |M| \rangle$;
+      \item $|{\bf let \: box \:} x = N {\: \bf in \:} M| = \langle \pi_1 |N| , |M| [x := \pi_2 |N|] \rangle$
+      \item $|{\bf let \: box \:} \vec{x} = \vec{N} {\: \bf in \:} M| = \langle \sum \limits_{i = 1}^n \pi_1 |N|, |M| [\vec{x} := \pi_2 \vec{N}] \rangle$
+    \end{enumerate}
+  \end{defin}
+
+  Let us consider the interpretation for $\text{let}_{\Box}$ rule:
+
+  \begin{prooftree}
+    \AxiomC{$|\Gamma \vdash \vec{N} : \Box \vec{A}| = |\Gamma| \vdash \vec{|N|} : \mathbb{N} \times \vec{|A|}$}
+    \AxiomC{$|\vec{x} : \vec{A} \vdash M : B| = \vec{x} : \vec{|A|} \vdash |M| : |B|$}
+    \RightLabel{$\text{let}_{\Box}$}
+    \BinaryInfC{$|\Gamma \vdash {\bf let \: box \:} \vec{x} = \vec{N} {\: \bf in \: } M : \Box B| = |\Gamma| \vdash \langle \sum \limits_{i = 1}^n \pi_1 |N|, |M| [\vec{x} := \pi_2 \vec{N}] \rangle : \mathbb{N} \times |B|$}
+  \end{prooftree}
+
+  \begin{lemma}:
+
+    $|M [x := N]| = |M| [x := |N|]$ for any term $M$.
+  \end{lemma}
+
+  \begin{proof}
+
+    Induction on the structure of $M$.
+  \end{proof}
+
+  \begin{lemma}
+
+    $M \twoheadrightarrow_{r} N \Rightarrow |M| \twoheadrightarrow_{\beta\eta} |N|$
+  \end{lemma}
+
+  \begin{proof}
+
+    Let us consider cases with $\beta \Box$, $\beta \Box {\bf box}$ and $\Box id$.
+
+\begin{enumerate}
+\item $|{\bf let \: box \:} x = ({\bf let \: box \:} y = N {\: \bf in \:} P) {\: \bf in \:} M| = \\
+\quad\quad\quad\quad |{\bf let \: box \:} y = N {\: \bf in \:} M [x := P]|$
+
+  $\begin{array}{lll}
+  &|{\bf let \: box \:} x = ({\bf let \: box \:} y = N {\: \bf in \:} P) {\: \bf in \:} M| = & \\
+  &\quad\quad\quad\quad\quad\quad\quad \text{Interpretation}& \\
+  &\langle \pi_1 |N|, |M| [x := |P| [y := \pi_2 |N|]] \rangle& \\
+  &|{\bf let \: box \:} y = N {\: \bf in \:} M [x := P]| = & \\
+  &\langle \pi_1 |N|, |M| [x := |P|] [y := \pi_2 |N|]\rangle \equiv & \\
+  &\quad\quad\quad\quad\quad\quad\quad \text{So far as $y \notin FV(M)$} & \\
+  &\langle \pi_1 |N|, |M| [x := |P| [y := \pi_2 |N|]]&
+  \end{array}$
+
+\item $|{\bf let \: box \:} \vec{x} = {\bf box \:} \vec{N} {\: \bf in \:} M| = |{\bf box \:} M [\vec{x} := \vec{N}]|$\\
+
+  $\begin{array}{lll}
+  &|{\bf let \: box \:} \vec{x} = {\bf box \:} \vec{N} {\: \bf in \:} M| = & \\
+  &\quad\quad\quad\quad\quad\quad\quad \text{Interpretation}& \\
+  &\langle 0 + \dots + 0, |M| [\vec{x} := \vec{|N|}]\rangle \twoheadrightarrow_{\beta}& \\
+  &\quad\quad\quad\quad\quad\quad\quad \text{Multistep reduction for natural numbers}& \\
+  &\langle 0, |M| [\vec{x} := \vec{|N|}] \rangle = & \\
+  &\quad\quad\quad\quad\quad\quad\quad \text{Interpretation}& \\
+  &|{\bf box \:} M [\vec{x} := \vec{N}]|&
+  \end{array}$
+
+\item $|{\bf let \: box \:} x = M {\: \bf in \:} x| = |M|$\\
+
+  $\begin{array}{lll}
+  &|{\bf let \: box \:} x = M {\: \bf in \:} x| = & \\
+  &\quad\quad\quad\quad\quad\quad\quad \text{Interpretation}& \\
+  &\langle \pi_1 |M|, x [x := \pi_2 |M|] \rangle = & \\
+  &\quad\quad\quad\quad\quad\quad\quad \text{Substitution}& \\
+  &\langle \pi_1 |M|, \pi_2 |M| \rangle \rightarrow_{\eta}& \\
+  &\quad\quad\quad\quad\quad\quad\quad \text{$\eta$-reduction for pairs}& \\
+  &|M|&
+  \end{array}$
+
+\item $\begin{array}{lll}
+  &|{\bf let \: box \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} M| = \langle 0 , |M| \rangle = |{\bf box \:} M|&
+  \end{array}$
+\end{enumerate}
+
+  Hence $\lambda_{\text{IEL}^{-}}$ sounds for $\lambda_{\to, \times, \mathbb{N}}$,
+  then multistep reduction in $\lambda_{\text{IEL}^{-}}$ is strongly normalizing, so far as multistep reduction in $\lambda_{\to, \times, \mathbb{N}}$ is strongly normalizing.
+
+  \end{proof}
+\end{proof}
+
+
+\begin{theorem}
+  $ $
+
+  $\twoheadrightarrow_r$ is confluent.
 \end{theorem}
 
 \begin{proof}
 
-  We modify and apply Barendregt's technique with term underlying. We will consider the grammar without constructors for pairs.
+  By Newman's lemma \cite{Morten}, if relation is strongly normalizing and locally conluent, then this relation is confluent.
 
-\begin{defin} The set of underlined terms.
+It is sufficient to show that $\twoheadrightarrow_r$ is locally confluent.
 
-  \begin{itemize}
-    \item $x \in \mathbb{V} \Rightarrow x \in \underline{\Lambda}$;
-    \item $M \in \underline{\Lambda} \Rightarrow (\lambda x. M) \in \underline{\Lambda}$;
-    \item $M, N \in \underline{\Lambda} \Rightarrow (M N) \in \underline{\Lambda}$;
-    \item $M \in \underline{\Lambda} \Rightarrow ({\bf pure \:} M) \in \underline{\Lambda}$;
-    \item $\vec{x} \in \mathbb{V}^{*}, \vec{M} \in \underline{\Lambda}^{*}, N \in \underline{\Lambda} \Rightarrow {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N \in \underline{\Lambda}$, where $length(\vec{x}) = length(\vec{M})$;
-    \item $M, N \in \underline{\Lambda} \Rightarrow (\lambda_i x. M) N \in \underline{\Lambda}$, for all $i \in \mathbb{N}$.
-  \end{itemize}
-\end{defin}
+\begin{lemma} Local confluence
 
-\begin{defin} Subsitution for term with labelled lambda:
+If $M \rightarrow_{r} N$ and $M \rightarrow_{r} Q$, then there exists some term $P$,
+such that $N \twoheadrightarrow_{r} P$ and $Q \twoheadrightarrow_{r} P$.
 
-  $((\lambda_i x. M) N) [y := Z] = (\lambda_i x. M [y := Z]) (N [y := Z])$
-\end{defin}
-
-\begin{defin} Index erasing
-
-  Let us define map $|.| : \underline{\Lambda} \to \Lambda$ as follows:
-
-  \begin{itemize}
-    \item $|x| = x$;
-    \item $|\lambda x. M| = \lambda x. |M|$;
-    \item $|M N| = |M| |N|$;
-    \item $|{\bf pure \:} M| = {\bf pure \:} |M|$;
-    \item $|{\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N| = {\bf let \: pure \:} \vec{x} = \vec{|M|} {\: \bf in \:} |N|$;
-    \item $|(\lambda_i x. M) N| = (\lambda x. |M|) |N|$
-  \end{itemize}
-\end{defin}
-
-\begin{defin} Reduction rules:
-
-\begin{itemize}
-  \item $(\lambda x. M) N \rightarrow_{\underline{\beta}} M [x := N]$;
-  \item $\begin{array}{llll}
-  & {\bf let \: pure \:} \vec{x}, y, \vec{z} = \vec{M}, {\bf let \: pure \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P} {\: in \:} R \rightarrow_{\underline{\beta}} & \\
-  & {\bf let \: pure \:} \vec{x}, \vec{w}, \vec{z} = \vec{M}, \vec{N}, \vec{P} \: { \bf in } \: R [y := Q]
-  \end{array}$;
-  \item ${\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N \rightarrow_{\underline{\beta}} {\bf pure \:} N [\vec{x} := \vec{M}]$;
-  \item ${\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M \rightarrow_{\underline{\beta}} {\bf pure \:} M$
-  \item $(\lambda x_i. M) N \rightarrow_{\underline{\beta}} M [x := N]$
-\end{itemize}
-\end{defin}
-
-$\twoheadrightarrow_{\underline{\beta}}$ is a reflexive-transitive closure of $\rightarrow_{\underline{\beta}}$.
-
-\begin{defin} Indexed redex erasing:
-
-  Let us define the next map $\phi : \underline{\Lambda} \to \Lambda$:
-
-  \begin{itemize}
-    \item $\phi(x) = x$;
-    \item $\phi(\lambda x. M) = \lambda x. \phi(M)$;
-    \item $\phi(M N) = \phi(M) \phi(N)$;
-    \item $\phi({\bf pure \:} M) = {\bf pure \:} \phi(M)$;
-    \item $\phi({\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N) = {\bf let \: pure \:} \vec{x} = \vec{\phi(M)} {\: \bf in \:} \phi(N)$;
-    \item $\phi((\lambda_i x. M) N) = \phi(M) [x := \phi(N)]$
-  \end{itemize}
-\end{defin}
-
-\begin{lemma}
-
-  $\forall \underline{M}, \underline{N} \in \underline{\Lambda} \: \forall M, N \in \Lambda, \text{if } |\underline{M}| = M, |\underline{N}| = N, \text{then}$
-  \begin{itemize}
-    \item If $M \twoheadrightarrow_{\beta} N$, then $\underline{M} \twoheadrightarrow_{\underline{\beta}} \underline{N}$
-    \item Vice versa
-  \end{itemize}
 \end{lemma}
 
 \begin{proof}
 
-  Induction on the generation $\rightarrow_{\beta}$ and $\rightarrow_{\underline{\beta}}$ correspondently. The general statement follows from transitivity
-  of multi-step reductions of both types.
-\end{proof}
+Let us consider the following critical pairs and show that they are joinable:
 
-\begin{lemma}
-  $\phi(M [x := N]) = \phi(M) [x := \phi(N)]$.
-\end{lemma}
-
-\begin{proof}
-  We treat only cases with {\bf pure} and with {\bf let}. For the rest cases see \cite{Baren}.
-
-  1)
-  $ $
-
-  $\begin{array}{lll}
-  & \phi({\bf pure \:} (M [x := N])) = & \\
-  &\quad\quad\quad\quad\quad\quad \text{By the definition of $\phi$} & \\
-  & {\bf pure \:} (\phi(M [x := N])) = & \\
-  &\quad\quad\quad\quad\quad\quad \text{Induction hypothesis}& \\
-  & {\bf pure \:} (\phi(M) [x := \phi(N)]) = &\\
-  &\quad\quad\quad\quad\quad\quad \text{Substitution definition}& \\
-  & ({\bf pure \:} \phi (M)) [x := \phi(N)]&
-  \end{array}$
-
-  2)
-  $ $
-
-  $\begin{array}{lll}
-  &\phi(({\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \:} N) [y := P]) = &\\
-  &\quad\quad\quad\quad\quad\quad \text{Substitution definition}& \\
-  &\phi({\bf let \: pure \:} \vec{x} = (\vec{M}[y := P]) {\: \bf in \:} N) = &\\
-  &\quad\quad\quad\quad\quad\quad \text{By the definition of $\phi$}& \\
-  &{\bf let \: pure \:} \vec{x} = \phi(\vec{M}[y := P]) {\: \bf in \:} \phi(N) = &\\
-  &\quad\quad\quad\quad\quad\quad \text{Induction hypothesis}& \\
-  &{\bf let \: pure \:} \vec{x} = (\phi(\vec{M}) [y := \phi(P)]) {\: \bf in \:} \phi(N) =&\\
-  &\quad\quad\quad\quad\quad\quad \text{Substitution definition} & \\
-  &({\bf let \: pure \:} \vec{x} = \phi(\vec{M}) {\: \bf in \:} \phi(N))[y := \phi(P)]
-  \end{array}$
-
-\end{proof}
-
-\begin{lemma}
-  $ $
-
-  \begin{itemize}
-  \item If $M \twoheadrightarrow_{\underline{\beta}} N$, then $\phi(M) \twoheadrightarrow_{\beta} \phi(N)$
-  \item If $|M| = N$ and $\phi(M) = P$, then $N \twoheadrightarrow_{\beta} P$.
-  \end{itemize}
-\end{lemma}
-
-\begin{proof}
-  $ $
-
-  i) Induction on the generation of $\twoheadrightarrow_{\underline{\beta}}$ using previous lemma.
-
-  ii) Induction on the structure of $M$.
-\end{proof}
-
-\begin{lemma} Strip lemma.
-
-$ $
-
-If $M \rightarrow_{\beta} N$ and $M \twoheadrightarrow_{\beta} P$. Then there exists some term $Q$, such that
-$N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
-\end{lemma}
-
-\begin{proof}
-
-Proof is similar to \cite{Baren} \cite{Baren2}. We build the following diagram, which commutes by lemmas 8 and 10.
-
-\vspace{\baselineskip}
+\begin{enumerate}
+\item $ $ \\
 
 \xymatrix{
-&&& M \ar[dd]_{\beta} \ar@{->>}[rrr] &&& P \ar@{-->>}[dd]^{\beta} \\
-&&&& N' \ar[ul]^{|.|} \ar[dl]_{\phi} \ar@{-->>}[rrr]^{\underline{\beta}} &&& P' \ar[ul]^{|.|} \ar[dl]_{\phi} \\
-&&& N \ar@{-->>}[rrr]_{\beta} &&& Q
+{\bf let \: box \:} x = ({\bf let \: box \:} \vec{y} = {\bf box \:} \vec{N} {\: \bf in \:} P) {\: \bf in \:} M \ar[d]_{\beta \Box} \ar[dr]^{\beta \Box {\bf box}} \\
+{\bf let \: box \:} \vec{y} = {\bf box \:} \vec{N} {\: \bf in \:} M [x := P] & {\bf let \: box \:} x = {\bf box \:} P [\vec{y} := \vec{N}] {\: \bf in \:} M
 }
+
+\vspace{\baselineskip}
+
+$\begin{array}{lll}
+&{\bf let \: box \:} \vec{y} = {\bf box \:} \vec{N} {\: \bf in \:} M [x := P] \rightarrow_{\beta \Box {\bf box}}& \\
+&\quad\quad\quad\quad\quad\quad\quad {\bf box \:} M [x := P] [\vec{y} := \vec{N}]& \\
+&{\bf let \: box \:} x = {\bf box \:} P [\vec{y} := \vec{N}] {\: \bf in \:} M \rightarrow_{\beta \Box {\bf box}}& \\
+&\quad\quad\quad\quad\quad\quad\quad {\bf box \:} M [x := P[\vec{y} := \vec{N}]] \equiv & \\
+&\text{So far as $x \notin \vec{y}$}& \\
+&\quad\quad\quad\quad\quad\quad\quad {\bf box \:} M [x := P] [\vec{y} := \vec{N}] & \\
+\end{array}$
+
+\item $ $ \\
+
+\xymatrix{
+{\bf let \: box \:} x = ({\bf let \: box \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N) {\: \bf in \:} M \ar[d]^{\beta \Box} \ar[dr]^{\beta \Box \underline{\quad}} \\
+{\bf let \: box \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} M [x := N] & {\bf let \: box \:} x = {\bf box \:} N {\: \bf in \:} M
+}
+
+$\begin{array}{lll}
+&{\bf let \: box \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} M [x := N] \rightarrow_{\beta \Box \underline{\quad}} {\bf box \:} (M [x := N])& \\
+&{\bf let \: box \:} x = {\bf box \:} N {\: \bf in \:} M \rightarrow_{\beta \Box {\bf box}} {\bf box \:} (M [x := N])&
+\end{array}$
+\end{enumerate}
 \end{proof}
 
-\begin{col}
-$ $
-If $M \twoheadrightarrow_{\beta} N$ and $M \twoheadrightarrow_{\beta} P$. Then there exists some term $Q$, such that
-$N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
-\end{col}
-
-\begin{proof}
-
-  Unfold $M \twoheadrightarrow_{\beta} N$ as the sequence of one-step reductions and apply strip lemma on the every step.
-\end{proof}
+Also we may consider four critical pairs which are used in local confluence proof for lambda-calculus based on {\bf IK} and \cite{ModalK}.
 
 \end{proof}
 
 \begin{theorem}
   $ $
 
-  Normal form in call-by-name $\lambda_{{\bf K}}$ has the subformula property: if $M$ is in normal formal, then its all subterms are in normal form too.
+  Normal form in call-by-name $\lambda_{\text{IEL}^{-}}$ has the subformula property: if $M$ is in normal formal, then its all subterms are in normal form too.
 
 \end{theorem}
 
 \begin{proof}
   By induction on the structure of $M$.
-  Case with ${\bf let \: pure\:} \vec{x} = \vec{M} {\: \bf in \:} N$ was considered by Kakutani \cite{ModalK} \cite{ModalK1}.
+  Case with ${\bf let \: box \:} \vec{x} = \vec{M} {\: \bf in \:} N$ was considered by Kakutani \cite{ModalK} \cite{ModalK1}.
 
-  If ${\bf pure \:} M$ is in normal form, so $M$ is in normal form and its subterms are in normal form too by hypothesis.
+  If ${\bf box \:} M$ is in normal form, so $M$ is in normal form and its subterms are in normal form too by hypothesis.
 
-  Thus if ${\bf pure \:} M$ is in normal form, then all its subterms are in normal form too.
+  Thus if ${\bf box \:} M$ is in normal form, then all its subterms are in normal form too.
 \end{proof}
 
 \section{Categorical semantics}
@@ -839,7 +670,7 @@ $N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
 \begin{defin} Monoidal category
 
   Monoidal category is a category $\mathcal{C}$ with additional monoidal structure:
-  \begin{itemize}
+  \begin{enumerate}
     \item A bifunctor $\otimes : \mathcal{C} \times \mathcal{C} \to C$ called tensor product;
     \item Identity object $\mathds{1}$;
     \item A natural isomorphism called associator: $\alpha_{A,B,C}: (A \otimes B) \otimes C \cong A \otimes (B \otimes C)$;
@@ -858,9 +689,7 @@ $N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
     && (A \otimes \mathds{1}) \otimes B \ar[rr]^{\alpha_{A, \mathds{1}, B}} \ar[dr]_{R_A \otimes id_B} && A \otimes (\mathds{1} \otimes B) \ar[dl]^{id_A \otimes L_B} \\
     &&& A \otimes B
     }
-
-    \item A monoidal category $\mathcal{C}$ is called symmetric if forall $A,B \in Ob_{\mathcal{C}}$, there is an isomorphism $\sigma_{A,B} : A \otimes B \cong B \otimes A$.
-  \end{itemize}
+  \end{enumerate}
 \end{defin}
 
 \begin{defin} Cartesian closed category
@@ -868,19 +697,19 @@ $N \twoheadrightarrow_{\beta} Q$ and $P \twoheadrightarrow_{\beta} Q$.
   Cartesian closed category is a category with a terminal object, finite products and exponentiation.
 \end{defin}
 
-Note that, any cartesian closed category is the special case of a (symmetric) monoidal category, where tensor is a product and identity object is a terminal object.
+Note that, any cartesian closed category is the special case of a monoidal category, where tensor is a product and identity object is a terminal object.
 
-\begin{defin} Lax monoidal functor
+\begin{defin} Monoidal functor
 
   Let $\langle \mathcal{C}, \otimes_1, \mathds{1}_{\mathcal{C}} \rangle$ and $\langle \mathcal{D}, \otimes_2, \mathds{1}_{\mathcal{D}} \rangle$ are monoidal categories.
 
-  A lax monoidal functor $\mathcal{F} : \langle \mathcal{C}, \otimes_1, \mathds{1} \rangle \to \langle \mathcal{D}, \otimes_2, \mathds{1}' \rangle$ is a functor
+  A monoidal functor $\mathcal{F} : \langle \mathcal{C}, \otimes_1, \mathds{1} \rangle \to \langle \mathcal{D}, \otimes_2, \mathds{1}' \rangle$ is a functor
   $\mathcal{F} : \mathcal{C} \to \mathcal{D}$ with additional natural transformations:
 
-  \begin{itemize}
+  \begin{enumerate}
   \item $u : \mathds{1}_{\mathcal{D}} \to \mathcal{F}\mathds{1}_{\mathcal{C}}$;
-  \item $\ast_{A, B} : \mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}B \to \mathcal{F}(A \otimes_{\mathcal{C}} B)$.
-  \end{itemize}
+  \item $A \varoast B : \mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}B \to \mathcal{F}(A \otimes_{\mathcal{C}} B)$.
+\end{enumerate}
 
   and coherence maps:
 
@@ -888,95 +717,53 @@ Note that, any cartesian closed category is the special case of a (symmetric) mo
     \item Associativity:
 
   \xymatrix{
-    && (\mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}B) \otimes_{\mathcal{D}} \mathcal{F}C \ar[d]_{\ast_{A,B} \otimes_{\mathcal{D}} id_{\mathcal{F}B}}
+    && (\mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}B) \otimes_{\mathcal{D}} \mathcal{F}C \ar[d]_{(A \varoast B) \otimes_{\mathcal{D}} id_{\mathcal{F}B}}
     \ar[rr]^{\alpha^{\mathcal{D}}_{{\mathcal{F}A, \mathcal{F}B, \mathcal{F}C}}} && \mathcal{F}A \otimes_{\mathcal{D}} (\mathcal{F}B \otimes_{\mathcal{D}} \mathcal{F}C) \ar[d]^{id_{\mathcal{F}A} \otimes_{\mathcal{D}} \ast_{B,C}}\\
-    && \mathcal{F}(A \otimes_{\mathcal{C}} B) \otimes_{\mathcal{D}} \mathcal{C} \ar[d]_{\ast_{A \otimes_{\mathcal{C}} B, C}} && \mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}(B \otimes_{\mathcal{C}} C) \ar[d]^{\ast_{A, B \otimes_{\mathcal{C}} C}}\\
+    && \mathcal{F}(A \otimes_{\mathcal{C}} B) \otimes_{\mathcal{D}} \mathcal{C} \ar[d]_{(A \otimes_{\mathcal{C}} B) \varoast C} && \mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}(B \otimes_{\mathcal{C}} C) \ar[d]^{A \varoast (B \otimes_{\mathcal{C}} C) }\\
     && \mathcal{F}((A \otimes_{\mathcal{C}} B) \otimes_{\mathcal{C}} C) \ar[rr]_{\mathcal{F}(\alpha^{\mathcal{C}}_{A,B,C})}&& \mathcal{F}(A \otimes_{\mathcal{C}} (B \otimes_{\mathcal{C}} C))
   }
 
     \item Left unitality:
 
     \xymatrix{
-    &&  \mathds{1}_{\mathcal{D}} \otimes_{\mathcal{D}} \mathcal{F}A \ar[d]_{L^{\mathcal{D}}_{\mathcal{F}A}}\ar[rr]^{u \otimes_{\mathcal{D}} id_{\mathcal{F}A}} && \mathcal{F}\mathds{1}_{\mathcal{C}} \otimes_{\mathcal{D}} \mathcal{F}A \ar[d]^{\ast_{\mathds{1}_{\mathcal{C}}, A}} \\
+    &&  \mathds{1}_{\mathcal{D}} \otimes_{\mathcal{D}} \mathcal{F}A \ar[d]_{L^{\mathcal{D}}_{\mathcal{F}A}}\ar[rr]^{u \otimes_{\mathcal{D}} id_{\mathcal{F}A}} && \mathcal{F}\mathds{1}_{\mathcal{C}} \otimes_{\mathcal{D}} \mathcal{F}A \ar[d]^{\mathds{1}_{\mathcal{C}} \varoast A} \\
     &&  \mathcal{F}A && \mathcal{F}(\mathds{1}_{\mathcal{C}} \otimes_{\mathcal{C}} A) \ar[ll]_{\mathcal{F}(L^{\mathcal{C}}_A)}
     }
 
     \item Right unitality:
 
     \xymatrix{
-    &&  \mathcal{F}A \otimes_{\mathcal{D}} \mathds{1}_{\mathcal{D}} \ar[d]_{R^{\mathcal{D}}_{\mathcal{F}A}}\ar[rr]^{id_{\mathcal{F}A} \otimes_{\mathcal{D}} u} && \mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}\mathds{1}_{\mathcal{C}} \ar[d]^{\ast_{A, \mathds{1}_{\mathcal{C}}}} \\
+    &&  \mathcal{F}A \otimes_{\mathcal{D}} \mathds{1}_{\mathcal{D}} \ar[d]_{R^{\mathcal{D}}_{\mathcal{F}A}}\ar[rr]^{id_{\mathcal{F}A} \otimes_{\mathcal{D}} u} && \mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}\mathds{1}_{\mathcal{C}} \ar[d]^{A \varoast \mathds{1}_{\mathcal{C}}} \\
     &&  \mathcal{F}A && \mathcal{F}(A \otimes_{\mathcal{C}} \mathds{1}_{\mathcal{C}} ) \ar[ll]^{\mathcal{F}(R^{\mathcal{C}}_A)}
     }
   \end{itemize}
 \end{defin}
 
-\begin{defin}
-
-Strong functor on a monoidal category is an endofunctor equipped with a natural transformation so called tensorial strength:
-
-\begin{center}
-$\begin{array}{lll}
-  \tau_{A, B} : A \otimes \mathcal{K}B \rightarrow \mathcal{K}(A \otimes B)
-\end{array}$
-\end{center}
-
-making two diagrams commute:
-
-\xymatrix{
-(A \otimes B) \otimes \mathcal{K}C \ar[d]_{\alpha_{A, B, \mathcal{K}C}}\ar[rrrr]^{\tau_{A \otimes B, C}} &&&& \mathcal{K}((A \otimes B) \otimes C) \ar[d]^{\mathcal{K}(\alpha_{A,B,C})}\\
-A \otimes (B \otimes \mathcal{K}C) \ar[rr]_{id_A \otimes \tau_{B,C}} && A \otimes \mathcal{K}(B \otimes C) \ar[rr]_{\quad \tau_{A, (B \otimes C)}} && \mathcal{K}(A \otimes (B \otimes C)) \\
-}
-
-\xymatrix{
-&&& \mathds{1} \otimes \mathcal{K}A \ar[drr]_{R_{\mathcal{K}A}} \ar[rr]^{\mu_{\mathds{1}, A}} && \mathcal{K}(\mathds{1} \otimes A) \ar[d]^{\mathcal{K}(R_A)}\\
-&&&&& \mathcal{K}A
-}
-\end{defin}
-
 \begin{defin} Applicative functor
 
-  An applicative functor is a triple $\langle \mathcal{C}, \mathcal{K}, \eta \rangle$,
-where $\mathcal{C}$ is a monoidal category, $\mathcal{K}$ is a strong lax monoidal endofunctor and $\eta : Id_{\mathcal{C}} \Rightarrow \mathcal{K}$ is a natural transformation (similar to unit in monad), such that:
+  An applicative functor is a triple $\langle \mathcal{C}, \mathcal{F}, \eta \rangle$,
+where $\mathcal{C}$ is a monoidal category, $\mathcal{F}$ is a monoidal endofunctor and $\eta : Id_{\mathcal{C}} \Rightarrow \mathcal{F}$ is a natural transformation (similar to unit in monad), such that:
 
-\begin{itemize}
+\begin{enumerate}
 \item $u = \eta_{\mathds{1}}$;
-\item $\ast_{A,B} \circ (\eta_A \otimes \eta_B) = \eta_{A \otimes B}$, i.e. the following diagram commutes:
+\item $A \varoast B \circ (\eta_A \otimes \eta_B) = \eta_{A \otimes B}$, i.e. the following diagram commutes:
 
 \xymatrix
 {
-&&& A \otimes B \ar[rr]^{\eta_A \otimes \eta_B} \ar[drr]_{\eta_{A \otimes B}} && \mathcal{K}A \otimes \mathcal{K}B \ar[d]^{\ast_{A,B}} \\
-&&&&& \mathcal{K}(A \otimes B)
+&&& A \otimes B \ar[rr]^{\eta_A \otimes \eta_B} \ar[drr]_{\eta_{A \otimes B}} && \mathcal{F}A \otimes \mathcal{F}B \ar[d]^{A \varoast B} \\
+&&&&& \mathcal{F}(A \otimes B)
 }
-
-\item $\tau_{A, B} = \ast_{A, B} \circ \eta_{A} \otimes id_{\mathcal{K}B}$;
-
-\item $\tau_{A, B} \circ id_A \otimes \eta_B = \eta_{A \otimes B}$, i.e. the following diagram commutes:
-
-\xymatrix
-{
-&&& A \otimes B \ar[drr]_{\eta_{A \otimes B}} \ar[rr]^{id_A \otimes \eta_B} && A \otimes \mathcal{K}B \ar[d]^{\tau_{A,B}} \\
-&&&&& \mathcal{K}(A \otimes B)
-}
-\end{itemize}
+\end{enumerate}
 \end{defin}
 
-By default we will consider some strong lax monoidal functor on cartesian closed category.
 
-Note that lax monoidal functor on a cartesian closed category is a special case of an applicative functor \cite{Cons}, but
-we will define $\eta$ explicitly for simplicity.
+By default we will consider some monoidal functor on cartesian closed category below.
 
 \subsection{Soundness and completeness}
 
-\begin{theorem} Soundness
+\begin{defin} Semantical translation from $\lambda_{\text{IEL}^{-}}$ to some cartesian closed category $\mathcal{C}$ with an applicative functor $\boxdot$:
 
-  Let $\Gamma \vdash M : A$ and $M =_{\beta\eta} N$, then $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$
-\end{theorem}
-
-\begin{proof}
-
-\begin{defin} Semantical translation from $\lambda_{{\bf K}}$ to some cartesian closed category $\mathcal{C}$ with an applicative functor $\mathcal{K}$:
-
-\begin{itemize}
+\begin{enumerate}
 \item Interpretation for types:
   \begin{itemize}
     \item $[\![A]\!] := \hat{A}, A \in \mathbb{T}$, where $\hat{A}$ is an object of $\mathcal{C}$ obtained by some given assignment;
@@ -984,18 +771,18 @@ we will define $\eta$ explicitly for simplicity.
     \item $[\![A \times B]\!] := [\![A]\!] \times [\![B]\!]$.
   \end{itemize}
 \item Interpretation for modal types:
-  \begin{itemize}
-    \item $[\![{\bf K}A]\!] = \mathcal{K}[\![A]\!]$;
-  \end{itemize}
+  \begin{enumerate}
+    \item $[\![\Box A]\!] = \boxdot [\![A]\!]$;
+  \end{enumerate}
 \item Interpretaion for contexts:
-  \begin{itemize}
+  \begin{enumerate}
     \item $[\![ \quad ]\!] = \mathds{1}$, where $\mathds{1}$ is a terminal object of a given ccc;
     \item $[\![\Gamma, x : A]\!] = [\![\Gamma]\!] \times [\![A]\!]$
-  \end{itemize}
+  \end{enumerate}
 \item Interpretation for typing assignment:
-  \begin{itemize}
+  \begin{enumerate}
     \item $[\![\Gamma \vdash M : A]\!] := [\![M]\!] : [\![\Gamma]\!] \to [\![A]\!]$.
-  \end{itemize}
+  \end{enumerate}
 \item Interpretation for typing rules:
 
 \begin{prooftree}
@@ -1034,38 +821,27 @@ we will define $\eta$ explicitly for simplicity.
 
 \begin{prooftree}
 \AxiomC{$[\![\Gamma \vdash M : A]\!] = [\![M]\!] : [\![\Gamma]\!] \rightarrow [\![A]\!]$}
-\UnaryInfC{$[\![\Gamma \vdash {\bf pure \:} M : {\bf K}A]\!] := [\![\Gamma]\!] \xrightarrow{[\![M]\!]}
-[\![A]\!] \xrightarrow{\eta_{[\![A]\!]}} \mathcal{K}[\![A]\!]$}
+\UnaryInfC{$[\![\Gamma \vdash {\bf box \:} M : \Box A]\!] := [\![\Gamma]\!] \xrightarrow{[\![M]\!]}
+[\![A]\!] \xrightarrow{\eta_{[\![A]\!]}} \boxdot [\![A]\!]$}
 \end{prooftree}
 
 \begin{small}
   \begin{prooftree}
-    \AxiomC{$[\![\Gamma \vdash \vec{M} : {\bf K} \vec{A}]\!] = \langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle : [\![\Gamma]\!] \rightarrow \prod \limits_{i=1}^n \mathcal{K}[\![A_i]\!]$}
+    \AxiomC{$[\![\Gamma \vdash \vec{M} : \Box \vec{A}]\!] = \langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle : [\![\Gamma]\!] \rightarrow \prod \limits_{i=1}^n \boxdot [\![A_i]\!]$}
     \AxiomC{$[\![\vec{x} : \vec{A} \vdash N : B]\!] = [\![N]\!] : \prod \limits_{i=1}^n [\![A_i]\!] \rightarrow [\![B]\!]$}
-    \BinaryInfC{$[\![\Gamma \vdash {\bf let \: pure \:} \vec{x} = \vec{M} {\: \bf in \: } M : {\bf K} B]\!] = \mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ \langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle : [\![\Gamma]\!] \rightarrow \mathcal{K}[\![B]\!]$}
+    \BinaryInfC{$[\![\Gamma \vdash {\bf let \: box \:} \vec{x} = \vec{M} {\: \bf in \: } M : \Box B]\!] = \boxdot ([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ \langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle : [\![\Gamma]\!] \rightarrow \boxdot [\![B]\!]$}
   \end{prooftree}
 \end{small}
-\end{itemize}
+\end{enumerate}
 \end{defin}
 
-\begin{defin} Simultaneous substitution
+\begin{theorem} Soundness
 
-Let $\Gamma = \{ x_1 : A_1, ..., x_n : A_n \}$, $\Gamma \vdash M : A$ and for all $i \in \{ 1,..., n \}$,
-$\Gamma \vdash M_i : A_i$.
+  Let $\Gamma \vdash M : A$ and $M =_r N$, then $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$
+\end{theorem}
 
-We define simultaneous substitution $M [ \vec{x} := \vec{M}]$ recursively by:
+\begin{proof}
 
-\begin{itemize}
-\item $x_i [ \vec{x} := \vec{M}] = M_i $;
-\item $(\lambda x. M) [ \vec{x} := \vec{M}] = \lambda x. (M [ \vec{x} := \vec{M}])$;
-\item $(M N) [ \vec{x} := \vec{M}] = (M [ \vec{x} = \vec{M}]) (N [ \vec{x} := \vec{M}])$;
-\item $\langle M, N \rangle = \langle (M [ \vec{x} = \vec{M}]), (N [ \vec{x} := \vec{M}])\rangle$;
-\item $(\pi_i P) [ \vec{x} := \vec{M}] = \pi_i (P [ \vec{x} = \vec{M}])$;
-\item $({\bf pure \:} M) [ \vec{x} := \vec{M}] = {\bf pure \:} (M [ \vec{x} = \vec{M}])$;
-\item $({\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N) [\vec{y} := \vec{P}] =
-{\bf let \: pure} \: \vec{x} = (\vec{M} [\vec{y} := \vec{P}]) {\: \bf in \:} N$
-\end{itemize}
-\end{defin}
 
 \begin{lemma}
 $ $
@@ -1081,16 +857,17 @@ $ $
 1)
 
 $\begin{array}{lll}
-& [\![\Gamma \vdash ({\bf pure \:} M) [ \vec{x} := \vec{M}] : {\bf K}A]\!] = [\![ \Gamma \vdash {\bf pure \:} (M [ \vec{x} := \vec{M}]) : {\bf K}A]\!] &
-\text{Substitution definition} \\
-& \quad\quad\quad\quad\quad\quad\quad = \eta_{[\![A]\!]} \circ [\![(M [ \vec{x} := \vec{M}])]\!]&
-\text{Translation for pure}\\
-& \quad\quad\quad\quad\quad\quad\quad = \eta_{[\![A]\!]} \circ ([\![M]\!] \circ \langle [\![M_1]\!], \dots,
-[\![M_n]\!] \rangle) & \text{Induction hypothesis} \\
-& \quad\quad\quad\quad\quad\quad\quad = (\eta_{[\![A]\!]} \circ [\![M]\!]) \circ \langle [\![M_1]\!], \dots,
-[\![M_n]\!] \rangle & \text{Associativity of composition}\\
-& \quad\quad\quad\quad\quad\quad\quad = [\![ \Gamma \vdash {\bf pure \:} M : {\bf K}A]\!] \circ \langle [\![M_1]\!], \dots,
-[\![M_n]\!] \rangle& \text{Translation for pure}\\
+& [\![\Gamma \vdash ({\bf box \:} M) [ \vec{x} := \vec{M}] : \Box A]\!] = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{By substitution definition}& \\
+&[\![ \Gamma \vdash {\bf box \:} (M [ \vec{x} := \vec{M}]) : \Box A]\!]& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Interpretation for {\bf box}}\\
+&\eta_{[\![A]\!]} \circ [\![(M [ \vec{x} := \vec{M}])]\!]& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Assumption} \\
+&\eta_{[\![A]\!]} \circ ([\![M]\!] \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle) = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Associativity of composition}&\\
+&(\eta_{[\![A]\!]} \circ [\![M]\!]) \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle = & \\
+&\quad\quad\quad\quad\quad\quad\quad  \text{Interpretation for {\bf box}}& \\
+&[\![ \Gamma \vdash {\bf box \:} M : \Box A]\!] \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle = & \\
 \end{array}$
 
 \vspace{\baselineskip}
@@ -1100,12 +877,17 @@ $\begin{array}{lll}
 \vspace{\baselineskip}
 
 $\begin{array}{lll}
-&[\![\Gamma \vdash ({\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N) [\vec{y} := \vec{P}] : {\bf K} B]\!] =& \text{Substitution definition}\\
-&[\![\Gamma \vdash {\bf let \: pure} \: \vec{x} = (\vec{M} [\vec{y} := \vec{P}]) {\: \bf in \:} N : {\bf K}B]\!] =& \text{Interpretaion for $let_{\bf K}$} \\
-&\mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ [\![\Gamma \vdash (\vec{M} [\vec{y} := \vec{P}]) : {\bf K}\vec{A}]\!] =& \text{Induction hypothesis} \\
-&\mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ ([\![\vec{M}]\!] \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle) = & \text{Associativity of composition} \\
-&(\mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ [\![\vec{M}]\!]) \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle = & \text{By interpretation} \\
-&[\![\Gamma \vdash {\bf let \: pure} \: \vec{x} = \vec{M} {\: \bf in \:} N : {\bf K}B]\!] \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle&
+&[\![\Gamma \vdash ({\bf let \: box} \: \vec{x} = \vec{M} {\: \bf in \:} N) [\vec{y} := \vec{P}] : \Box B]\!] =& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Substitution} &\\
+&[\![\Gamma \vdash {\bf let \: box} \: \vec{x} = (\vec{M} [\vec{y} := \vec{P}]) {\: \bf in \:} N : \Box B]\!] =& \\
+&\quad\quad\quad\quad\quad\quad\quad  \text{Interpretation for $let_{\Box}$} \\
+&\boxdot ([\![N]\!]) \circ ([\![A_1]\!] \ast \dots \ast [\![A_n]\!]) \circ [\![\Gamma \vdash (\vec{M} [\vec{y} := \vec{P}]) : \Box \vec{A}]\!] =& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Induction hypothesis}& \\
+&\boxdot ([\![N]\!]) \circ ([\![A_1]\!] \ast \dots \ast [\![A_n]\!]) \circ ([\![\vec{M}]\!] \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle) = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Associativity of composition}& \\
+&(\boxdot ([\![N]\!]) \circ ([\![A_1]\!] \ast \dots \ast [\![A_n]\!]) \circ [\![\vec{M}]\!]) \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Interpretaion}& \\
+&[\![\Gamma \vdash {\bf let \: box} \: \vec{x} = \vec{M} {\: \bf in \:} N : \Box B]\!] \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle&
 \end{array}$
 
 \end{proof}
@@ -1113,54 +895,54 @@ $\begin{array}{lll}
 \begin{lemma}
   $ $
 
-  Let $\Gamma \vdash M : A$ and $M \twoheadrightarrow_{\beta \eta} N$, then $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$;
+  Let $\Gamma \vdash M : A$ and $M \to_r N$, then $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$;
 \end{lemma}
 
 \begin{proof}
   $ $
 
-Cases with $\beta$-reductions for $let_{\bf K}$ are shown in \cite{ModalK1}. Let us consider cases with ${\bf pure}$.
+Cases with $\beta$-reductions for $let_{\Box}$ are shown in \cite{ModalK1}. Let us consider cases with ${\bf box}$.
 
 \vspace{\baselineskip}
 
-1) $[\![\Gamma \vdash {\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N : {\bf K}B]\!] = [\![\Gamma \vdash {\bf pure \:} N [\vec{x} := \vec{M}] : {\bf K}B]\!]$
+1) $[\![\Gamma \vdash {\bf let \: box \:} \vec{x} = {\bf box \:} \vec{M} {\: \bf in \:} N : \Box B]\!] = [\![\Gamma \vdash {\bf box \:} N [\vec{x} := \vec{M}] : \Box B]\!]$
 
 \vspace{\baselineskip}
 
 $\begin{array}{lll}
-&[\![\Gamma \vdash {\bf let \: pure \:} \vec{x} = {\bf pure \:} \vec{M} {\: \bf in \:} N : {\bf K}B]\!] = & \\
-&\text{\quad\quad\quad\quad\quad\quad\quad\quad\quad By interpretation}& \\
-&\mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ \langle \eta_{[\![A_1]\!]} \circ [\![M_1]\!],\dots,\eta_{[\![A_n]\!]} \circ [\![M_n]\!] \rangle = \\
-&\text{\quad\quad\quad\quad\quad\quad\quad\quad\quad By the property of a pair of morphisms}& \\
-&\mathcal{K}([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ (\eta_{[\![A_1]\!]} \times \dots \times \eta_{[\![A_n]\!]}) \circ \langle [\![M_1]\!], \dots, [\![M_n]\!]\rangle =& \\
-&\text{\quad\quad\quad\quad\quad\quad\quad\quad\quad Associativity of composition}& \\
-&\mathcal{K}([\![N]\!]) \circ (\ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ (\eta_{[\![A_1]\!]} \times \dots \eta_{[\![A_n]\!]})) \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle =& \\
-&\text{\quad\quad\quad\quad\quad\quad\quad\quad\quad By the definition of an applicative functor}& \\
-&\mathcal{K}([\![N]\!]) \circ \eta_{[\![A_1]\!] \times \dots \times [\![A_n]\!]} \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle =& \\
-&\text{\quad\quad\quad\quad\quad\quad\quad\quad\quad Naturality of $\eta$}& \\
+&[\![\Gamma \vdash {\bf let \: box \:} \vec{x} = {\bf box \:} \vec{M} {\: \bf in \:} N : \Box B]\!] = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{By interpretation}& \\
+&\boxdot ([\![N]\!]) \circ ([\![A_1]\!] \varoast \dots \varoast [\![A_n]\!]) \circ \langle \eta_{[\![A_1]\!]} \circ [\![M_1]\!],\dots,\eta_{[\![A_n]\!]} \circ [\![M_n]\!] \rangle = \\
+&\quad\quad\quad\quad\quad\quad\quad \text{By the property of a pair of morphisms}& \\
+&\boxdot ([\![N]\!]) \circ ([\![A_1]\!] \varoast \dots \varoast [\![A_n]\!]) \circ (\eta_{[\![A_1]\!]} \times \dots \times \eta_{[\![A_n]\!]}) \circ \langle [\![M_1]\!], \dots, [\![M_n]\!]\rangle =& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Associativity of composition}& \\
+&\boxdot ([\![N]\!]) \circ (([\![A_1]\!] \varoast \dots \varoast [\![A_n]\!]) \circ (\eta_{[\![A_1]\!]} \times \dots \times \eta_{[\![A_n]\!]})) \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle =& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{By the definition of an applicative functor}& \\
+&\boxdot ([\![N]\!]) \circ \eta_{[\![A_1]\!] \times \dots \times [\![A_n]\!]} \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle =& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Naturality of $\eta$}& \\
 &\eta_{[\![B]\!]} \circ [\![N]\!] \circ \langle [\![M_1]\!], \dots, [\![M_n]\!] \rangle =& \\
-&\text{\quad\quad\quad\quad\quad\quad\quad\quad\quad Associativity of composition}& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{Associativity of composition}& \\
 &\eta_{[\![B]\!]} \circ ([\![N]\!] \circ \langle [\![M_1]\!], \dots, [\![M_n]\!]) \rangle =& \\
-&\text{\quad\quad\quad\quad\quad\quad\quad\quad\quad Simultaneous substitution lemma}& \\
-&\eta_{[\![B]\!]} \circ [\![N [\vec{x} := \vec{M}]]\!]& \\
-&\text{\quad\quad\quad\quad\quad\quad\quad\quad\quad By interpetation}& \\
-&[\![\Gamma \vdash {\bf pure \:} (N [\vec{x} := \vec{M}]) : {\bf K}B]\!]&
+&\quad\quad\quad\quad\quad\quad\quad \text{Substitution lemma}& \\
+&\eta_{[\![B]\!]} \circ [\![\Gamma \vdash N [\vec{x} := \vec{M}] : \Box B]\!]& \\
+&\quad\quad\quad\quad\quad\quad\quad \text{By interpetation}& \\
+&[\![\Gamma \vdash {\bf box \:} (N [\vec{x} := \vec{M}]) : \Box B]\!]&
 \end{array}$
 
 \vspace{\baselineskip}
 
-2) $[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M : {\bf K} A]\!] = [\![\vdash {\bf pure \:} M : {\bf K} A]\!]$
+2) $[\![\vdash {\bf let \: box \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M : \Box A]\!] = [\![\vdash {\bf box \:} M : \Box A]\!]$
 
 $\begin{array}{lll}
-&[\![\vdash {\bf let \: pure \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M : {\bf K} A]\!] = & \\
-&\quad\quad\quad\quad\quad\quad \text{By interpretation}& \\
-&\mathcal{K}([\![M]\!]) \circ u_{\mathds{1}} = & \\
-&\quad\quad\quad\quad\quad\quad \text{By the definition of an applicative functor}& \\
-&\mathcal{K}([\![M]\!]) \circ \eta_{\mathds{1}} = & \\
-&\quad\quad\quad\quad\quad\quad \text{By naturality of $\eta$} & \\
+&[\![\vdash {\bf let \: box \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M : \Box A]\!] = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{By interpretation}& \\
+&\boxdot ([\![M]\!]) \circ u_{\mathds{1}} = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{By the definition of an applicative functor}& \\
+&\boxdot {K}([\![M]\!]) \circ \eta_{\mathds{1}} = & \\
+&\quad\quad\quad\quad\quad\quad\quad \text{By naturality of $\eta$} & \\
 &\eta_{[\![A]\!]} \circ [\![M]\!] = &\\
-&\quad\quad\quad\quad\quad\quad \text{By interpretation} & \\
-&[\![\vdash {\bf pure \:} M : {\bf K} A]\!]&
+&\quad\quad\quad\quad\quad\quad\quad \text{By interpretation} & \\
+&[\![\vdash {\bf box \:} M : \Box A]\!]&
 \end{array}$
 \end{proof}
 
@@ -1168,7 +950,7 @@ $\begin{array}{lll}
 
 \begin{theorem} Completeness
 
-Let $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$, then $M =_{\beta \eta} N$.
+Let $[\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$, then $M =_r N$.
 \end{theorem}
 
 \begin{proof}
@@ -1180,42 +962,44 @@ We will consider term model for simply typed lambda calculus $\times$ and $\to$ 
 \begin{defin} Equivalence on term pairs:
   $ $
 
-  Let us define relation $\sim_{A, B} \subseteq \mathbb{V} \times \Lambda_{{\bf K}}$, such that:
+  Let us define relation $\sim_{A, B} \subseteq (\mathbb{V} \times \Lambda_{\Box})^2$, such that:
 
-  $(x, M) \sim_{A, B} (y, N) \Leftrightarrow x : A \vdash M : B \:\: \& \:\: y : A \vdash N : A \:\: \& \:\: M =_{\beta \eta} N [y := x]$;
+  $(x, M) \sim_{A, B} (y, N) \Leftrightarrow x : A \vdash M : B \:\: \& \:\: y : A \vdash N : A \:\: \& \:\: M =_r N [y := x]$;
 \end{defin}
 
 We will denote equivalence class as $[x, M]_{A, B} = \{ (y, N) \: | \: (x, M) \sim_{A, B} (y, N) \}$ (we will drop indices below).
 
 
 \begin{defin} Category $\mathcal{C}(\lambda)$:
-\begin{itemize}
+\begin{enumerate}
   \item $Ob_{\mathcal{C}} = \{ \hat{A} \: | \: A \in \mathbb{T} \} \cup \{ \mathds{1} \}$;
-  \item $Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B}) = (\mathbb{V} \times \Lambda_{{\bf K}})/_{\sim_{A, B}}$;
+  \item $Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B}) = \{ [x, M] \: | \: x : A \vdash_{\lambda_{\text{IEL}^{-}}} M : B \}$;
   \item Let $[x, M] \in Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B})$ and $[y,N] \in Hom_{\mathcal{C}(\lambda)}(\hat{B},\hat{C})$, then $[y,M] \circ [x, M] = [x, N [y := M]]$;
-  \item Identity morphism $id_{\hat{A}} = [x,x] \in Hom_{\mathcal{C}(\lambda)(\hat{A})}$;
+  \item Identity morphism $id_{\hat{A}} = [x,x] \in Hom_{\mathcal{C}(\lambda)(\hat{A}, \hat{A})}$;
   \item $\mathds{1}$ is a terminal object;
   \item $\widehat{A \times B} = \hat{A} \times \hat{B}$;
   \item Canonical projection is defined as $[x, \pi_i x] \in Hom_{\mathcal{C}(\lambda)}(\hat{A_1} \times \hat{A_2},\hat{A_i})$ for $i \in \{ 1, 2 \}$;
   \item $\widehat{A \to B} = \hat{B}^{\hat{A}}$;
   \item Evaluation arrow $\epsilon = [x, (\pi_2 x) (\pi_1 x)] \in Hom_{\mathcal{C}(\lambda)(\hat{B}^{\hat{A}} \times \hat{A}, \hat{B})}$.
-\end{itemize}
+\end{enumerate}
 \end{defin}
 
-It is sufficient to show ${\bf K}$ is an applicative functor on $\mathcal{C}(\lambda)$.
+We define endofunctor $\boxdot$ on $\mathcal{C}(\lambda)$ and natural transformation $\eta$ from $id_{\mathcal{C}(\lambda)}$ to this endofunctor.
+It is sufficient to show $\boxdot$ and $\eta$ form an applicative functor on $\mathcal{C}(\lambda)$ for theorem proof.
 
 \begin{defin}
-  Let us define an endofunctor $\mathcal{K} : \mathcal{C}(\lambda) \to \mathcal{C}(\lambda)$, such that
-forall $[x,M] \in Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B}), {\bf K}([x,M]) = [y, {\bf let \: pure \:} x = y {\: \bf in \:} M] \in Hom_{\mathcal{C}(\lambda)}({\bf K} \hat{A}, {\bf K} \hat{B})$ (denotation: $\text{fmap } f$ for an arbitrary arrow $f$).
+  Let us define an endofunctor $\boxdot : \mathcal{C}(\lambda) \to \mathcal{C}(\lambda)$, such that
+forall $[x,M] \in Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B}), \boxdot ([x,M]) = [y, {\bf let \: box \:} x = y {\: \bf in \:} M] \in Hom_{\mathcal{C}(\lambda)}(\boxdot \hat{A}, \boxdot \hat{B})$
+(denotation: $\text{fmap } f$ for an arbitrary arrow $f$).
 
 \end{defin}
 
 \begin{lemma} Functoriality
 
-\begin{itemize}
+\begin{enumerate}
   \item $\text{fmap }(g \circ f) = \text{fmap }(g) \circ \text{fmap }(f)$;
-  \item $\text{fmap }(id_{\hat{A}}) = id_{{\bf K}\hat{A}}$.
-\end{itemize}
+  \item $\text{fmap }(id_{\hat{A}}) = id_{\boxdot}\hat{A}$.
+\end{enumerate}
 \end{lemma}
 
 \begin{proof}
@@ -1228,29 +1012,29 @@ Easy checking using reduction rules.
 
   Let us define natural transformations:
 
-\begin{itemize}
-  \item $\eta:Id \Rightarrow \mathcal{K}$, s. t. $\forall \hat{A} \in Ob_{\mathcal{C}(\lambda)}$, $\eta_{\hat{A}} = [x, {\bf pure \:} x] \in Hom_{\mathcal{C}(\lambda)}(\hat{A}, {\bf K}\hat{A})$;
-  \item $\ast_{A,B}:{\bf K}\hat{A} \times {\bf K}\hat{B} \to {\bf K}(\hat{A} \times \hat{B})$, s. t. $\forall \hat{A}, \hat{B} \in Ob_{\mathcal{C}(\lambda)}, \ast_{\hat{A},\hat{B}} = [p, {\bf let \: pure \:} x,y = \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, y \rangle] \in Hom_{\mathcal{C}(\lambda)}({\bf K}A \times {\bf K}B, {\bf K}(A \times B))$.
-\end{itemize}
+\begin{enumerate}
+  \item $\eta: Id_{\mathcal{C}(\lambda)} \Rightarrow \boxdot$, s. t. $\forall \hat{A} \in Ob_{\mathcal{C}(\lambda)}$, $\eta_{\hat{A}} = [x, {\bf box \:} x] \in Hom_{\mathcal{C}(\lambda)}(\hat{A}, \boxdot \hat{A})$;
+  \item $\hat{A} \varoast \hat{B} : \boxdot \hat{A} \times \boxdot \hat{B} \to \boxdot (\hat{A} \times \hat{B})$, s. t. $\forall \hat{A}, \hat{B} \in Ob_{\mathcal{C}(\lambda)}, \ast_{\hat{A},\hat{B}} = [p, {\bf let \: box \:} x,y = \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, y \rangle] \in Hom_{\mathcal{C}(\lambda)}(\boxdot \hat{A} \times \boxdot \hat{B}, \boxdot (\hat{A} \times \hat{B}))$.
+\end{enumerate}
 \end{defin}
 
-Implementation for $\ast$ in our term model is a modification of ${\text{let}_{\bf K}}$-rule:
+Implementation for $\ast$ in our term model is the instance of ${\text{let}_{\Box}}$-rule:
 
 \begin{prooftree}
-\AxiomC{$p : {\bf K}A \times {\bf K}B \vdash p : {\bf K}A \times {\bf K}B$}
-\UnaryInfC{$p : {\bf K}A \times {\bf K}B \vdash \pi_1 p : {\bf K} A$}
-\AxiomC{$p : {\bf K}A \times {\bf K}B \vdash p : {\bf K}A \times {\bf K}B$}
-\UnaryInfC{$p : {\bf K}A \times {\bf K}B \vdash \pi_2 p : {\bf K} B$}
+\AxiomC{$p : \Box A \times \Box B \vdash p : \Box A \times \Box B$}
+\UnaryInfC{$p : \Box A \times \Box B \vdash \pi_1 p : \Box A$}
+\AxiomC{$p : \Box A \times \Box B \vdash p : \Box A \times \Box B$}
+\UnaryInfC{$p : \Box A \times \Box B \vdash \pi_2 p : \Box B$}
 \AxiomC{$x : A \vdash x : A$}
 \AxiomC{$y : B \vdash y : B$}
 \BinaryInfC{$x : A, y : B \vdash \langle x, y \rangle : A \times B$}
-\TrinaryInfC{$p : {\bf K}A \times {\bf K}B \vdash {\bf let \: pure \:} x,y = \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, y \rangle : {\bf K}(A \times B)$}
+\TrinaryInfC{$p : \Box A \times \Box B \vdash {\bf let \: box \:} x,y = \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, y \rangle : \Box (A \times B)$}
 \end{prooftree}
 
 \begin{lemma}
   $ $
 
-  {\bf K} is a lax monoidal endofunctor
+  $\boxdot$ is a monoidal endofunctor
 \end{lemma}
 
 \begin{proof}
@@ -1261,74 +1045,66 @@ See \cite{ModalK}
 
 \begin{lemma} Naturality and coherence for $\eta$:
 
-\begin{itemize}
+\begin{enumerate}
   \item $\text{fmap } f \circ \eta_A = \eta_B \circ f$;
-  \item $\ast_{\hat{A},\hat{B}} \circ (\eta_{A} \times \eta_{B}) = \eta_{\hat{A} \times \hat{B}}$;
-\end{itemize}
+  \item $(\hat{A} \varoast \hat{B}) \circ (\eta_{A} \times \eta_{B}) = \eta_{\hat{A} \times \hat{B}}$;
+\end{enumerate}
 \end{lemma}
 
 \begin{proof}
   $ $
 
-  i) $\text{fmap } f \circ \eta_{\hat{A}} = \eta_{\hat{B}} \circ f$
-
-\vspace{\baselineskip}
+\begin{enumerate}
+\item $\text{fmap } f \circ \eta_{\hat{A}} = \eta_{\hat{B}} \circ f$ \\
 
 $\begin{array}{lll}
 &\eta_{\hat{B}} \circ f = & \\
-&\quad\quad\quad\quad\quad\quad \text{By the definition}&\\
-&[y, {\bf pure \:} y] \circ [x, M] = &\\
-&\quad\quad\quad\quad\quad\quad \text{By the definition of composition} & \\
-&[x, {\bf pure \:} y [y := M]] = &\\
+&[y, {\bf box \:} y] \circ [x, M] = &\\
+&\quad\quad\quad\quad\quad\quad \text{Composition} & \\
+&[x, {\bf box \:} y [y := M]] = &\\
 &\quad\quad\quad\quad\quad\quad \text{By substitution}& \\
-&[x, {\bf pure \:} M]& \\
+&[x, {\bf box \:} M]& \\
 & &\\
 &\text{On the other hand:}& \\
 &\text{fmap } f \circ \eta_{\hat{A}} = & \\
-&\quad\quad\quad\quad\quad\quad \text{By the definiton}& \\
-&[z, {\bf let \: pure \:} x = z {\: \bf in \:} M] \circ [x, {\bf pure \: x}] = &\\
+&[z, {\bf let \: box \:} x = z {\: \bf in \:} M] \circ [x, {\bf box \:} x] = &\\
 &\quad\quad\quad\quad\quad\quad \text{By the definition of composition}& \\
-&[x, {\bf let \: pure \:} x = z {\: \bf in \:} M [z := {\bf pure \:} x]] = & \\
+&[x, {\bf let \: box \:} x = z {\: \bf in \:} M [z := {\bf box \:} x]] = & \\
 &\quad\quad\quad\quad\quad\quad \text{By substitution}& \\
-&[x, {\bf let \: pure \:} x = {\bf pure \:} x {\: \bf in \:} M] = & \\
+&[x, {\bf let \: box \:} x = {\bf box \:} x {\: \bf in \:} M] = & \\
 &\quad\quad\quad\quad\quad\quad \text{$\beta$-reduction rule}& \\
-&[x, {\bf pure \:} M [x := x]] = &\\
+&[x, {\bf box \:} M [x := x]] = &\\
 &\quad\quad\quad\quad\quad\quad \text{By substitution} & \\
-&[x, {\bf pure \:} M]&
+&[x, {\bf box \:} M]&
 \end{array}$
 
-\vspace{\baselineskip}
-
-ii) $\ast_{\hat{A},\hat{B}} \circ (\eta_{\hat{A}} \times \eta_{\hat{B}}) = \eta_{\hat{A} \times \hat{B}}$
-
-\vspace{\baselineskip}
+\item $(\hat{A} \varoast \hat{B}) \circ (\eta_{A} \times \eta_{B}) = \eta_{\hat{A} \times \hat{B}}$ \\
 
 $\begin{array}{lll}
-& \ast_{\hat{A},\hat{B}} \circ (\eta_{\hat{A}} \times \eta_{\hat{B}}) = & \\
-& \quad\quad\quad\quad\quad\quad \text{By unfolding} & \\
-& [q, {\bf let \: pure \:} x, y = \pi_1 q, \pi_2 q {\: \bf in \:} \langle x, y \rangle] \circ [p, \langle {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) \rangle] = & \\
+& (\hat{A} \varoast \hat{B}) \circ (\eta_{A} \times \eta_{B}) = & \\
+& [q, {\bf let \: box \:} x, y = \pi_1 q, \pi_2 q {\: \bf in \:} \langle x, y \rangle] \circ [p, \langle {\bf box \:} (\pi_1 p), {\bf box \:} (\pi_2 p) \rangle] = & \\
 & \quad\quad\quad\quad\quad\quad \text{Composition}& \\
-& [p, {\bf let \: pure \:} x, y = \pi_1 q, \pi_2 q {\: \bf in \:} \langle x, y \rangle [q := \langle {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) \rangle]] = & \\
+& [p, {\bf let \: box \:} x, y = \pi_1 q, \pi_2 q {\: \bf in \:} \langle x, y \rangle [q := \langle {\bf box \:} (\pi_1 p), {\bf box \:} (\pi_2 p) \rangle]] = & \\
 & \quad\quad\quad\quad\quad\quad \text{By substitution}& \\
-& [p, {\bf let \: pure \:} x, y = \pi_1 (\langle {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) \rangle), \pi_2 (\langle {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) \rangle) {\: \bf in \:} \langle x, y \rangle] = & \\
+& [p, {\bf let \: box \:} x, y = \pi_1 (\langle {\bf box \:} (\pi_1 p), {\bf box \:} (\pi_2 p) \rangle), \pi_2 (\langle {\bf box \:} (\pi_1 p), {\bf box \:} (\pi_2 p) \rangle) {\: \bf in \:} \langle x, y \rangle] = & \\
 & \quad\quad\quad\quad\quad\quad \text{Reduction rules}& \\
-& [p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) {\: \bf in \:} \langle x, y \rangle] = & \\
+& [p, {\bf let \: box \:} x, y = {\bf box \:} (\pi_1 p), {\bf box \:} (\pi_2 p) {\: \bf in \:} \langle x, y \rangle] = & \\
 & \quad\quad\quad\quad\quad\quad \text{Reduction rule}& \\
-& [p, {\bf pure \:} (\langle x,y \rangle [x := \pi_1 p, y := \pi_2 p])] = & \\
+& [p, {\bf box \:} (\langle x,y \rangle [x := \pi_1 p, y := \pi_2 p])] = & \\
 & \quad\quad\quad\quad\quad\quad \text{Substitution}& \\
-& [p, {\bf pure \:} \langle \pi_1 p, \pi_2 p \rangle] = & \\
+& [p, {\bf box \:} \langle \pi_1 p, \pi_2 p \rangle] = & \\
 & \quad\quad\quad\quad\quad\quad \text{$\eta$-reduction}& \\
-& [p, {\bf pure \:} p] =& \\
+& [p, {\bf box \:} p] =& \\
 & \quad\quad\quad\quad\quad\quad \text{By definition}& \\
 & \eta_{\hat{A} \times \hat{B}}&
 \end{array}$
-
+\end{enumerate}
 \end{proof}
 
 \begin{defin}
   $ $
 
-  $u_{\mathds{1}} = [\sqbullet, {\bf let \: pure \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} \sqbullet] \in Hom_{\mathcal{C}(\lambda)}(\mathds{1}, {\bf K}\mathds{1})$.
+  $u_{\mathds{1}} = [\sqbullet, {\bf let \: box \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} \sqbullet] \in Hom_{\mathcal{C}(\lambda)}(\mathds{1}, \boxdot \mathds{1})$.
 \end{defin}
 
 \begin{lemma}
@@ -1343,165 +1119,154 @@ $\begin{array}{lll}
   Immediately.
 \end{proof}
 
-  Tensorial strength is defined as follows:
-
-\begin{defin} Tensorial strength
-  $ $
-
-  Let $[p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] \in Hom_{\mathcal{C}(\lambda)}(\hat{A} \times {\bf K}\hat{B}, {\bf K}\hat{A} \times {\bf K}\hat{B})$.
-
-  So tensorial strength is defined as $\tau_{\hat{A}, \hat{B}} = \ast_{\hat{A}, \hat{B}} \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle]$.
-\end{defin}
-
-It is clearly that tensorial strength defined above can be simplified as follows:
-
-$\begin{array}{lll}
-&\ast_{\hat{A}, \hat{B}} \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] = & \\
-&\quad\quad\quad\quad\quad\quad \text{By definition}&\\
-&[p^{'}, {\bf let \: pure \:} x, y = \pi_1 p^{'}, \pi_2 p^{'} {\: \bf in \:} \langle x, y \rangle] \circ [p, \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle] = & \\
-&\quad\quad\quad\quad\quad\quad \text{By composition} & \\
-&[p, {\bf let \: pure \:} x, y = \pi_1 p^{'}, \pi_2 p^{'} {\: \bf in \:} \langle x, y \rangle [p^{'} := \langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle]] = & \\
-&\quad\quad\quad\quad\quad\quad \text{By substitution} & \\
-&[p, {\bf let \: pure \:} x, y = \pi_1 (\langle {\bf pure \:} (\pi_1 p), \pi_2 p \rangle), \pi_2 (\langle \pi_1 p, {\bf pure \:} (\pi_2 p) \rangle) {\: \bf in \:} \langle x, y \rangle] = & \\
-&\quad\quad\quad\quad\quad\quad \text{By $\beta$-reduction rules} & \\
-&[p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, y \rangle]&
-\end{array}$
-
-\begin{lemma} Coherence for tensorial strength
-
-  \begin{itemize}
-    \item $\text{fmap } \alpha_{\hat{A},\hat{B},\hat{C}} \circ \tau_{\hat{A} \times \hat{B}, \hat{C}} = \tau_{\hat{A}, \hat{B} \times \hat{C}} \circ (id_{\hat{A}} \times \tau_{\hat{B}, \hat{C}}) \circ \alpha_{\hat{A}, \hat{B}, {\bf K}\hat{C}}$;
-    \item ${\bf K}(R_{\hat{A}}) \circ \tau_{\mathds{1}, \hat{A}} = R_{{\bf K}\hat{A}}$.
-  \end{itemize}
-  where $\alpha_{\hat{A},\hat{B},\hat{C}} = [p, \langle \pi_1 (\pi_1 p), \langle \pi_2 (\pi_1 p), \pi_2 p \rangle \rangle]$ and
-  $R = \pi_2$.
-\end{lemma}
-
-\begin{proof}
-  $ $ The second part is obvious. We will consider only the first statement.
-
-1) Let us define $\tau_{\hat{A} \times \hat{B}, \hat{C}}$ as follows:
-
-$\tau_{\hat{A} \times \hat{B}, \hat{C}} = [p, {\bf \: let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:} \langle \langle x,y \rangle, z \rangle]$
-
-\vspace{\baselineskip}
-
-Then:
-
-$\begin{array}{lll}
-&\text{fmap } \alpha_{\hat{A},\hat{B},\hat{C}} \circ \tau_{\hat{A} \times \hat{B}, \hat{C}} = & \\
-&[q, {\bf let \: pure \:} r = q {\: \bf in \:}  \langle \pi_1 (\pi_1 r), \langle \pi_2 (\pi_1 r), \pi_2 r \rangle \rangle] \: \circ & \\
-&\quad\quad\quad\quad \circ \: [p, {\bf \: let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:} \langle \langle x,y \rangle, z \rangle] = & \\
-&\quad\quad\quad\quad\quad\quad \text{Composition}& \\
-&[p, {\bf let \: pure \:} r = q {\: \bf in \:}  \langle \pi_1 (\pi_1 r), \langle \pi_2 (\pi_1 r), \pi_2 r \rangle \rangle & \\
-&\quad\quad\quad\quad [q := {\bf \: let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:} \langle \langle x,y \rangle, z \rangle]] = & \\
-&\quad\quad\quad\quad\quad\quad \text{Substitution and reduction}& \\
-&[p, {\bf let \: pure \:} r = ({\bf let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:} \langle \langle x,y \rangle, z \rangle) & \\
-&\quad\quad\quad\quad {\: \bf in \:} \langle \pi_1 (\pi_1 r), \langle \pi_2 (\pi_1 r), \pi_2 r \rangle \rangle] = & \\
-&\quad\quad\quad\quad\quad\quad \text{$\beta$-reduction rule}& \\
-&[p, {\bf let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:}  \langle \pi_1 (\pi_1 r), \langle \pi_2 (\pi_1 r), \pi_2 r \rangle \rangle & \\
-&\quad\quad\quad\quad [r := \langle \langle x,y \rangle, z \rangle]] = & \\
-&\quad\quad\quad\quad\quad\quad \text{$\beta$-reduction rule}& \\
-&[p, {\bf let \: pure \:} x,y,z = {\bf pure\:} (\pi_1 (\pi_1 p)), {\bf pure \:} (\pi_2 (\pi_1 p)), \pi_2 p {\: \bf in \:} \langle x, \langle y, z \rangle \rangle]&
-\end{array}$
-
-On the other hand:
-
-Let us define as follows $\tau_{\hat{A}, \hat{B} \times \hat{C}}$:
-
-$\begin{array}{lll}
-&\tau_{\hat{A}, \hat{B} \times \hat{C}} = [r, {\bf let \: pure \:} x, y, z = ({\bf pure \:} \pi_1 r, {\bf let \: pure \:} q^{'} = \pi_2 r {\: \bf in \:} \pi_1 q^{'}, {\bf let \: pure \:} q^{'} = \pi_2 r {\: \bf in \:} \pi_2 q^{'}) & \\
-&\quad\quad\quad\quad {\: \bf in \:} \langle x, \langle y, z \rangle\rangle]& \\
-\end{array}$
-
-We may simplify the current instance of tensorial strength:
-
-$\begin{array}{lll}
-&[p, {\bf let \: pure \:} x, y, z = ({\bf pure \:} \pi_1 p, {\bf let \: pure \:} p^{'} = \pi_2 p {\: \bf in \:} \pi_1 p^{'}, {\bf let \: pure \:} p^{'} = \pi_2 p {\: \bf in \:} \pi_2 p^{'}) & \\
-&\quad\quad\quad\quad {\: \bf in \:} \langle x, \langle y, z \rangle\rangle] = & \\
-&\quad\quad\quad\quad\quad\quad \text{Substitution and reduction}& \\
-&[p, {\bf let \: pure \:} x, p^{'}, z = ({\bf pure \:} \pi_1 p, \pi_2 p, {\bf let \: pure \:} p^{'} = \pi_2 p {\: \bf in \:} \pi_2 p^{'}) {\: \bf in \:} \langle x, \langle \pi_1 p^{'}, z \rangle\rangle] = & \\
-&\quad\quad\quad\quad\quad\quad \text{Substitution and reduction}& \\
-&[p, {\bf let \: pure \:} x, p^{'} = {\bf pure \:} \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, \langle \pi_1 p^{'}, \pi_2 p^{'} \rangle\rangle]&
-\end{array}$
-
-Then:
-
-$\begin{array}{lll}
-&\tau_{\hat{A}, \hat{B} \times \hat{C}} \circ (id_{\hat{A}} \times \tau_{\hat{B}, \hat{C}}) \circ \alpha_{\hat{A}, \hat{B}, {\bf K}\hat{C}} = & \\
-&\quad\quad\quad\quad\quad\quad \text{Unfolding}& \\
-&\tau_{\hat{A}, \hat{B} \times \hat{C}} \circ [q, \langle \pi_1 q, {\bf let \: pure \:} y, z = {\bf pure \:} (\pi_1 (\pi_2 q)), \pi_2 (\pi_2 q) {\: \bf in \:} \langle y, z \rangle \rangle] \: \circ & \\
-&\quad\quad\quad\quad \circ \: [p, \langle \pi_1 (\pi_1 p), \langle \pi_2 (\pi_1 p), \pi_2 p \rangle \rangle] = & \\
-&\quad\quad\quad\quad\quad\quad \text{Composition}& \\
-&\tau_{\hat{A}, \hat{B} \times \hat{C}} \circ [p, \langle \pi_1 q, {\bf let \: pure \:} y, z = {\bf pure \:} (\pi_1 (\pi_2 q)), \pi_2 (\pi_2 q) {\: \bf in \:} \langle y, z \rangle \rangle & \\
-&\quad\quad\quad\quad [q := \langle \pi_1 (\pi_1 p), \langle \pi_2 (\pi_1 p), \pi_2 p \rangle \rangle]] = & \\
-&\quad\quad\quad\quad\quad\quad \text{Substitution and reduction}& \\
-&\tau_{\hat{A}, \hat{B} \times \hat{C}} \circ [p, \langle \pi_1 (\pi_1 p), {\bf let \: pure \:} y, z = {\bf pure \:} \pi_2 (\pi_1 p), \pi_2 p {\: \bf in \:} \langle y, z \rangle \rangle] = & \\
-&\quad\quad\quad\quad\quad\quad \text{Composition}& \\
-&[r, {\bf let \: pure \:} x, p^{'} = {\bf pure \:} \pi_1 r, \pi_2 r {\: \bf in \:} \langle x, \langle \pi_1 p^{'}, \pi_2 p^{'} \rangle\rangle] \: \circ & \\
-&\quad\quad\quad\quad \circ \: [p, \langle \pi_1 (\pi_1 p), {\bf let \: pure \:} y, z = {\bf pure \:} \pi_2 (\pi_1 p), \pi_2 p {\: \bf in \:} \langle y, z \rangle \rangle] = & \\
-&\quad\quad\quad\quad\quad\quad \text{Substitution and reduction}& \\
-&[p, {\bf let \: pure \:} x, p^{'} = ({\bf pure \:} (\pi_1 (\pi_1 p)), {\bf let \: pure \:} y, z = ({\bf pure \:} \pi_2 (\pi_1 p), \pi_2 p {\: \bf in \:} \langle y, z \rangle \rangle) & \\
-&\quad\quad\quad\quad {\: \bf in \:} \langle x, \langle \pi_1 p^{'}, \pi_2 p^{'} \rangle\rangle ] = & \\
-&\quad\quad\quad\quad\quad\quad \text{Reduction}& \\
-&[p, {\bf let \: pure \:} x,y,z = {\bf pure \:} (\pi_1 (\pi_1 p)), {\bf pure \:} \pi_2 (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, \langle \pi_1 p^{'}, \pi_2 p^{'} \rangle\rangle [p^{'} := \langle y, z \rangle]] = & \\
-&\quad\quad\quad\quad\quad\quad \text{Substitution and reduction}& \\
-&[p, {\bf let \: pure \:} x,y,z = {\bf pure \:} (\pi_1 (\pi_1 p)), {\bf pure \:} \pi_2 (\pi_1 p), \pi_2 p {\: \bf in \:} \langle x, \langle y, z \rangle\rangle]&
-\end{array}$
-
-\vspace{\baselineskip}
-
-\end{proof}
-
-\begin{lemma}
-  $ $
-
-  $\tau_{A, B} \circ id_A \times \eta_B = \eta_{\widehat{A \times B}}$
-
-\end{lemma}
-
-\begin{proof}
-$ $
-
-$\begin{array}{lll}
-& \tau_{\hat{A}, \hat{B}} \circ id_{\hat{A}} \times \eta_{\hat{B}} = & \\
-&\quad\quad\quad\quad\quad\quad \text{Unfolding}& \\
-&[q, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 q), \pi_2 q {\: \bf in \:} \langle x, y \rangle] \circ [p, \langle \pi_1 p, {\bf pure \:} (\pi_2 p) \rangle] = & \\
-&\quad\quad\quad\quad\quad\quad \text{Composition}& \\
-&[p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 q), \pi_2 q {\: \bf in \:} \langle x, y \rangle [q := \langle \pi_1 p, {\bf pure \:} (\pi_2 p) \rangle]]& \\
-&\quad\quad\quad\quad\quad\quad \text{Substitution}& \\
-&[p, {\bf let \: pure \:} x, y = {\bf pure \:} (\pi_1 p), {\bf pure \:} (\pi_2 p) {\: \bf in \:} \langle x, y \rangle ] = & \\
-&\quad\quad\quad\quad\quad\quad \text{$\beta$-reduction rule}& \\
-&[p, {\bf \: pure \:} (\langle x, y \rangle) [x := \pi_1 p, y := \pi_2 p]]& \\
-&\quad\quad\quad\quad\quad\quad \text{Substitution}& \\
-&[p, {\bf \: pure \:} (\langle \pi_1 p, \pi_2 p \rangle)] = & \\
-&\quad\quad\quad\quad\quad\quad \text{$\eta$-reduction}& \\
-&[p, {\bf \: pure \:} p] =& \\
-&\quad\quad\quad\quad\quad\quad \text{The definition of $\eta$}& \\
-&\eta_{\widehat{A \times B}}&
-\end{array}$
-
-\end{proof}
-
 \begin{lemma}
 
-  {\bf K} is an applicative functor
+  $\langle \mathcal{C}(\lambda), \boxdot, \eta \rangle$ is an applicative functor
 \end{lemma}
 
 \begin{proof}
   Immediately follows from previous lemmas in the section.
 \end{proof}
 
-Similar to \cite{Abramsky}, we apply the translation from $\lambda_{{\bf K}}$ to some cartesian closed category with an abritraty applicative functor $\mathcal{K}$, then
-we have $[\![\Gamma \vdash M : A]\!] = [x, M [x_i := \pi_i x]]$, so $M =_{\beta \eta} N \Leftrightarrow [\![\Gamma \vdash M : A]\!] = [\![\Gamma \vdash N : A]\!]$.
+\end{proof}
+
+\section{Relation with Moggi's monadic metalanguage}
+
+\begin{defin} Monadic metalanguage
+
+  Monadic metalanguage is a simply typed lambda calculus with additional typing rules:
+
+\begin{minipage}{0.45\textwidth}
+\begin{prooftree}
+  \AxiomC{$\Gamma \vdash M : A$}
+  \RightLabel{$\bigcirc_I$}
+  \UnaryInfC{$\Gamma \vdash {\bf val \:} M : \bigcirc A$}
+\end{prooftree}
+\end{minipage}%
+\hfill
+\begin{minipage}{0.45\textwidth}
+\begin{tabular}{p{\textwidth}}
+\begin{prooftree}
+  \AxiomC{$\Gamma \vdash M : \bigcirc A$}
+  \AxiomC{$\Gamma, x : A \vdash N : \bigcirc B$}
+  \RightLabel{$\bigcirc_E$}
+  \BinaryInfC{$\Gamma \vdash {\bf let \: val \:} x = M {\: \bf in \:} N : \bigcirc B$}
+\end{prooftree}
+\end{tabular}
+\end{minipage}
+
+\end{defin}
+
+\begin{defin} Reduction rules for monadic metalanguage
+  \begin{enumerate}
+    \item ${\bf let \: val \:} x = {\bf val \:} M {\: \bf in \:} N \rightarrow_{\beta} N [x := M]$;
+    \item ${\bf let \: val \:} x = ({\bf let \: val \:} y = N {\: \bf in \:} P) {\: \bf in \:} M \rightarrow_{\beta} {\bf let \: val \:} y = N {\: \bf in \:} ({\bf let \: val \:} x = P {\: \bf in \:} M)$;
+    \item ${\bf let \: val \:} x = M {\: \bf in \:} {\bf val} x \rightarrow_{\eta} M$.
+  \end{enumerate}
+\end{defin}
+
+Let us define translation $\ulcorner . \urcorner$ from $\lambda_{\text{IEL}^{-}}$ into monadic metalanguage.
+Without loss of generality we will consider $\lambda_{\text{IEL}^{-}}$ with $\to$ and $\Box$:
+
+\begin{defin} Translation for types
+  \begin{enumerate}
+    \item $\ulcorner A \urcorner = A$ for an atomic $A$;
+    \item $\ulcorner A \to B \urcorner = \ulcorner A \urcorner \to \ulcorner B \urcorner$;
+    \item $\ulcorner \Box A \urcorner = \bigcirc \ulcorner A \urcorner$
+  \end{enumerate}
+\end{defin}
+
+\begin{defin} Translation for terms
+  \begin{enumerate}
+    \item $\ulcorner x \urcorner = x$ for $x \in \mathbb{V}$;
+    \item $\ulcorner \lambda x. M \urcorner = \lambda x. \ulcorner M \urcorner$;
+    \item $\ulcorner M N \urcorner = \ulcorner M \urcorner \ulcorner N \urcorner$;
+    \item $\ulcorner {\bf box \:} M \urcorner = {\bf val \:} \ulcorner M \urcorner$
+    \item $\ulcorner {\bf let \: box \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} N \urcorner = {\bf val \:} \ulcorner N \urcorner$;
+    \item $\ulcorner {\bf let \: box \:} \vec{x} = \vec{M} {\: \bf in \:} N \urcorner = {\bf let \: val \:} \vec{x} = \ulcorner \vec{M} \urcorner {\: \bf in \:} {\bf val \:} \ulcorner N \urcorner$;
+  \end{enumerate}
+\end{defin}
+
+Where ${\bf let \: val \:} \vec{x} = \ulcorner \vec{M} \urcorner {\: \bf in \:} {\bf val \:} \ulcorner N \urcorner$ denotes
+${\bf let \: val \:} x_n = \ulcorner M_n \urcorner {\: \bf in \:} (\dots ({\bf let \: val \:} x_1 = \ulcorner M_1 \urcorner {\bf \: in \: } \ulcorner N \urcorner) \dots)$
+
+\begin{defin} Interpretation for modal rules
+  \begin{prooftree}
+    \AxiomC{$\ulcorner \Gamma \vdash M : A \urcorner = \ulcorner \Gamma \urcorner \vdash \ulcorner M \urcorner : \ulcorner A \urcorner$}
+    \UnaryInfC{$\ulcorner \Gamma \vdash {\bf box \:} M : \Box A \urcorner = \ulcorner \Gamma \urcorner \vdash {\bf val \:} \ulcorner M \urcorner : \bigcirc \ulcorner A \urcorner$}
+  \end{prooftree}
+
+  \begin{prooftree}
+    \AxiomC{$\ulcorner \Gamma \vdash \vec{M} : \Box \vec{A} \urcorner = \ulcorner \Gamma \urcorner \vdash \ulcorner \vec{M} \urcorner : \bigcirc \ulcorner \vec{A} \urcorner$}
+    \AxiomC{$\ulcorner \vec{x} : \vec{A} \vdash N : B \urcorner = \vec{x} : \ulcorner \vec{A} \urcorner \vdash \ulcorner N \urcorner : \ulcorner B \urcorner$}
+    \UnaryInfC{$\vec{x} : \ulcorner \vec{A} \urcorner \vdash {\bf val \:} \ulcorner N \urcorner : \bigcirc \ulcorner B \urcorner$}
+    \BinaryInfC{$\ulcorner \Gamma \vdash {\bf let \: box \:} \vec{x} = \vec{M} {\: \bf in \:} N : \Box B \urcorner = \ulcorner \Gamma \urcorner \vdash {\bf let \: val \:} \vec{x} = \ulcorner \vec{M} \urcorner {\: \bf in \:} {\bf val \:} \ulcorner N \urcorner : \bigcirc \ulcorner B \urcorner$}
+  \end{prooftree}
+\end{defin}
+
+\begin{lemma}
+  $ $
+
+  $\ulcorner M [x := N] \urcorner = \ulcorner M \urcorner [x := \ulcorner N \urcorner]$
+\end{lemma}
+
+\begin{proof}
+  Induction on the structure of $M$.
+\end{proof}
+
+\begin{lemma}
+  $ $
+
+  If $M =_{r} N$, then $\ulcorner M \urcorner =_{\beta \eta} \ulcorner N \urcorner$.
+\end{lemma}
+
+\begin{proof}
+$ $
+
+1) \\
+$\begin{array}{lll}
+&\ulcorner {\bf let \: box \:} x = ({\bf let \: box \:} \vec{y} = \vec{N} {\: \bf in \:} P) {\: \bf in \:} M \urcorner = & \\
+&\quad {\bf let \: val \:} x = ({\bf let \: val \:} \vec{y} = \ulcorner \vec{N} \urcorner {\: \bf in \:} {\bf val \:} \ulcorner P \urcorner) {\: \bf in \:} {\bf val \:} \ulcorner M \urcorner \rightarrow_{\beta} & \\
+&\quad {\bf let \: val \:} \vec{y} = \ulcorner \vec{N} \urcorner {\: \bf in \:} ({\bf let \: val \:} x = \ulcorner P \urcorner {\: \bf in \:} {\bf val \:} \ulcorner M \urcorner) \rightarrow_{\beta} & \\
+&\quad {\bf let \: val \:} \vec{y} = \ulcorner \vec{N} \urcorner {\: \bf in \:} {\bf val \:} \ulcorner M \urcorner [x := \ulcorner P \urcorner] = & \\
+&\ulcorner {\bf let \: box \:} \vec{y} = \vec{N} {\: \bf in \:} M [x := P] \urcorner&
+\end{array}$
+
+\vspace{\baselineskip}
+
+2) \\
+$\begin{array}{lll}
+&\ulcorner {\bf let \: box \:} \vec{x} = {\bf box \:} \vec{N} {\: \bf in \:} M \urcorner = & \\
+&\quad {\bf let \: val \:} \vec{x} = {\bf val \:} \ulcorner \vec{N} \urcorner {\: \bf in \:} {\bf val} \ulcorner M \urcorner \rightarrow_{\beta} & \\
+&\quad {\bf val \:} \ulcorner M \urcorner [\vec{x} := \ulcorner \vec{N} \urcorner] =& \\
+&\ulcorner {\bf box \:} M [\vec{x} := \vec{N}] \urcorner&
+\end{array}$
+
+\vspace{\baselineskip}
+
+3) \\
+$\begin{array}{lll}
+&\ulcorner {\bf let \: box \:} x = M {\: \bf in \:} x \urcorner = & \\
+&\quad {\bf let \: val \:} x = \ulcorner M \urcorner {\: \bf in \:} {\bf val \:} x \rightarrow_{\eta}& \\
+&\ulcorner M \urcorner&
+\end{array}$
 
 \end{proof}
 
+\begin{theorem}
+  $ $
+
+  If $\Gamma \vdash M : A$, then $\ulcorner \Gamma \urcorner \vdash \ulcorner M \urcorner : \ulcorner A \urcorner$
+\end{theorem}
+
+\begin{proof}
+  Follows from lemmas above.
+\end{proof}
+
+
 \section{Acknowledgment}
 
-  We are grateful to Valeria de Paiva, Neel Krishnaswami and Vladimir Vasyukov for consulting and advice.
-
-  Special thanks to Vladimir Krupski for general idea, critics and support.
+  We are grateful to Neel Krishnaswami, Vladimir Krupski, Valeria de Paiva, Valerii Plisko and Vladimir Vasyukov for consulting and advice.
 
   \addcontentsline{toc}{section}{References}
 
@@ -1521,9 +1286,6 @@ we have $[\![\Gamma \vdash M : A]\!] = [x, M [x_i := \pi_i x]]$, so $M =_{\beta 
 
   \bibitem{Purs} Purescript. A strongly-typed functional programming language that compiles to JavaScript.
   URL: http://www.purescript.org. (Date: 1.08.2017) \parskip=1mm
-
-  \bibitem{Elm} Elm. A delightful language for reliable webapps. // URL: http://elm-lang.org. (Date:
-  1.08.2017) \parskip=1mm
 
   \bibitem{Base} Hackage, \/ ``The base package'' // URL: https://hackage.haskell.org/package/base-4.10.0.0
   (Date: 1.08.2017) \parskip=1mm
