@@ -11,6 +11,7 @@
 \usepackage{stmaryrd}
 \usepackage[all, 2cell]{xy}
 \usepackage[all]{xy}
+\usepackage{authblk}
 \newtheorem{theorem}{Theorem}
 \newtheorem{prop}{Proposition}
 \newtheorem{lemma}{Lemma}
@@ -20,16 +21,19 @@
 \newtheorem{con}{Consequence}
 \usepackage{listings} 		% for source code
 \date{}
-\title{Modal type theory based on the intuitionistic epistemic logic}
+\author[1]{Daniel Rogozin}
+\affil[1]{Moscow State University, Moscow, Russia}
+\affil[1]{Serokell O\"{U}, Tallinn, Estonia}
+\title{Modal type theory as based on the intuitionistic modal logic IEL$^{-}$}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Modal intuitionistic epistemic logic IEL$^{-}$ was proposed by S.Artemov and T. Protopopescu as the formal
+Modal intuitionistic epistemic logic IEL$^{-}$ was proposed by S. Artemov and T. Protopopescu as the formal
 foundation for the intuitionistic theory of knowledge. We construct a modal simply typed lambda-calculus
-which is Curry-Howard isomorphic to IEL$^{-}$ as formal theory of calculations with applicative functors in
-functional programming languages like Haskell or Idris.
+which is Curry-Howard isomorphic to IEL$^{-}$ as the formal theory of calculations with applicative functors in
+functional programming.
 \end{abstract}
 
 
@@ -38,7 +42,7 @@ functional programming languages like Haskell or Idris.
   Modal intutionistic epistemic logic IEL was proposed by S. Artemov and T. Proropopescu \cite{Artemov}. IEL
   provides the epistimology and the theory of knowledge as based on BHK-semantics of intuitionistic logic.
   IEL$^{-}$  is a variant of IEL, that corresponds to intuitionistic belief.
-  Informally, $\Box A$ denotes that $A$ is verified intuitionistically.
+  Informally, $\Box A$ denotes that the agent believes in $A$.
 
   Intuitionistic epistemic logic IEL$^{-}$ is defined by following axioms and derivation rules:
 
@@ -57,11 +61,10 @@ functional programming languages like Haskell or Idris.
   V. Krupski and  A. Yatmanov provided the sequential calculus for IEL and proved that this calculus is
   PSPACE-complete \cite{Krupski}.
 
-  Functional programming languages such as Haskell \cite{Haskell}, Idris \cite{Idris} or Purescript \cite{Purs}
-  have special type classes\footnote{Type class in Haskell is a general interface for
-  special group of datatypes.} for calculations with container types like \verb"Functor" and
-  \verb"Applicative" \footnote{Reader may read more about container types in the Haskell standard library documentation\cite{Base} or in the next one textbook
-  \cite{Miran}}:
+  Functional programming languages such as Haskell, Idris or Purescript
+  have special type classes \footnote{Type class in Haskell is a general interface for
+  special group of datatypes.} for calculations with type operators like \verb"Functor" and
+  \verb"Applicative" \footnote{Reader may read more about these types in the Haskell standard library documentation.}:
 
   \begin{lstlisting}[language=Haskell]
     class Functor f where
@@ -72,7 +75,7 @@ functional programming languages like Haskell or Idris.
       (<*>) :: f (a -> b) -> f a -> f b
   \end{lstlisting}
 
-  By \emph{container} (or \emph{computational context}) type we mean some type-operator $f$, where $f$ is a
+  By \emph{container} (or \emph{computational context}) type we mean some type operator $f$, where $f$ is a
   ``function'' from $*$ to $*$: type operator takes a simple type (ща kind $*$) and returns another
   simple type of kind \verb"*". For more detailed description of the type system with kinds used in
   Haskell see \cite{Morten}.
@@ -89,8 +92,9 @@ Applicative functor allows to generalize the action of a functor for functions w
 
   We investigate the relationship between intuitionistic epistemic logic IEL$^{-}$ and applicative programming with side-effects
   by constructing the type system (which is called $\lambda_{\text{IEL}^{-}}$) which is Curry-Howard isomorphic to $IEL^{-}$.
-  So we will consider IEL$^{-}$ modality as an arbitrary applicative functor and we prove that obtained type system
-  is sound and complete for applicative functor on cartesian closed category (using the categorical definition proposed by Paterson \cite{Cons}).
+  So we will consider IEL$^{-}$ modality as an arbitrary applicative functor and we prove that the obtained type system
+  is sound and complete for an applicative functor on cartesian closed category
+  (using the categorical definition proposed by Paterson \cite{Cons}).
 
   $\lambda_{\text{IEL}^{-}}$ consists of the rules for simply typed lambda-calculus and special typing rules for
   lifting types into the applicative functor $\Box$. We assume that our type system will
@@ -104,27 +108,61 @@ Applicative functor allows to generalize the action of a functor for functions w
   \begin{defin} Natural deduction NIEL$^{-}$ for IEL$^{-}$ is an extenstion of intuitionistic natural deduction calculus
     with additional inference rules for modality:
 
+  \begin{center}
+    \begin{prooftree}
+      \AxiomC{$ $}
+      \RightLabel{\bf{ax}}
+      \UnaryInfC{$\Gamma, A \vdash A$}
+    \end{prooftree}
+  \end{center}
+
   \begin{minipage}{0.5\textwidth}
     \begin{flushleft}
+    \begin{prooftree}
+      \AxiomC{$\Gamma, A \vdash B$}
+      \RightLabel{$\to_I$}
+      \UnaryInfC{$\Gamma \vdash A \to B$}
+    \end{prooftree}
+    \begin{prooftree}
+      \AxiomC{$\Gamma \vdash A$}
+      \AxiomC{$\Gamma \vdash B$}
+      \RightLabel{$\land_I$}
+      \BinaryInfC{$\Gamma \vdash A \land B$}
+    \end{prooftree}
   	\begin{prooftree}
     	\AxiomC{$\Gamma \vdash A$}
-    	\RightLabel{$\Box_I$}
+    	\RightLabel{${\Box_I}_1$}
     	\UnaryInfC{$\Gamma \vdash \Box A$}
   \end{prooftree}
     \end{flushleft}
   \end{minipage}
   \begin{minipage}{0.5\textwidth}
     \begin{flushright}
+    \begin{prooftree}
+      \AxiomC{$\Gamma \vdash A \to B$}
+      \AxiomC{$\Gamma \vdash A$}
+      \RightLabel{$\to_E$}
+      \BinaryInfC{$\Gamma \vdash B$}
+    \end{prooftree}
+    \begin{prooftree}
+      \AxiomC{$\Gamma \vdash A_1 \land A_2$}
+      \RightLabel{$\land_E, i \in {1,2}$}
+      \UnaryInfC{$\Gamma \vdash A_i$}
+    \end{prooftree}
   	\begin{prooftree}
     \AxiomC{$\Gamma \vdash \Box A_1, \dots, \Gamma \vdash \Box A_n $}
     \AxiomC{$A_1,\dots,A_n \vdash B$}
+    \RightLabel{${\Box_I}_2$}
     \BinaryInfC{$\Gamma \vdash \Box B$}
   	\end{prooftree}
     \end{flushright}
   \end{minipage}
   \end{defin}
 
-The first rule allows to derive co-reflextion. The second modal rule is a counterpart of $\Box_I$
+Without loss of generality we will consider the calculus without inference rule for disjunction and negation.
+Obtained calculus is equivalent to Hilbert-style IEL$^{-}$ without axioms for negation and disjunction.
+
+The first modal rule allows to derive co-reflextion. The second modal rule is a counterpart of $\Box_I$
 rule in natural deduction calculus for constructive K (see \cite{ModalLa}).
 
 We will denote $\Gamma \vdash \Box A_1, \dots, \Gamma \vdash \Box A_n$ and $A_1,\dots,A_n \vdash B$ as $\Gamma \vdash \Box \vec{A}$ and $\vec{A} \vdash B$ for brevity.
@@ -162,12 +200,12 @@ $\begin{array}{lll}
 (1) &\bigwedge \Gamma \rightarrow \Box A_1, \dots, \bigwedge \Gamma \rightarrow \Box A_1 & \text{assumption} \\
 (2) &\bigwedge \Gamma \rightarrow \bigwedge \limits_{i = 1}^{n} \Box A_i & \text{IEL$^{-}$ theorem} \\
 (3) &\bigwedge \limits_{i = 1}^{n} \Box A_i \rightarrow \Box \bigwedge \limits_{i = 1}^{n} A_i & \text{IEL$^{-}$ theorem} \\
-(4) &\bigwedge \Gamma \rightarrow \Box \bigwedge \limits_{i = 1}^{n} A_i & \text{from (1), (2) and transitivity} \\
+(4) &\bigwedge \Gamma \rightarrow \Box \bigwedge \limits_{i = 1}^{n} A_i & \text{from (2), (3) and transitivity} \\
 (5) &\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B& \text{assumption} \\
 (6) &(\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B) \rightarrow \Box (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{co-reflection}\\
-(7) &\Box (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{from (4), (5) and MP} \\
-(8) &\Box \bigwedge \limits_{i = 1}^{n} A_i \rightarrow \Box B & \text{from (6) and normality} \\
-(9) &\bigwedge \Gamma \rightarrow \Box B & \text{from (3), (7) and transitivity}
+(7) &\Box (\bigwedge \limits_{i = 1}^{n} A_i \rightarrow B)& \text{from (5), (6) and MP} \\
+(8) &\Box \bigwedge \limits_{i = 1}^{n} A_i \rightarrow \Box B & \text{from (7) and normality} \\
+(9) &\bigwedge \Gamma \rightarrow \Box B & \text{from (4), (8) and transitivity}
 \end{array}$
 
   \end{proof}
@@ -178,13 +216,13 @@ $\begin{array}{lll}
 \end{lemma}
 
 \begin{proof}
-  Straightforward derivation of modal axioms in $\text{NIEL}^{-}$. We consider this derivation below using terms.
+  Straightforward derivation of modal axioms in $\text{NIEL}^{-}$. We shall consider these derivations using terms below.
 \end{proof}
 
   \vspace{\baselineskip}
 
-  At the next step we build the typed lambda-calculus based on the NIEL$^{-}$ with implication and dijunction
-by proof-assingment in rules. Obtained fragment is equivalent to IEL$^{-}$ without axioms for negation and disjunction.
+  At the next step we build the typed lambda-calculus based on the NIEL$^{-}$.
+by proof-assingment in rules.
 
   At first, we define lambda-terms and types for this lambda-calculus.
 
@@ -322,7 +360,7 @@ Here are some examples of derivation trees:
   \item $FV(\lambda x. M) = FV(M) \setminus \{ x\}$;
   \item $FV(M N) = FV(M) \cup FV(N);$
   \item $FV(\langle M,N \rangle) = FV(M) \cup FV(N)$;
-  \item $FV(\pi_i M) \subseteq FV(M)$, $i \in \{ 1, 2\}$;
+  \item $FV(\pi_i M) = FV(M)$, $i \in \{ 1, 2\}$;
   \item $FV(\text{\bf box } M) = FV(M)$;
   \item $FV({\bf let \: box} \: \vec{x} = \vec{M} {\: \bf in \:} N) = \bigcup \limits_{i = 1}^n FV(M), \text{where $n = |\vec{M}|$}$.
 \end{enumerate}
@@ -386,20 +424,7 @@ example see \cite{Neder} \cite{Morten}. We will consider only modal cases}:
 \begin{proof}
   $ $
 
-1) The derivation ends in
-
-\begin{prooftree}
-  \AxiomC{$\Gamma \vdash \vec{M} : \Box \vec{A}$}
-  \AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
-  \RightLabel{$\text{let}_{\Box}$}
-  \BinaryInfC{$\Gamma \vdash {\bf let \: box \:} \vec{x} = \vec{M} {\: \bf in \: } N : \Box B$}
-\end{prooftree}
-
-By IH $\Delta \vdash \vec{M} : \Box \vec{A}$, so $\Delta \vdash {\bf let \: box \:} \vec{x} = \vec{M} {\: \bf in \: } N : \Box B$.
-
-  \vspace{\baselineskip}
-
-2)-3) Similary.
+Induction on the derivation of $\Gamma \vdash M : A$.
 
 \end{proof}
 
@@ -415,41 +440,32 @@ Induction on the derivation $\Gamma \vdash M : A$ and on the generation of $\rig
 
 For cases with axiom, application, abstraction and pairs see \cite{Morten} \cite{Pierce}.
 
-1) If $\Gamma \vdash {\bf let \: box \:} \vec{x}, y, \vec{z} = \vec{M}, {\bf let \: box \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P}  {\: \bf in \:} R : \Box B$,
+\begin{enumerate}
+
+\item If $\Gamma \vdash {\bf let \: box \:} \vec{x}, y, \vec{z} = \vec{M}, {\bf let \: box \: } \vec{w} = \vec{N} {\bf \: in \: } Q, \vec{P}  {\: \bf in \:} R : \Box B$,
   then $\Gamma \vdash {\bf let \: box \:} \vec{x}, \vec{w}, \vec{z} = \vec{M}, \vec{N}, \vec{P} \: { \bf in } \: R [y := Q] : \Box B$ by rule 4).
-
-2) Let $\Gamma \vdash {\bf let \: box \:} x = M {\: \bf in \: } x : \Box A$, then $\Gamma \vdash M : \Box A$ by rule 9).
-
-See \cite{ModalK}.
-
-3) The derivation ends in
-
+\item Let $\Gamma \vdash {\bf let \: box \:} x = M {\: \bf in \: } x : \Box A$,
+then $\Gamma \vdash M : \Box A$ by rule 9). \\ See \cite{ModalK}.
+\item The derivation ends in
 \begin{prooftree}
 \AxiomC{$\Gamma \vdash {\bf box \:} \vec{M} : \Box \vec{A}$}
 \AxiomC{$\vec{x} : \vec{A} \vdash N : B$}
 \BinaryInfC{$\Gamma \vdash {\bf let \: box \:} \vec{x} = {\bf box \:} \vec{M} {\: \bf in \:} N : \Box B$}
 \end{prooftree}
-
 So $\Gamma \vdash \vec{M} : \vec{A}$ by Lemma 4 and $\Gamma \vdash N [\vec{x} := \vec{M}] : B$ by Lemma 4, part 3.
-
 Then we can transform this into the following derivation:
-
 \begin{prooftree}
 \AxiomC{$\Gamma \vdash N [\vec{x} := \vec{M}] : B$}
 \RightLabel{$\Box_I$}
 \UnaryInfC{$\Gamma \vdash {\bf box \:} N [\vec{x} := \vec{M}] : \Box B$}
 \end{prooftree}
-
-4) The derivation ends in
-
+\item The derivation ends in
 \begin{prooftree}
 \AxiomC{$\vdash M : A$}
 \UnaryInfC{$\vdash {\bf let \: box \:} \underline{\quad} = \underline {\quad} {\: \bf in \:} M : \Box A$}
 \end{prooftree}
-
 So, if $\vdash M : A$, then $\vdash {\bf box \:} M : \Box A$.
-
-
+\end{enumerate}
 \end{proof}
 
 \begin{theorem}
@@ -462,7 +478,8 @@ So, if $\vdash M : A$, then $\vdash {\bf box \:} M : \Box A$.
   $ $
 
   Let us define the transformation from $\lambda_{\text{IEL}^{-}}$ into the simple type theory with
-  $\to$, $\times$ and natural number type $\mathbb{N}$ \footnote{Strong normalization for stronger system was shown here \cite{Girard}} with additional typing and reduction rules:
+  $\to$, $\times$ and natural number type $\mathbb{N}$ with additional typing and reduction rules
+  \footnote{Strong normalization for stronger system was shown here \cite{Girard}} :
 
   \begin{prooftree}
   \AxiomC{$ $}
@@ -507,7 +524,7 @@ So, if $\vdash M : A$, then $\vdash {\bf box \:} M : \Box A$.
       \item $|{\bf box \:} M| = \langle 0, |M| \rangle$;
       \item $|{\bf let \: box \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} M| = \langle 0, |M| \rangle$;
       \item $|{\bf let \: box \:} x = N {\: \bf in \:} M| = \langle \pi_1 |N| , |M| [x := \pi_2 |N|] \rangle$
-      \item $|{\bf let \: box \:} \vec{x} = \vec{N} {\: \bf in \:} M| = \langle \sum \limits_{i = 1}^n \pi_1 |N|, |M| [\vec{x} := \pi_2 \vec{N}] \rangle$
+      \item $|{\bf let \: box \:} \vec{x} = \vec{N} {\: \bf in \:} M| = \langle \sum \limits_{i = 1}^n \pi_1 |N|, |M| [\vec{x} := \pi_2 |\vec{N}|] \rangle$
     \end{enumerate}
   \end{defin}
 
@@ -645,7 +662,8 @@ $\begin{array}{lll}
 \end{enumerate}
 \end{proof}
 
-Also we may consider four critical pairs which are used in local confluence proof for lambda-calculus based on {\bf IK} and \cite{ModalK}.
+Also we may consider four critical pairs which are considered in
+confluence proof for lambda-calculus as based on {\bf IK} \cite{ModalK}.
 
 \end{proof}
 
@@ -657,6 +675,8 @@ Also we may consider four critical pairs which are used in local confluence proo
 \end{theorem}
 
 \begin{proof}
+  $ $
+
   By induction on the structure of $M$.
   Case with ${\bf let \: box \:} \vec{x} = \vec{M} {\: \bf in \:} N$ was considered by Kakutani \cite{ModalK} \cite{ModalK1}.
 
@@ -718,7 +738,7 @@ Note that, any cartesian closed category is the special case of a monoidal categ
 
   \xymatrix{
     && (\mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}B) \otimes_{\mathcal{D}} \mathcal{F}C \ar[d]_{(A \varoast B) \otimes_{\mathcal{D}} id_{\mathcal{F}B}}
-    \ar[rr]^{\alpha^{\mathcal{D}}_{{\mathcal{F}A, \mathcal{F}B, \mathcal{F}C}}} && \mathcal{F}A \otimes_{\mathcal{D}} (\mathcal{F}B \otimes_{\mathcal{D}} \mathcal{F}C) \ar[d]^{id_{\mathcal{F}A} \otimes_{\mathcal{D}} \ast_{B,C}}\\
+    \ar[rr]^{\alpha^{\mathcal{D}}_{{\mathcal{F}A, \mathcal{F}B, \mathcal{F}C}}} && \mathcal{F}A \otimes_{\mathcal{D}} (\mathcal{F}B \otimes_{\mathcal{D}} \mathcal{F}C) \ar[d]^{id_{\mathcal{F}A} \otimes_{\mathcal{D}} B \varoast C}\\
     && \mathcal{F}(A \otimes_{\mathcal{C}} B) \otimes_{\mathcal{D}} \mathcal{C} \ar[d]_{(A \otimes_{\mathcal{C}} B) \varoast C} && \mathcal{F}A \otimes_{\mathcal{D}} \mathcal{F}(B \otimes_{\mathcal{C}} C) \ar[d]^{A \varoast (B \otimes_{\mathcal{C}} C) }\\
     && \mathcal{F}((A \otimes_{\mathcal{C}} B) \otimes_{\mathcal{C}} C) \ar[rr]_{\mathcal{F}(\alpha^{\mathcal{C}}_{A,B,C})}&& \mathcal{F}(A \otimes_{\mathcal{C}} (B \otimes_{\mathcal{C}} C))
   }
@@ -757,11 +777,11 @@ where $\mathcal{C}$ is a monoidal category, $\mathcal{F}$ is a monoidal endofunc
 \end{defin}
 
 
-By default we will consider some monoidal functor on cartesian closed category below.
+By default we will consider an arbitrary monoidal functor on cartesian closed category below.
 
 \subsection{Soundness and completeness}
 
-\begin{defin} Semantical translation from $\lambda_{\text{IEL}^{-}}$ to some cartesian closed category $\mathcal{C}$ with an applicative functor $\boxdot$:
+\begin{defin} Semantical translation from $\lambda_{\text{IEL}^{-}}$ to some cartesian closed category $\mathcal{C}$ with an applicative functor $\langle \mathcal{C}, \boxdot, \eta \rangle$:
 
 \begin{enumerate}
 \item Interpretation for types:
@@ -829,11 +849,13 @@ By default we will consider some monoidal functor on cartesian closed category b
   \begin{prooftree}
     \AxiomC{$[\![\Gamma \vdash \vec{M} : \Box \vec{A}]\!] = \langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle : [\![\Gamma]\!] \rightarrow \prod \limits_{i=1}^n \boxdot [\![A_i]\!]$}
     \AxiomC{$[\![\vec{x} : \vec{A} \vdash N : B]\!] = [\![N]\!] : \prod \limits_{i=1}^n [\![A_i]\!] \rightarrow [\![B]\!]$}
-    \BinaryInfC{$[\![\Gamma \vdash {\bf let \: box \:} \vec{x} = \vec{M} {\: \bf in \: } M : \Box B]\!] = \boxdot ([\![N]\!]) \circ \ast_{[\![A_1]\!],\dots,[\![A_n]\!]} \circ \langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle : [\![\Gamma]\!] \rightarrow \boxdot [\![B]\!]$}
+    \BinaryInfC{$[\![\Gamma \vdash {\bf let \: box \:} \vec{x} = \vec{M} {\: \bf in \: } M : \Box B]\!] = \boxdot ([\![N]\!]) \circ ([\![A_1]\!] \varoast \dots \varoast [\![A_n]\!]) \circ \langle [\![M_1]\!],\dots, [\![M_n]\!] \rangle : [\![\Gamma]\!] \rightarrow \boxdot [\![B]\!]$}
   \end{prooftree}
 \end{small}
 \end{enumerate}
 \end{defin}
+
+Interpretation for ${\bf let \: box\:}$-rule is similar to interpretation for $\Box$-rule in term calculus for intutionistic {\bf K} \cite{Paiva}.
 
 \begin{theorem} Soundness
 
@@ -881,11 +903,11 @@ $\begin{array}{lll}
 &\quad\quad\quad\quad\quad\quad\quad \text{Substitution} &\\
 &[\![\Gamma \vdash {\bf let \: box} \: \vec{x} = (\vec{M} [\vec{y} := \vec{P}]) {\: \bf in \:} N : \Box B]\!] =& \\
 &\quad\quad\quad\quad\quad\quad\quad  \text{Interpretation for $let_{\Box}$} \\
-&\boxdot ([\![N]\!]) \circ ([\![A_1]\!] \ast \dots \ast [\![A_n]\!]) \circ [\![\Gamma \vdash (\vec{M} [\vec{y} := \vec{P}]) : \Box \vec{A}]\!] =& \\
+&\boxdot ([\![N]\!]) \circ ([\![A_1]\!] \varoast \dots \varoast [\![A_n]\!]) \circ [\![\Gamma \vdash (\vec{M} [\vec{y} := \vec{P}]) : \Box \vec{A}]\!] =& \\
 &\quad\quad\quad\quad\quad\quad\quad \text{Induction hypothesis}& \\
-&\boxdot ([\![N]\!]) \circ ([\![A_1]\!] \ast \dots \ast [\![A_n]\!]) \circ ([\![\vec{M}]\!] \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle) = & \\
+&\boxdot ([\![N]\!]) \circ ([\![A_1]\!] \varoast \dots \varoast [\![A_n]\!]) \circ ([\![\vec{M}]\!] \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle) = & \\
 &\quad\quad\quad\quad\quad\quad\quad \text{Associativity of composition}& \\
-&(\boxdot ([\![N]\!]) \circ ([\![A_1]\!] \ast \dots \ast [\![A_n]\!]) \circ [\![\vec{M}]\!]) \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle = & \\
+&(\boxdot ([\![N]\!]) \circ ([\![A_1]\!] \varoast \dots \varoast [\![A_n]\!]) \circ [\![\vec{M}]\!]) \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle = & \\
 &\quad\quad\quad\quad\quad\quad\quad \text{Interpretaion}& \\
 &[\![\Gamma \vdash {\bf let \: box} \: \vec{x} = \vec{M} {\: \bf in \:} N : \Box B]\!] \circ \langle [\![P_1]\!],\dots,[\![P_n]\!]\rangle&
 \end{array}$
@@ -938,7 +960,7 @@ $\begin{array}{lll}
 &\quad\quad\quad\quad\quad\quad\quad \text{By interpretation}& \\
 &\boxdot ([\![M]\!]) \circ u_{\mathds{1}} = & \\
 &\quad\quad\quad\quad\quad\quad\quad \text{By the definition of an applicative functor}& \\
-&\boxdot {K}([\![M]\!]) \circ \eta_{\mathds{1}} = & \\
+&\boxdot ([\![M]\!]) \circ \eta_{\mathds{1}} = & \\
 &\quad\quad\quad\quad\quad\quad\quad \text{By naturality of $\eta$} & \\
 &\eta_{[\![A]\!]} \circ [\![M]\!] = &\\
 &\quad\quad\quad\quad\quad\quad\quad \text{By interpretation} & \\
@@ -980,25 +1002,24 @@ We will denote equivalence class as $[x, M]_{A, B} = \{ (y, N) \: | \: (x, M) \s
   \item $\widehat{A \times B} = \hat{A} \times \hat{B}$;
   \item Canonical projection is defined as $[x, \pi_i x] \in Hom_{\mathcal{C}(\lambda)}(\hat{A_1} \times \hat{A_2},\hat{A_i})$ for $i \in \{ 1, 2 \}$;
   \item $\widehat{A \to B} = \hat{B}^{\hat{A}}$;
-  \item Evaluation arrow $\epsilon = [x, (\pi_2 x) (\pi_1 x)] \in Hom_{\mathcal{C}(\lambda)(\hat{B}^{\hat{A}} \times \hat{A}, \hat{B})}$.
+  \item Evaluation arrow $\epsilon_{\hat{A},\hat{B}} = [x, (\pi_2 x) (\pi_1 x)] \in Hom_{\mathcal{C}(\lambda)}(\hat{B}^{\hat{A}} \times \hat{A}, \hat{B})$.
 \end{enumerate}
 \end{defin}
 
 We define endofunctor $\boxdot$ on $\mathcal{C}(\lambda)$ and natural transformation $\eta$ from $id_{\mathcal{C}(\lambda)}$ to this endofunctor.
-It is sufficient to show $\boxdot$ and $\eta$ form an applicative functor on $\mathcal{C}(\lambda)$ for theorem proof.
+It is sufficient to show $\boxdot$ and $\eta$ form the relevant structure on $\mathcal{C}(\lambda)$.
 
 \begin{defin}
   Let us define an endofunctor $\boxdot : \mathcal{C}(\lambda) \to \mathcal{C}(\lambda)$, such that
-forall $[x,M] \in Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B}), \boxdot ([x,M]) = [y, {\bf let \: box \:} x = y {\: \bf in \:} M] \in Hom_{\mathcal{C}(\lambda)}(\boxdot \hat{A}, \boxdot \hat{B})$
-(denotation: $\text{fmap } f$ for an arbitrary arrow $f$).
+forall $[x,M] \in Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B}), \boxdot ([x,M]) = [y, {\bf let \: box \:} x = y {\: \bf in \:} M] \in Hom_{\mathcal{C}(\lambda)}(\boxdot \hat{A}, \boxdot \hat{B})$.
 
 \end{defin}
 
 \begin{lemma} Functoriality
 
 \begin{enumerate}
-  \item $\text{fmap }(g \circ f) = \text{fmap }(g) \circ \text{fmap }(f)$;
-  \item $\text{fmap }(id_{\hat{A}}) = id_{\boxdot}\hat{A}$.
+  \item $\boxdot(g \circ f) = \boxdot g \circ \boxdot f$;
+  \item $\boxdot (id_{\hat{A}}) = id_{\boxdot}\hat{A}$.
 \end{enumerate}
 \end{lemma}
 
@@ -1014,11 +1035,11 @@ Easy checking using reduction rules.
 
 \begin{enumerate}
   \item $\eta: Id_{\mathcal{C}(\lambda)} \Rightarrow \boxdot$, s. t. $\forall \hat{A} \in Ob_{\mathcal{C}(\lambda)}$, $\eta_{\hat{A}} = [x, {\bf box \:} x] \in Hom_{\mathcal{C}(\lambda)}(\hat{A}, \boxdot \hat{A})$;
-  \item $\hat{A} \varoast \hat{B} : \boxdot \hat{A} \times \boxdot \hat{B} \to \boxdot (\hat{A} \times \hat{B})$, s. t. $\forall \hat{A}, \hat{B} \in Ob_{\mathcal{C}(\lambda)}, \ast_{\hat{A},\hat{B}} = [p, {\bf let \: box \:} x,y = \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, y \rangle] \in Hom_{\mathcal{C}(\lambda)}(\boxdot \hat{A} \times \boxdot \hat{B}, \boxdot (\hat{A} \times \hat{B}))$.
+  \item $\hat{A} \varoast \hat{B} : \boxdot \hat{A} \times \boxdot \hat{B} \to \boxdot (\hat{A} \times \hat{B})$, s. t. $\forall \hat{A}, \hat{B} \in Ob_{\mathcal{C}(\lambda)}, \hat{A} \varoast \hat{B} = [p, {\bf let \: box \:} x,y = \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, y \rangle] \in Hom_{\mathcal{C}(\lambda)}(\boxdot \hat{A} \times \boxdot \hat{B}, \boxdot (\hat{A} \times \hat{B}))$.
 \end{enumerate}
 \end{defin}
 
-Implementation for $\ast$ in our term model is the instance of ${\text{let}_{\Box}}$-rule:
+Implementation for $\varoast$ in our term model is the instance of ${\text{let}_{\Box}}$-rule:
 
 \begin{prooftree}
 \AxiomC{$p : \Box A \times \Box B \vdash p : \Box A \times \Box B$}
@@ -1046,7 +1067,7 @@ See \cite{ModalK}
 \begin{lemma} Naturality and coherence for $\eta$:
 
 \begin{enumerate}
-  \item $\text{fmap } f \circ \eta_A = \eta_B \circ f$;
+  \item $\boxdot f \circ \eta_A = \eta_B \circ f$;
   \item $(\hat{A} \varoast \hat{B}) \circ (\eta_{A} \times \eta_{B}) = \eta_{\hat{A} \times \hat{B}}$;
 \end{enumerate}
 \end{lemma}
@@ -1055,7 +1076,7 @@ See \cite{ModalK}
   $ $
 
 \begin{enumerate}
-\item $\text{fmap } f \circ \eta_{\hat{A}} = \eta_{\hat{B}} \circ f$ \\
+\item $\boxdot f \circ \eta_{\hat{A}} = \eta_{\hat{B}} \circ f$ \\
 
 $\begin{array}{lll}
 &\eta_{\hat{B}} \circ f = & \\
@@ -1066,7 +1087,7 @@ $\begin{array}{lll}
 &[x, {\bf box \:} M]& \\
 & &\\
 &\text{On the other hand:}& \\
-&\text{fmap } f \circ \eta_{\hat{A}} = & \\
+&\boxdot f \circ \eta_{\hat{A}} = & \\
 &[z, {\bf let \: box \:} x = z {\: \bf in \:} M] \circ [x, {\bf box \:} x] = &\\
 &\quad\quad\quad\quad\quad\quad \text{By the definition of composition}& \\
 &[x, {\bf let \: box \:} x = z {\: \bf in \:} M [z := {\bf box \:} x]] = & \\
@@ -1134,7 +1155,7 @@ $\begin{array}{lll}
 
 \begin{defin} Monadic metalanguage
 
-  Monadic metalanguage is a simply typed lambda calculus with additional typing rules:
+  Monadic metalanguage is a simply typed lambda calculus with additional typing rules \cite{Moggi}:
 
 \begin{minipage}{0.45\textwidth}
 \begin{prooftree}
@@ -1187,9 +1208,8 @@ Without loss of generality we will consider $\lambda_{\text{IEL}^{-}}$ with $\to
   \end{enumerate}
 \end{defin}
 
-Where ${\bf let \: val \:} \vec{x} = \ulcorner \vec{M} \urcorner {\: \bf in \:} {\bf val \:} \ulcorner N \urcorner$ denotes
-${\bf let \: val \:} x_n = \ulcorner M_n \urcorner {\: \bf in \:} (\dots ({\bf let \: val \:} x_1 = \ulcorner M_1 \urcorner {\bf \: in \: } \ulcorner N \urcorner) \dots)$
-
+Where $\ulcorner \Gamma \urcorner \vdash {\bf let \: val \:} \vec{x} = \ulcorner \vec{M} \urcorner {\: \bf in \:} {\bf val \:} \ulcorner N \urcorner$
+denotes ${\bf let \: val \:} x_1 = \ulcorner M_1 \urcorner {\: \bf in \:} ( \dots {\: \bf in \:} ({\bf let \: val \:} x_n = \ulcorner M_n \urcorner {\: \bf in \:} {\bf val \:} \ulcorner N \urcorner) \dots )$.
 \begin{defin} Interpretation for modal rules
   \begin{prooftree}
     \AxiomC{$\ulcorner \Gamma \vdash M : A \urcorner = \ulcorner \Gamma \urcorner \vdash \ulcorner M \urcorner : \ulcorner A \urcorner$}
@@ -1203,6 +1223,7 @@ ${\bf let \: val \:} x_n = \ulcorner M_n \urcorner {\: \bf in \:} (\dots ({\bf l
     \BinaryInfC{$\ulcorner \Gamma \vdash {\bf let \: box \:} \vec{x} = \vec{M} {\: \bf in \:} N : \Box B \urcorner = \ulcorner \Gamma \urcorner \vdash {\bf let \: val \:} \vec{x} = \ulcorner \vec{M} \urcorner {\: \bf in \:} {\bf val \:} \ulcorner N \urcorner : \bigcirc \ulcorner B \urcorner$}
   \end{prooftree}
 \end{defin}
+
 
 \begin{lemma}
   $ $
@@ -1268,79 +1289,75 @@ $\begin{array}{lll}
 
   We are grateful to Neel Krishnaswami, Vladimir Krupski, Valeria de Paiva, Valerii Plisko and Vladimir Vasyukov for consulting and advice.
 
+  The research described in this paper was supported by Russian Foundation for Basic Research (grant 16-03-00364).
+
   \addcontentsline{toc}{section}{References}
 
   \begin{thebibliography}{}
 
-  \bibitem{Artemov} Artemov S. and Protopopescu T., \/ ``Intuitionistic Epistemic Logic'', \textit{The
-  Review of Symbolic Logic}, 2016, vol. 9, no 2. pp. 266-298.\parskip=1mm
+  \bibitem{Abe} T. Abe, Completeness of modal proofs in first-order predicate logic, Computer Software, JSSST Journal. 24 (2007).
 
-  \bibitem{Krupski} Krupski V. N. and Yatmanov A., \/ ``Sequent Calculus for Intuitionistic Epistemic Logic
-  IEL'', \textit{Logical Foundations of Computer Science: International Symposium, LFCS 2016, Deerfield
-  Beach, FL, USA, January 4-7, 2016. Proceedings}, 2016, pp. 187-201.\parskip=1mm
+  \bibitem{Abramsky} S. Abramsky and N. Tzevelekos, Introduction to Categories and Categorical Logic, in: B. Coecke, ed., New Structures for Physics.
+  Lecture Notes in Physics, vol. 813 (Springer-Verlag, Berlin, 2011).
 
-  \bibitem{Haskell} Haskell Language. // URL: https://www.haskell.org. (Date: 1.08.2017) \parskip=1mm
+  \bibitem{Artemov} S. Artemov and T. Protopopescu, Intuitionistic Epistemic Logic, The
+  Review of Symbolic Logic. 9 (2016).
 
-  \bibitem{Idris} Idris. A Language with Dependent Types.// URL:https://www.idris-lang.org. (Date:
-  1.08.2017) \parskip=1mm
+  \bibitem{Awodey} S. Awodey, Category Theory (2nd ed.), Oxford University Press, 2010.
 
-  \bibitem{Purs} Purescript. A strongly-typed functional programming language that compiles to JavaScript.
-  URL: http://www.purescript.org. (Date: 1.08.2017) \parskip=1mm
+  \bibitem{Baren2} H. P. Barendregt, The Lambda Calculus --- Its Syntax and Semantics, North-Holland, 1985.
 
-  \bibitem{Base} Hackage, \/ ``The base package'' // URL: https://hackage.haskell.org/package/base-4.10.0.0
-  (Date: 1.08.2017) \parskip=1mm
+  \bibitem{Baren} H.P. Barendregt. Lambda calculi with types, in: S. Abramsky, Dov M. Gabbay, and S. E.
+  Maibaum, eds., Handbook of logic in computer science (vol. 2), Osborne Handbooks Of Logic In Computer
+  Science, vol. 2. (Oxford University Press, New York, 1993).
 
-  \bibitem{Miran} Lipovaca M, \/ ``Learn you a Haskell for Great Good!''. //URL:
-  http://learnyouahaskell.com/chapters (Date: 1.08.2017) \parskip=1mm
+  \bibitem{Paiva} G. Bellin, V. C. V. de Paiva, and E. Ritter. Extended Curry-Howard correspondence for a basic constructive modal logic, Proceedings of Methods for Modalities, 2001.
 
-  \bibitem{McP} McBride C. and Paterson R., ``Applicative programming with effects", \textit{Journal of
-  Functional Programming}, 2008, vol. 18, no 01. pp 1-13. \parskip=1mm
+  \bibitem{ElKelly} S. Eilenberg and M. Kelly. Closed categories, Proc. Conf. Categorical Algebra, La Jolla, (1965).
 
-  \bibitem{McP2} McBride C. and Paterson R, ``Functional Pearl. Idioms: applicative programming with
-  effects'', \textit{Journal of Functional Programming}, 2005. vol. 18, no 01. pp 1-20. \parskip=1mm
+  \bibitem{Girard} J.-Y. Girard, P. Taylor and Y. Lafont, Proofs and Types, Cambridge University
+  Press, 1989.
 
-  \bibitem{Neder} R. Nederpelt and H. Geuvers, ``Type Theory and Formal Proof: An Introduction''.
-  \textit{Cambridge University Press}, New York, NY, USA, 2014. pp. 436. \parskip=1mm
+  \bibitem{Hindley} J. Roger Hindley, Basic Simple Type Theory, Cambridge University Press, 1997.
 
-  \bibitem{Morten} Sorensen M. H. and Urzyczyn P, ``Lectures on the Curry-Howard isomorphism'',
-  \textit{Studies in Logic and the Foundations of Mathematics}, vol. 149, \textit{Elsevier Science}, 1998.
-  pp 261. \parskip=1mm
+  \bibitem{ModalK} Y. Kakutani. A Curry-Howard Correspondence for Intuitionistic Normal Modal Logic. // Computer Software, 2008.
 
-  \bibitem{Pierce} Pierce B. C., ``Types and Programming Languages''. \textit{Cambridge, Mass: The MIT
-  Press}, 2002. pp. 605. \parskip=1mm
+  \bibitem{ModalK1} Y. Kakutani, Call-by-Name and Call-by-Value in Normal Modal Logic, in: Shao Z. (eds)
+  Programming Languages and Systems, Lecture Notes in Computer Science, vol 4807 (2016).
 
-  \bibitem{Girard} Girard J.-Y., Taylor P. and  Lafont Y, ``Proofs and Types'', \textit{Cambridge University
-  Press}, New York, NY, USA, 1989. pp. 175. \parskip=1mm
+  \bibitem{ModalLa} G. A. Kavvos. The Many Worlds of Modal $\lambda$--calculi: I. Curry-Howard for Necessity, Possibility and Time. // [Электронный ресурс] URL: https://arxiv.org/abs/1605.08106
 
-  \bibitem{Baren} Barendregt. H. P., ``Lambda calculi with types" // Abramsky S., Gabbay Dov M., and S. E.
-  Maibaum, ``Handbook of logic in computer science (vol. 2), Osborne Handbooks Of Logic In Computer
-  Science'', Vol. 2. \textit{Oxford University Press, Inc.}, New York, NY, USA, 1993. pp 117-309.
-  \parskip=1mm
+  \bibitem{Krupski} V. N. Krupski and A. Yatmanov. Sequent Calculus for Intuitionistic Epistemic Logic IEL,
+   in: Artemov S., Nerode A. (eds), Logical Foundations of Computer Science. Lecture Notes in Computer Science, vol 9537. Springer, Cham (2016).
 
-  \bibitem{Hindley} Hindley J. Roger, ``Basic Simple Type Theory''. \textit{Cambridge University Press}, New
-  York, NY, USA, 1997. pp. 185. \parskip=1mm
+  \bibitem{LambekScott} J. Lambek and P.J. Scott, Introduction to Higher Order Categorical Logic, Cambridge University Press, 1986.
 
-  \bibitem{Lax} Pfenning F. and Davies R., ``A judgmental reconstruction of modal logic'',
-  \textit{Mathematical Structures in Computer Science}, vol. 11, no 4, 2001, pp. 511-540. \parskip=1mm
+  \bibitem{MacLane} S. MacLane. Categories for the Working Mathematician, Graduate Texts in Mathematics, Springer-Verlag, 1998.
 
-  \bibitem{Baren2} H.P. Barendregt. The Lambda Calculus --- Its Syntax and Semantics. Studies in Logic and
-  the Foundations of Mathematics, vol. 103. Amsterdam: North-Holland, 1985.
+  \bibitem{McP} C. McBride and R. Paterson, Applicative programming with effects, Journal of
+  Functional Programming, 18 (2008).
 
-  \bibitem{ModalK} Yoshihiko KAKUTANI, A Curry-Howard Correspondence for Intuitionistic Normal Modal Logic, Computer Software, Released February 29, 2008, Online ISSN , Print ISSN 0289-6540.
+  \bibitem{McP2} C. McBride and R. Paterson, Functional Pearl. Idioms: applicative programming with
+  effects, Journal of Functional Programming, 18 (2005).
 
-  \bibitem{ModalK1} Kakutani Y. (2007) Call-by-Name and Call-by-Value in Normal Modal Logic. In: Shao Z. (eds) Programming Languages and Systems. APLAS 2007. Lecture Notes in Computer Science, vol 4807. Springer, Berlin, Heidelberg
+  \bibitem{Moggi} E. Moggi, Notions of computation and monads, Inf. Comput., 93 (1) (1991).
 
-  \bibitem{Abe} T. Abe. Completeness of modal proofs in first-order predicate logic. Computer Software, JSSST Journal, 24:165 -- 177, 2007.
+  \bibitem{Neder} R. Nederpelt and H. Geuvers, Type Theory and Formal Proof: An Introduction.
+  Cambridge University Press, 2014.
 
-  \bibitem{LambekScott} Lambek, J. and Scott P.J. (1986) Introduction to Higher Order Categorical Logic, Cambridge Studies in Advanced Mathematics 7, Cambridge: Cambridge University Press.
+  \bibitem{Cons} R. Paterson, Constructing applicative functors,
+  in: Mathematics of Program Construction, Lecture Notes in Computer Science (Springer, Berlin, 2012).
 
-  \bibitem{ElKelly} Samuel Eilenberg and Max Kelly, Closed categories. Proc. Conf. Categorical Algebra (La Jolla, Calif., 1965).
+  \bibitem{Lax} F. Pfenning and R. Davies. A judgmental reconstruction of modal logic.
+  Mathematical Structures in Computer Science, vol. 11 (2001).
 
-  \bibitem{Abramsky} Samson Abramsky and Nikos Tzevelekos, Introduction to Categories and Categorical Logic
+  \bibitem{Pierce} B. C. Pierce, Types and Programming Languages, The MIT
+  Press, 2002.
 
-  \bibitem{ModalLa} G. A. Kavvos. The Many Worlds of Modal $\Lambda$--calculi: I. Curry-Howard for Necessity, Possibility and Time
+  \bibitem{Morten} M. H. Sorensen and P. Urzyczyn, Lectures on the Curry-Howard isomorphism, Elsevier Science, 1998.
+  pp 261.
 
-  \bibitem{Cons} Ross Paterson. in Mathematics of Program Construction, Madrid, 2012, Lecture Notes in Computer Science, vol. 7342, pp. 300--323, Springer, 2012.
-\end{thebibliography}
+  \bibitem{Troelstra} A.S. Troelstra and H. Schwichtenberg, Basic Proof Theory, Cambridge University Press, 1996.
+  \end{thebibliography}
 
 \end{document}
