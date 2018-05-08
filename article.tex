@@ -146,7 +146,7 @@ Applicative functor allows to generalize the action of a functor for functions w
     \end{prooftree}
     \begin{prooftree}
       \AxiomC{$\Gamma \vdash A_1 \land A_2$}
-      \RightLabel{$\land_E, i \in {1,2}$}
+      \RightLabel{$\land_E, i = 1,2$}
       \UnaryInfC{$\Gamma \vdash A_i$}
     \end{prooftree}
   	\begin{prooftree}
@@ -299,7 +299,7 @@ Otherwise, term is not well-formed.
 
     \begin{prooftree}
     \AxiomC{ $\Gamma \vdash M : A_1 \times A_2$ }
-    \RightLabel{$\times_e$, $i \in \{ 1, 2 \}$}
+    \RightLabel{$\times_e$, $i = 1, 2$}
     \UnaryInfC{$\Gamma \vdash \pi_i M : A_i$}
     \end{prooftree}
 
@@ -332,7 +332,9 @@ Here are some examples of derivation trees:
 
 \begin{prooftree}
 \AxiomC{$x : A \vdash x : A$}
+\RightLabel{$\Box_I$}
 \UnaryInfC{$x : A \vdash {\bf box \:} x : \Box A$}
+\RightLabel{$\to_I$}
 \UnaryInfC{$\vdash (\lambda x. {\bf box \: } x) : A \to \Box A$}
 \end{prooftree}
 
@@ -345,7 +347,9 @@ Here are some examples of derivation trees:
 \BinaryInfC{$g : A \to B, y : A \vdash g y : B$}
 \RightLabel{$\text{let}_{\Box}$}
 \TrinaryInfC{$f : \Box (A \to B), x : \Box A \vdash {\bf let \: box \:} g, y  = f, x {\: \bf in \:} g y : \Box B$}
+\RightLabel{$\to_I$}
 \UnaryInfC{$f : \Box (A \to B) \vdash \lambda x. {\bf let \: box \:} g, y = f, x {\: \bf in \:} g y : \Box A \to \Box B$}
+\RightLabel{$\to_I$}
 \UnaryInfC{$\vdash \lambda f. \lambda x. {\bf let \: box \:} g, y = f, x {\: \bf in \:} g y : \Box (A \to B) \to \Box A \to \Box B$}
 \end{prooftree}
 
@@ -360,7 +364,7 @@ Here are some examples of derivation trees:
   \item $FV(\lambda x. M) = FV(M) \setminus \{ x\}$;
   \item $FV(M N) = FV(M) \cup FV(N);$
   \item $FV(\langle M,N \rangle) = FV(M) \cup FV(N)$;
-  \item $FV(\pi_i M) = FV(M)$, $i \in \{ 1, 2\}$;
+  \item $FV(\pi_i M) = FV(M)$, $i = 1, 2$;
   \item $FV(\text{\bf box } M) = FV(M)$;
   \item $FV({\bf let \: box} \: \vec{x} = \vec{M} {\: \bf in \:} N) = \bigcup \limits_{i = 1}^n FV(M), \text{where $n = |\vec{M}|$}$.
 \end{enumerate}
@@ -373,7 +377,7 @@ Here are some examples of derivation trees:
   \item $(M N) [x := N] = M[x := N] N [x := N]$;
   \item $(\lambda x. M) [x := N] = \lambda x. M [y := N]$, $y \in FV(M)$;
   \item $(M, N)[x := P] = (M[x := P], N [x := P])$;
-  \item $(\pi_i M) [x := P] = \pi_i (M[x := P])$, $i \in \{ 1, 2\}$;
+  \item $(\pi_i M) [x := P] = \pi_i (M[x := P])$, $i = 1, 2$;
   \item $({\bf box \: } M) [x := P] = {\bf box \: } (M [x := P])$;
   \item $({\bf let \: box \:}\vec{x} = \vec{M} {\: \bf in \:} N) [y := P] = {\bf let \: box \:} \vec{x} = (\vec{M} [y := P]) {\: \bf in \:} N$.
 \end{enumerate}
@@ -388,9 +392,9 @@ Substitution and free variable for terms of kind ${\bf let \: box}$ are defined 
   \item $\pi_1 \langle M, N \rangle \rightarrow_{\beta} M$;
   \item $\pi_2 \langle M, N \rangle \rightarrow_{\beta} N$;
   \item ${\bf let \: box \:} \vec{x}, y, \vec{z} = \vec{M}, {\bf let \: box \: } \vec{w} = \vec{N} {\: \bf in \: } Q, \vec{P} {\: in \:} R \rightarrow_{\beta} \\
-  {\bf let \: box \:} \vec{x}, \vec{w}, \vec{z} = \vec{M}, \vec{N}, \vec{P} {\: \bf in \: } R [y := Q]$
-  \item ${\bf let \: box \:} \vec{x} = {\bf box \:} \vec{M} {\: \bf in \:} N \rightarrow_{\beta} {\bf box \:} N [\vec{x} := \vec{M}]$
-  \item ${\bf let \: box \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} M \rightarrow_{\beta} {\bf box \:} M$, where \underline{\quad} is an empty sequence of terms.
+  {\bf let \: box \:} \vec{x}, \vec{w}, \vec{z} = \vec{M}, \vec{N}, \vec{P} {\: \bf in \: } R [y := Q]$;
+  \item ${\bf let \: box \:} \vec{x} = {\bf box \:} \vec{M} {\: \bf in \:} N \rightarrow_{\beta} {\bf box \:} N [\vec{x} := \vec{M}]$;
+  \item ${\bf let \: box \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} M \rightarrow_{\beta} {\bf box \:} M$, where \underline{\quad} is an empty sequence of terms;
   \item $\lambda x. f x \rightarrow_{\eta} f$;
   \item $\langle \pi_1 P, \pi_2 P \rangle \rightarrow_{\eta} P$;
   \item ${\bf let \: box \:} x = M {\: \bf in \: } x \rightarrow_{\eta} M$;
@@ -399,9 +403,9 @@ Substitution and free variable for terms of kind ${\bf let \: box}$ are defined 
 
 By default we use call-by-name evaluation strategy.
 
-Now we will prove standard lemmas for contexts in type systems\footnote{We will not prove cases with
-$\to$-constructor, they are proved standardly in the same lemmas for simply typed lambda calculus, for
-example see \cite{Neder} \cite{Morten}. We will consider only modal cases}:
+Now we will prove standard lemmas for contexts in type systems\footnote{Cases with
+$\to$-constructor are proven standardly in similar lemmas for simply typed lambda calculus, for
+example see \cite{Neder} \cite{Morten} \cite{Pierce}. We will consider only modal cases}:
 
 \begin{lemma} Generation for $\Box_I$.
 
@@ -416,7 +420,7 @@ example see \cite{Neder} \cite{Morten}. We will consider only modal cases}:
 
 \begin{enumerate}
   \item If $\Gamma \vdash M : A$ and $\Gamma \subseteq \Delta$, then $\Delta \vdash M : A$;
-  \item If $\Gamma \vdash M : A$, then $\Delta \vdash M : A$, where $\Delta = \{ x_i : A_i \: | \: (x_i : A_i) \in \Gamma \: \& \: x_i \in FV(M) \}$
+  \item If $\Gamma \vdash M : A$, then $\Delta \vdash M : A$, where $\Delta = \{ x : A \: | \: (x : A) \in \Gamma \: \& \: x \in FV(M) \}$
   \item If $\Gamma, x : A \vdash M : B$ and $\Gamma \vdash N : A$, then $\Gamma \vdash M [x := N] : B$.
 \end{enumerate}
 \end{lemma}
@@ -424,21 +428,19 @@ example see \cite{Neder} \cite{Morten}. We will consider only modal cases}:
 \begin{proof}
   $ $
 
-Induction on the derivation of $\Gamma \vdash M : A$.
+1--3) Induction on the derivation of $\Gamma \vdash M : A$.
 
 \end{proof}
 
 \begin{theorem} Subject reduction
 
-  If $\Gamma \vdash M : A$ and $M \twoheadrightarrow_r N$, then $\Gamma \vdash N : A$
+  If $\Gamma \vdash M : A$ and $M \twoheadrightarrow_r N$, then $\Gamma \vdash N : A$.
 
 \end{theorem}
 
 \begin{proof}
 
 Induction on the derivation $\Gamma \vdash M : A$ and on the generation of $\rightarrow_r$.
-
-For cases with axiom, application, abstraction and pairs see \cite{Morten} \cite{Pierce}.
 
 \begin{enumerate}
 
@@ -478,24 +480,33 @@ So, if $\vdash M : A$, then $\vdash {\bf box \:} M : \Box A$.
   $ $
 
   Let us define the transformation from $\lambda_{\text{IEL}^{-}}$ into the simple type theory with
-  $\to$, $\times$ and natural number type $\mathbb{N}$ with additional typing and reduction rules
-  \footnote{Strong normalization for stronger system was shown here \cite{Girard}} :
+  $\to$, $\times$ and natural number type $\mathbb{N}$ with additional typing and reduction rules\footnote{Strong normalization for stronger system was shown here \cite{Girard}}:
 
   \begin{prooftree}
   \AxiomC{$ $}
+  \RightLabel{{\bf zero}}
   \UnaryInfC{$\Gamma \vdash 0 : \mathbb{N}$}
   \end{prooftree}
 
+\begin{minipage}{0.45\textwidth}
+\begin{flushleft}
   \begin{prooftree}
   \AxiomC{$\Gamma \vdash n : \mathbb{N}$}
+  \RightLabel{{\bf succ}}
   \UnaryInfC{$\Gamma \vdash {\bf succ \:} n : \mathbb{N}$}
   \end{prooftree}
-
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.45\textwidth}
+\begin{flushright}
   \begin{prooftree}
   \AxiomC{$\Gamma \vdash n : \mathbb{N}$}
   \AxiomC{$\Gamma \vdash m : \mathbb{N}$}
+  \RightLabel{{\bf add}}
   \BinaryInfC{$\Gamma \vdash n + m : \mathbb{N}$}
   \end{prooftree}
+\end{flushright}
+\end{minipage}
 
   \begin{enumerate}
     \item $n + 0 \rightarrow_{\beta} n$;
@@ -520,7 +531,7 @@ So, if $\vdash M : A$, then $\vdash {\bf box \:} M : \Box A$.
       \item $|\lambda x. M| = \lambda x. |M|$;
       \item $|(M N)| = |M| |N|$;
       \item $|\langle M, N \rangle| = \langle |M|, |N| \rangle$;
-      \item $|\pi_i M| = \pi_i |M|$, $i \in \{ 1, 2\}$;
+      \item $|\pi_i M| = \pi_i |M|$, $i = 1, 2$;
       \item $|{\bf box \:} M| = \langle 0, |M| \rangle$;
       \item $|{\bf let \: box \:} \underline{\quad} = \underline{\quad} {\: \bf in \:} M| = \langle 0, |M| \rangle$;
       \item $|{\bf let \: box \:} x = N {\: \bf in \:} M| = \langle \pi_1 |N| , |M| [x := \pi_2 |N|] \rangle$
@@ -613,8 +624,9 @@ So, if $\vdash M : A$, then $\vdash {\bf box \:} M : \Box A$.
 \end{theorem}
 
 \begin{proof}
+  $ $
 
-  By Newman's lemma \cite{Morten}, if relation is strongly normalizing and locally conluent, then this relation is confluent.
+By Newman's lemma \cite{Morten}, if relation is strongly normalizing and locally conluent, then this relation is confluent.
 
 It is sufficient to show that $\twoheadrightarrow_r$ is locally confluent.
 
@@ -689,7 +701,7 @@ confluence proof for lambda-calculus as based on {\bf IK} \cite{ModalK}.
 
 \begin{defin} Monoidal category
 
-  Monoidal category is a category $\mathcal{C}$ with additional monoidal structure:
+  Monoidal category is a category $\mathcal{C}$ with the following additional structure:
   \begin{enumerate}
     \item A bifunctor $\otimes : \mathcal{C} \times \mathcal{C} \to C$ called tensor product;
     \item Identity object $\mathds{1}$;
@@ -724,7 +736,7 @@ Note that, any cartesian closed category is the special case of a monoidal categ
   Let $\langle \mathcal{C}, \otimes_1, \mathds{1}_{\mathcal{C}} \rangle$ and $\langle \mathcal{D}, \otimes_2, \mathds{1}_{\mathcal{D}} \rangle$ are monoidal categories.
 
   A monoidal functor $\mathcal{F} : \langle \mathcal{C}, \otimes_1, \mathds{1} \rangle \to \langle \mathcal{D}, \otimes_2, \mathds{1}' \rangle$ is a functor
-  $\mathcal{F} : \mathcal{C} \to \mathcal{D}$ with additional natural transformations:
+  $\mathcal{F} : \mathcal{C} \to \mathcal{D}$ with natural transformations:
 
   \begin{enumerate}
   \item $u : \mathds{1}_{\mathcal{D}} \to \mathcal{F}\mathds{1}_{\mathcal{C}}$;
@@ -821,7 +833,7 @@ By default we will consider an arbitrary monoidal functor on cartesian closed ca
 \AxiomC{$[\![\Gamma \vdash M : A \to B]\!] = [\![M]\!] : [\![\Gamma]\!] \rightarrow [\![B]\!]^{[\![A]\!]}$}
 \AxiomC{$[\![\Gamma \vdash N : A]\!] = [\![N]\!] : [\![\Gamma]\!] \rightarrow [\![A]\!]$}
 \BinaryInfC{$[\![\Gamma \vdash (M N) : B]\!] = [\![\Gamma]\!] \xrightarrow{\langle [\![M]\!], [\![N]\!]
-\rangle} [\![B]\!]^{[\![A]\!]} \times [\![A]\!] \xrightarrow{\epsilon} [\![B]\!] $}
+\rangle} [\![B]\!]^{[\![A]\!]} \times [\![A]\!] \xrightarrow{\epsilon_{[\![A]\!],[\![B]\!]}} [\![B]\!] $}
 \end{prooftree}
 
 \begin{prooftree}
@@ -834,7 +846,7 @@ By default we will consider an arbitrary monoidal functor on cartesian closed ca
 \begin{prooftree}
 \AxiomC{$[\![\Gamma \vdash M : A_1 \times A_2]\!] = [\![M]\!] : [\![\Gamma]\!] \rightarrow [\![A_1]\!] \times
 [\![A_2]\!]$}
-\RightLabel{$i \in \{1,2\}$}
+\RightLabel{$i = 1,2$}
 \UnaryInfC{$[\![\Gamma \vdash \pi_i M : A_i]\!] = [\![\Gamma]\!] \xrightarrow{[\![M]\!]} [\![A_1]\!] \times
 [\![A_2]\!] \xrightarrow{\pi_i} [\![A_i]\!]$}
 \end{prooftree}
@@ -1000,9 +1012,9 @@ We will denote equivalence class as $[x, M]_{A, B} = \{ (y, N) \: | \: (x, M) \s
   \item Identity morphism $id_{\hat{A}} = [x,x] \in Hom_{\mathcal{C}(\lambda)(\hat{A}, \hat{A})}$;
   \item $\mathds{1}$ is a terminal object;
   \item $\widehat{A \times B} = \hat{A} \times \hat{B}$;
-  \item Canonical projection is defined as $[x, \pi_i x] \in Hom_{\mathcal{C}(\lambda)}(\hat{A_1} \times \hat{A_2},\hat{A_i})$ for $i \in \{ 1, 2 \}$;
+  \item Canonical projection is defined as $[x, \pi_i x] \in Hom_{\mathcal{C}(\lambda)}(\hat{A_1} \times \hat{A_2},\hat{A_i})$ for $i = 1, 2$;
   \item $\widehat{A \to B} = \hat{B}^{\hat{A}}$;
-  \item Evaluation arrow $\epsilon_{\hat{A},\hat{B}} = [x, (\pi_2 x) (\pi_1 x)] \in Hom_{\mathcal{C}(\lambda)}(\hat{B}^{\hat{A}} \times \hat{A}, \hat{B})$.
+  \item Evaluation arrow $\epsilon_{\hat{A},\hat{B}} = [x, (\pi_1 x) (\pi_2 x)] \in Hom_{\mathcal{C}(\lambda)}(\hat{B}^{\hat{A}} \times \hat{A}, \hat{B})$.
 \end{enumerate}
 \end{defin}
 
@@ -1019,7 +1031,7 @@ forall $[x,M] \in Hom_{\mathcal{C}(\lambda)}(\hat{A},\hat{B}), \boxdot ([x,M]) =
 
 \begin{enumerate}
   \item $\boxdot(g \circ f) = \boxdot g \circ \boxdot f$;
-  \item $\boxdot (id_{\hat{A}}) = id_{\boxdot}\hat{A}$.
+  \item $\boxdot (id_{\hat{A}}) = id_{\boxdot \hat{A}}$.
 \end{enumerate}
 \end{lemma}
 
@@ -1034,23 +1046,29 @@ Easy checking using reduction rules.
   Let us define natural transformations:
 
 \begin{enumerate}
-  \item $\eta: Id_{\mathcal{C}(\lambda)} \Rightarrow \boxdot$, s. t. $\forall \hat{A} \in Ob_{\mathcal{C}(\lambda)}$, $\eta_{\hat{A}} = [x, {\bf box \:} x] \in Hom_{\mathcal{C}(\lambda)}(\hat{A}, \boxdot \hat{A})$;
-  \item $\hat{A} \varoast \hat{B} : \boxdot \hat{A} \times \boxdot \hat{B} \to \boxdot (\hat{A} \times \hat{B})$, s. t. $\forall \hat{A}, \hat{B} \in Ob_{\mathcal{C}(\lambda)}, \hat{A} \varoast \hat{B} = [p, {\bf let \: box \:} x,y = \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, y \rangle] \in Hom_{\mathcal{C}(\lambda)}(\boxdot \hat{A} \times \boxdot \hat{B}, \boxdot (\hat{A} \times \hat{B}))$.
+  \item $\eta: Id_{\mathcal{C}(\lambda)} \Rightarrow \boxdot\text{, s. t. }\forall \hat{A} \in Ob_{\mathcal{C}(\lambda)}$, $\eta_{\hat{A}} = [x, {\bf box \:} x] \in Hom_{\mathcal{C}(\lambda)}(\hat{A}, \boxdot \hat{A})$;
+  \item $\hat{A} \varoast \hat{B} : \boxdot \hat{A} \times \boxdot \hat{B} \to \boxdot (\hat{A} \times \hat{B})\text{, s. t. } \forall \hat{A}, \hat{B} \in Ob_{\mathcal{C}(\lambda)}, \hat{A} \varoast \hat{B} = [p, {\bf let \: box \:} x,y = \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, y \rangle] \in Hom_{\mathcal{C}(\lambda)}(\boxdot \hat{A} \times \boxdot \hat{B}, \boxdot (\hat{A} \times \hat{B}))$.
 \end{enumerate}
 \end{defin}
 
 Implementation for $\varoast$ in our term model is the instance of ${\text{let}_{\Box}}$-rule:
 
+\begin{small}
 \begin{prooftree}
 \AxiomC{$p : \Box A \times \Box B \vdash p : \Box A \times \Box B$}
+\RightLabel{$\times_E$}
 \UnaryInfC{$p : \Box A \times \Box B \vdash \pi_1 p : \Box A$}
 \AxiomC{$p : \Box A \times \Box B \vdash p : \Box A \times \Box B$}
+\RightLabel{$\times_E$}
 \UnaryInfC{$p : \Box A \times \Box B \vdash \pi_2 p : \Box B$}
 \AxiomC{$x : A \vdash x : A$}
 \AxiomC{$y : B \vdash y : B$}
+\RightLabel{$\times_I$}
 \BinaryInfC{$x : A, y : B \vdash \langle x, y \rangle : A \times B$}
+\RightLabel{${\bf let}_{\Box}$}
 \TrinaryInfC{$p : \Box A \times \Box B \vdash {\bf let \: box \:} x,y = \pi_1 p, \pi_2 p {\: \bf in \:} \langle x, y \rangle : \Box (A \times B)$}
 \end{prooftree}
+\end{small}
 
 \begin{lemma}
   $ $
